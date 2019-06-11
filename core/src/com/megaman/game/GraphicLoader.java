@@ -10,9 +10,11 @@ public class GraphicLoader{
 	//ArrayList <Texture> walk;
 	float frameRates;
 	private Texture inizioWalk;
+	private Array<Texture> fallTexture;
 	private Array<Texture> walkTexture;
 	private Array<Texture> idleTexture;
 	private Array<Texture> jumpTexture;
+	private Animation<Texture> fall;
 	private Animation<Texture> walk;
 	private Animation<Texture> idle;
 	private Animation<Texture> jump;
@@ -20,13 +22,15 @@ public class GraphicLoader{
 	public GraphicLoader() {
 		frameRates = 0.060f;
 		inizioWalk = new Texture("Megaman/Walk/inizio.png");
+		
 		walkTexture = new Array<Texture>();
 		idleTexture = new Array<Texture>();
 		jumpTexture = new Array<Texture>();
+		fallTexture = new Array<Texture>();
 	}
 	
 	public void importImage () {
-		for (int i=0;i<7;i++) {
+		for (int i=0;i<3;i++) {
 			jumpTexture.add(new Texture("Megaman/Jump/"+i+".png"));
 		}
 			jump = new Animation<Texture>(0.080f,jumpTexture);
@@ -38,6 +42,10 @@ public class GraphicLoader{
 			idleTexture.add(new Texture("Megaman/Idle/"+i+".png"));
 		}
 			idle = new Animation<Texture>(frameRates,idleTexture);
+		for (int i=0;i<1;i++) {
+			fallTexture.add(new Texture("Megaman/3.png"));
+		}
+			fall = new Animation<Texture>(frameRates,fallTexture);
 	}
 	
 	public Animation<Texture> getIdle(){
@@ -54,6 +62,10 @@ public class GraphicLoader{
 	
 	public Animation<Texture> getJump (){
 		return jump;
+	}
+	
+	public Animation<Texture> getFall (){
+		return fall;
 	}
 }
 

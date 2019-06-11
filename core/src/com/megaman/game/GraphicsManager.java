@@ -29,10 +29,10 @@ public class GraphicsManager {
 			batch.draw(graphicLoader.getInizioWalk(),megaman.getPositionX(),megaman.getPositionY());
 			controller.setControlliFalse(controller.WALK_START);
 		}
-		if (controller.getControlli(controller.FALL)) {
+		else if (controller.getControlli(controller.FALL)) {
 			batch.draw(graphicLoader.getFall().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
 		}
-		if (controller.getControlli(controller.WALK)) {
+		else if (controller.getControlli(controller.WALK)) {
 			if (controller.getControlli(controller.WALK_JUMP)) {
 				controller.setControlliFalse(controller.WALK);
 				salto+= Gdx.graphics.getDeltaTime();
@@ -49,7 +49,7 @@ public class GraphicsManager {
 					controller.setControlliFalse(controller.WALK);
 			}
 		}
-		if (controller.getControlli(controller.JUMP)) {
+		else if (controller.getControlli(controller.JUMP)) {
 			batch.draw(graphicLoader.getJump().getKeyFrame(elapsed), megaman.getPositionX(), megaman.getPositionY());
 			salto+= Gdx.graphics.getDeltaTime();
 			if (graphicLoader.getJump().isAnimationFinished(salto)) {
