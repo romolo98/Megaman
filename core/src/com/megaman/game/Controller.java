@@ -40,6 +40,21 @@ public class Controller {
 				controlli[WALK] = true;
 			}
 		}
+		if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
+			megaman.setPositionX(megaman.getPositionX()-1);
+			controlli[WALK_START] = true;
+		}
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+				megaman.setPositionX(megaman.getPositionX()-speed);
+				megaman.setPositionY(megaman.getPositionY()-speed);
+				controlli[WALK_JUMP] = true;
+			}
+			else {
+				megaman.setPositionX(megaman.getPositionX()-speed);
+				controlli[WALK] = true;
+			}
+		}
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			controlli[JUMP] = true;
 		}

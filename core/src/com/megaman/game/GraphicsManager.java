@@ -1,5 +1,9 @@
 package com.megaman.game;
 
+import java.awt.DisplayMode;
+
+import javax.management.monitor.Monitor;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,6 +29,7 @@ public class GraphicsManager {
 		elapsed += Gdx.graphics.getDeltaTime();
 		controller.muoviMegaman(megaman);
 		
+		
 		if (controller.controlli[controller.WALK_START]) {
 			batch.draw(graphicLoader.getInizioWalk(),megaman.getPositionX(),megaman.getPositionY());
 			controller.setControlliFalse(controller.WALK_START);
@@ -32,7 +37,7 @@ public class GraphicsManager {
 		else if (controller.getControlli(controller.FALL)) {
 			batch.draw(graphicLoader.getFall().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
 		}
-		else if (controller.getControlli(controller.WALK)) {
+		else if (controller.getControlli(controller.WALK) && !controller.getControlli(controller.FALL)) {
 			if (controller.getControlli(controller.WALK_JUMP)) {
 				controller.setControlliFalse(controller.WALK);
 				salto+= Gdx.graphics.getDeltaTime();

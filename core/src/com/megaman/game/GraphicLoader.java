@@ -22,7 +22,6 @@ public class GraphicLoader{
 	public GraphicLoader() {
 		frameRates = 0.060f;
 		inizioWalk = new Texture("Megaman/Walk/inizio.png");
-		
 		walkTexture = new Array<Texture>();
 		idleTexture = new Array<Texture>();
 		jumpTexture = new Array<Texture>();
@@ -35,9 +34,9 @@ public class GraphicLoader{
 		}
 			jump = new Animation<Texture>(0.080f,jumpTexture);
 		for (int i=1;i<11;i++) {
-			walkTexture.add(new Texture("Megaman/Walk/"+i+".png"));
+			walkTexture.add(new Texture("Megaman/Walk/"+i+".png"));	
 		} 
-			walk = new Animation<Texture>(frameRates,walkTexture);
+			walk = new Animation<Texture>(0.080f,walkTexture);
 		for (int i=0;i<27;i++) {
 			idleTexture.add(new Texture("Megaman/Idle/"+i+".png"));
 		}
