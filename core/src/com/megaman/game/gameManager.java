@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array;
 public class gameManager {
 	
 	Bullet bullet;
+	int bulletCorrente;
 	Array<Bullet> ammo;
 	Controller controller;
 	Megaman megaman;
@@ -18,17 +19,19 @@ public class gameManager {
 		gm = new GraphicsManager();
 		bullet = new Bullet();
 		ammo = new Array<Bullet>();
+		ammo.add(new Bullet());
+		bulletCorrente = 0;
 	}
-	
 	public void run(SpriteBatch batch) {
 		gm.drawMegaman(batch, controller, megaman);
 		
-		if (gm.bulletExistence) {
+		if (gm.updateBullet || gm.bulletShooting) {
 			ammo.add(new Bullet());
-			gm.drawBullet(batch, ammo.peek(), megaman);	
+			bulletCorrente = ammo.size-1;
 		}
-		
-		if (gm.destroyBullet) {
+		if (!gm.destroyBullet)
+			gm.drawBullet(batch, ammo.get(bulletCorrente), megaman);
+		else {
 			gm.destroyBullet = false;
 			ammo.removeIndex(0);
 		}

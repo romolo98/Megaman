@@ -12,6 +12,7 @@ public class GraphicLoader{
 	private Texture inizioWalk;
 	private Texture background;
 	private Texture bullet;
+	private Array<Texture> shootTexture;
 	private Array<Texture> specialMoveTexture;
 	private Array<Texture> fallTexture;
 	private Array<Texture> walkTexture;
@@ -24,6 +25,7 @@ public class GraphicLoader{
 	private Animation<Texture> idle;
 	private Animation<Texture> jump;
 	private Animation<Texture> shooting;
+	private Animation<Texture> shoot;
 	
 	public GraphicLoader() {
 		frameRates = 0.060f;
@@ -36,33 +38,39 @@ public class GraphicLoader{
 		fallTexture = new Array<Texture>();
 		shootingTexture = new Array<Texture>();
 		specialMoveTexture = new Array<Texture>();
+		shootTexture = new Array<Texture>();
 	}
 	
 	public void importImage () {
-		for (int i=0;i<3;i++) {
+		for (int i = 0; i < 3; i++) {
 			jumpTexture.add(new Texture("Megaman/Jump/"+i+".png"));
 		}
 			jump = new Animation<Texture>(0.080f,jumpTexture);
 			
-		for (int i=1;i<11;i++) {
+		for (int i = 1; i < 11; i++) {
 			walkTexture.add(new Texture("Megaman/Walk/"+i+".png"));	
 		} 
 			walk = new Animation<Texture>(0.080f,walkTexture);
 			
-		for (int i=0;i<27;i++) {
+		for (int i = 0; i < 27; i++) {
 			idleTexture.add(new Texture("Megaman/Idle/"+i+".png"));
 		}
 			idle = new Animation<Texture>(frameRates,idleTexture);
 			
-		for (int i=0;i<1;i++) {
-			fallTexture.add(new Texture("Megaman/3.png"));
+		for (int i = 0; i < 3; i++) {
+			fallTexture.add(new Texture("Megaman/Fall/"+i+".png"));
 		}
 			fall = new Animation<Texture>(frameRates,fallTexture);
 			
 		for (int i = 0; i < 10; i++) {
-			shootingTexture.add(new Texture("Megaman/Shoot/"+i+".png"));
+			shootingTexture.add(new Texture("Megaman/WalkShoot/"+i+".png"));
 		}
 			shooting = new Animation<Texture>(frameRates, shootingTexture);
+		
+		for (int i = 0;i < 2; i++) {
+			shootTexture.add(new Texture("Megaman/Shoot/"+i+".png"));
+		}
+			shoot = new Animation<Texture>(0.080f, shootTexture);
 	}
 	
 	public Animation<Texture> getIdle(){
@@ -99,6 +107,10 @@ public class GraphicLoader{
 	
 	public Animation<Texture> getSpecialMove() {
 		return specialMove;
+	}
+	
+	public Animation<Texture> getShoot (){
+		return shoot;
 	}
 }
 

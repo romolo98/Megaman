@@ -15,14 +15,14 @@ public class GraphicsManager {
 	GraphicLoader graphicLoader;
 	float elapsed;
 	float salto;
-	boolean bulletExistence;
+	boolean bulletShooting;
 	boolean destroyBullet;
 	boolean updateBullet;
 	
 	public GraphicsManager (){
 		elapsed = 0;
 		salto = 0;
-		bulletExistence = false;
+		bulletShooting = false;
 		destroyBullet = false;
 		updateBullet = false;
 		graphicLoader = new GraphicLoader();
@@ -40,13 +40,18 @@ public class GraphicsManager {
 			batch.draw(graphicLoader.getInizioWalk(),megaman.getPositionX(),megaman.getPositionY());
 			controller.setControlliFalse(controller.WALK_START);
 		}
+		else if (controller.getControlli(controller.SHOOT)){
+			batch.draw(graphicLoader.getShoot().getKeyFrame(elapsed,true), megaman.getPositionX(), megaman.getPositionY());
+			bulletShooting = true;
+			controller.setControlliFalse(controller.SHOOT);
+		}
 		else if (controller.getControlli(controller.FALL)) {
 			batch.draw(graphicLoader.getFall().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
 		}
 		
 		else if (controller.getControlli(controller.WALK_SHOOT)) {
 			controller.setControlliFalse(controller.WALK);
-			bulletExistence = true;
+			bulletShooting = true;
 			batch.draw(graphicLoader.getShooting().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
 			controller.setControlliFalse(controller.WALK_SHOOT);
 		}
@@ -85,22 +90,23 @@ public class GraphicsManager {
 	
 		
 	}
-public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman) {
-	if (bulletExistence) {
-		updateBullet = true;
-		bullet.setPositionX(megaman.getPositionX()+10);
-		bullet.setPositionY(megaman.getPositionY());
-		bulletExistence = false;
+	public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman) {
+		if (bulletShooting) {
+			bullet.setPositionX(megaman.getPositionX()+10);
+			bullet.setPositionY(megaman.getPositionY());
+			updateBullet = true;
+			bulletShooting = false;
 		}
-	
-		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY());
+		
 		bullet.physics(updateBullet);
+		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY());
 		
 		if (bullet.getPositionX() > Gdx.graphics.getWidth()) {
 			destroyBullet = true;
+			updateBullet = false;
 		}
-
-}
+		
+	}
 
 }
 

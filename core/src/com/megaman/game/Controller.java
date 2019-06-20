@@ -29,6 +29,9 @@ public class Controller {
 			megaman.setPositionX(megaman.getPositionX()+1);
 			controlli[WALK_START] = true;
 		}
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+			controlli[SHOOT] = true;
+		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
 				megaman.setPositionX(megaman.getPositionX()+speed);
