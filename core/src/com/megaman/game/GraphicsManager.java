@@ -7,27 +7,33 @@ import javax.management.monitor.Monitor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 
 public class GraphicsManager {
 	
 	
 	GraphicLoader graphicLoader;
-	Megaman megaman;
-	Controller controller;
 	float elapsed;
 	float salto;
+	boolean bulletExistence;
+	boolean destroyBullet;
+	boolean updateBullet;
 	
 	public GraphicsManager (){
 		elapsed = 0;
 		salto = 0;
-		controller = new Controller();
-		megaman = new Megaman();
+		bulletExistence = false;
+		destroyBullet = false;
+		updateBullet = false;
 		graphicLoader = new GraphicLoader();
 		graphicLoader.importImage();
 	}
-	public void draw(SpriteBatch batch) {
+
+	public void drawMegaman(SpriteBatch batch, Controller controller, Megaman megaman) {
 		elapsed += Gdx.graphics.getDeltaTime();
 		controller.muoviMegaman(megaman);
+		
+		batch.draw(graphicLoader.getBackground(), 0, -200);
 		
 		
 		if (controller.controlli[controller.WALK_START]) {
@@ -37,6 +43,14 @@ public class GraphicsManager {
 		else if (controller.getControlli(controller.FALL)) {
 			batch.draw(graphicLoader.getFall().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
 		}
+		
+		else if (controller.getControlli(controller.WALK_SHOOT)) {
+			controller.setControlliFalse(controller.WALK);
+			bulletExistence = true;
+			batch.draw(graphicLoader.getShooting().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
+			controller.setControlliFalse(controller.WALK_SHOOT);
+		}
+		
 		else if (controller.getControlli(controller.WALK) && !controller.getControlli(controller.FALL)) {
 			if (controller.getControlli(controller.WALK_JUMP)) {
 				controller.setControlliFalse(controller.WALK);
@@ -48,6 +62,7 @@ public class GraphicsManager {
 					controller.setFallTrue();
 				}
 			}
+			
 			else if (!controller.getControlli(controller.FALL)){ 
 					batch.draw(graphicLoader.getWalk().getKeyFrame(elapsed, true), megaman.getPositionX(),megaman.getPositionY());
 					controller.setControlliFalse(controller.WALK_JUMP);					
@@ -70,7 +85,25 @@ public class GraphicsManager {
 	
 		
 	}
+public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman) {
+	if (bulletExistence) {
+		updateBullet = true;
+		bullet.setPositionX(megaman.getPositionX()+10);
+		bullet.setPositionY(megaman.getPositionY());
+		bulletExistence = false;
+		}
+	
+		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY());
+		bullet.physics(updateBullet);
+		
+		if (bullet.getPositionX() > Gdx.graphics.getWidth()) {
+			destroyBullet = true;
+		}
+
 }
+
+}
+
 
 
 

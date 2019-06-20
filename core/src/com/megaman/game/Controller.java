@@ -35,6 +35,10 @@ public class Controller {
 				megaman.setPositionY(megaman.getPositionY()+speed);
 				controlli[WALK_JUMP] = true;
 			}
+			else if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+				megaman.setPositionX(megaman.getPositionX()+speed);
+				controlli[WALK_SHOOT] = true;
+			}
 			else {
 				megaman.setPositionX(megaman.getPositionX()+speed);
 				controlli[WALK] = true;
@@ -70,6 +74,7 @@ public class Controller {
 				controlli[FALL] = false;
 			}
 		}
+
 	}
 	
 	void setTuttiControlliFalse () {
