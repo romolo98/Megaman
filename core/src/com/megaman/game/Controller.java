@@ -15,12 +15,10 @@ public class Controller {
 	public static final int WALK_START = 6;
 	
 	boolean[] controlli;
-	int speed;
 	int contJump;
 	
 	public Controller () {
 		controlli = new boolean[7];
-		speed = 2;
 		contJump = 0;
 	}
 
@@ -28,15 +26,15 @@ public class Controller {
 		
 		//RIGHT
 		if (Gdx.input.isKeyJustPressed(Keys.RIGHT) && !controlli[JUMP]) {
-			megaman.setPositionX(megaman.getPositionX()+speed);
+			megaman.setPositionX(megaman.getPositionX()+megaman.getSpeed());
 			controlli[WALK_START] = true;
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			megaman.setPositionX(megaman.getPositionX()+speed);
+			megaman.setPositionX(megaman.getPositionX()+megaman.getSpeed());
 
 			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-				megaman.setPositionY(megaman.getPositionY()+speed);
+				megaman.setPositionY(megaman.getPositionY()+megaman.getSpeed());
 				controlli[WALK_JUMP] = true;
 			}
 			else if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
@@ -49,14 +47,14 @@ public class Controller {
 		
 		//LEFT
 		if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
-			megaman.setPositionX(megaman.getPositionX()-speed);
+			megaman.setPositionX(megaman.getPositionX()-megaman.getSpeed());
 			controlli[WALK_START] = true;
 			}
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			megaman.setPositionX(megaman.getPositionX()-speed);
+			megaman.setPositionX(megaman.getPositionX()-megaman.getSpeed());
 					
 			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-				megaman.setPositionY(megaman.getPositionY()+speed);
+				megaman.setPositionY(megaman.getPositionY()+megaman.getSpeed());
 				controlli[WALK_JUMP] = true;
 				}
 			else {
@@ -74,7 +72,7 @@ public class Controller {
 			controlli[JUMP] = false;
 			controlli[WALK_JUMP] = false;
 			
-			megaman.setPositionY(megaman.getPositionY()-speed);
+			megaman.setPositionY(megaman.getPositionY()-megaman.getSpeed());
 			if (megaman.getPositionY() <= 0) {
 				controlli[FALL] = false;
 			}
@@ -89,7 +87,7 @@ public class Controller {
 		if (controlli[JUMP] && !controlli[FALL]) {
 			setFalseExcept(JUMP);
 			
-			megaman.setPositionY(megaman.getPositionY()+speed);
+			megaman.setPositionY(megaman.getPositionY()+megaman.getSpeed());
 		}
 
 	}
