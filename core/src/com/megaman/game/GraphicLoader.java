@@ -60,7 +60,7 @@ public class GraphicLoader{
 		for (int i = 0; i < 3; i++) {
 			fallTexture.add(new Texture("Megaman/Fall/"+i+".png"));
 		}
-			fall = new Animation<Texture>(frameRates,fallTexture);
+			fall = new Animation<Texture>(0.080f ,fallTexture);
 			
 		for (int i = 0; i < 10; i++) {
 			shootingTexture.add(new Texture("Megaman/WalkShoot/"+i+".png"));

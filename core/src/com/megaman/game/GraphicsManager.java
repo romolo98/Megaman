@@ -15,6 +15,8 @@ public class GraphicsManager {
 	GraphicLoader graphicLoader;
 	float elapsed;
 	float salto;
+	float caduta;
+	float saltoMoto;
 	boolean bulletShooting;
 	boolean destroyBullet;
 	boolean updateBullet;
@@ -22,6 +24,8 @@ public class GraphicsManager {
 	public GraphicsManager (){
 		elapsed = 0;
 		salto = 0;
+		saltoMoto = 0;
+		caduta = 0;
 		bulletShooting = false;
 		destroyBullet = false;
 		updateBullet = false;
@@ -46,7 +50,12 @@ public class GraphicsManager {
 			controller.setControlliFalse(controller.SHOOT);
 		}
 		else if (controller.getControlli(controller.FALL)) {
-			batch.draw(graphicLoader.getFall().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
+			controller.setControlliFalse(controller.JUMP);
+			batch.draw(graphicLoader.getFall().getKeyFrame(elapsed), megaman.getPositionX(), megaman.getPositionY());
+			caduta+= Gdx.graphics.getDeltaTime();
+			if (graphicLoader.getFall().isAnimationFinished(caduta)) {
+				caduta = 0;
+			}
 		}
 		
 		else if (controller.getControlli(controller.WALK_SHOOT)) {
@@ -55,20 +64,20 @@ public class GraphicsManager {
 			batch.draw(graphicLoader.getShooting().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
 			controller.setControlliFalse(controller.WALK_SHOOT);
 		}
-		
+
 		else if (controller.getControlli(controller.WALK) && !controller.getControlli(controller.FALL)) {
 			if (controller.getControlli(controller.WALK_JUMP)) {
 				controller.setControlliFalse(controller.WALK);
-				salto+= Gdx.graphics.getDeltaTime();
-				batch.draw(graphicLoader.getJump().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
-				if (graphicLoader.getJump().isAnimationFinished(salto)) {
+				saltoMoto+= Gdx.graphics.getDeltaTime();
+				batch.draw(graphicLoader.getJump().getKeyFrame(elapsed), megaman.getPositionX(), megaman.getPositionY());
+				if (graphicLoader.getJump().isAnimationFinished(saltoMoto)) {
 					controller.setControlliFalse(controller.WALK_JUMP);
-					salto = 0;
+					saltoMoto = 0;
 					controller.setFallTrue();
 				}
 			}
 			
-			else if (!controller.getControlli(controller.FALL)){ 
+			else { 
 					batch.draw(graphicLoader.getWalk().getKeyFrame(elapsed, true), megaman.getPositionX(),megaman.getPositionY());
 					controller.setControlliFalse(controller.WALK_JUMP);					
 					controller.setControlliFalse(controller.WALK);

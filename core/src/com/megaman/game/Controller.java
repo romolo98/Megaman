@@ -25,57 +25,71 @@ public class Controller {
 	}
 
 	public void muoviMegaman (Megaman megaman) {
-		if (Gdx.input.isKeyJustPressed(Keys.RIGHT)) {
-			megaman.setPositionX(megaman.getPositionX()+1);
+		
+		//RIGHT
+		if (Gdx.input.isKeyJustPressed(Keys.RIGHT) && !controlli[JUMP]) {
+			megaman.setPositionX(megaman.getPositionX()+speed);
 			controlli[WALK_START] = true;
 		}
-		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-			controlli[SHOOT] = true;
-		}
+		
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-				megaman.setPositionX(megaman.getPositionX()+speed);
+			megaman.setPositionX(megaman.getPositionX()+speed);
+
+			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 				megaman.setPositionY(megaman.getPositionY()+speed);
 				controlli[WALK_JUMP] = true;
 			}
 			else if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-				megaman.setPositionX(megaman.getPositionX()+speed);
 				controlli[WALK_SHOOT] = true;
 			}
 			else {
-				megaman.setPositionX(megaman.getPositionX()+speed);
 				controlli[WALK] = true;
 			}
-		}
-		if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
-			megaman.setPositionX(megaman.getPositionX()-1);
-			controlli[WALK_START] = true;
-		}
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-				megaman.setPositionX(megaman.getPositionX()-speed);
-				megaman.setPositionY(megaman.getPositionY()-speed);
-				controlli[WALK_JUMP] = true;
-			}
-			else {
-				megaman.setPositionX(megaman.getPositionX()-speed);
-				controlli[WALK] = true;
-			}
-		}
-		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-			controlli[JUMP] = true;
 		}
 		
-		if (controlli[JUMP]) {
-			megaman.setPositionY(megaman.getPositionY()+speed);
+		//LEFT
+		if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
+			megaman.setPositionX(megaman.getPositionX()-speed);
+			controlli[WALK_START] = true;
+			}
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			megaman.setPositionX(megaman.getPositionX()-speed);
+					
+			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+				megaman.setPositionY(megaman.getPositionY()+speed);
+				controlli[WALK_JUMP] = true;
+				}
+			else {
+				controlli[WALK] = true;
+			}
 		}
-			
+		
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+			controlli[SHOOT] = true;
+		}
+		
+		
 		if (controlli[FALL]) {
+			
 			controlli[JUMP] = false;
+			controlli[WALK_JUMP] = false;
+			
 			megaman.setPositionY(megaman.getPositionY()-speed);
-			if (megaman.getPositionY() < 0) {
+			if (megaman.getPositionY() <= 0) {
 				controlli[FALL] = false;
 			}
+		}
+		
+		
+		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+			controlli[JUMP] = true;
+			
+		}
+		
+		if (controlli[JUMP] && !controlli[FALL]) {
+			setFalseExcept(JUMP);
+			
+			megaman.setPositionY(megaman.getPositionY()+speed);
 		}
 
 	}
@@ -86,6 +100,12 @@ public class Controller {
 	}
 	void setControlliFalse (int index) {
 		controlli[index] = false;
+	}
+	
+	void setFalseExcept (int index) {
+		for (int i = 0; i < 6; i++)
+			if (i != index)
+			controlli[i] = false;
 	}
 	
 	boolean getControlli (int index) {
