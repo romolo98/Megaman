@@ -19,6 +19,7 @@ public class GraphicLoader{
 	private Array<Texture> idleTexture;
 	private Array<Texture> jumpTexture;
 	private Array<Texture> shootingTexture;
+	private Array<Texture> hud;
 	private Animation<Texture> specialMove;
 	private Animation<Texture> fall;
 	private Animation<Texture> walk;
@@ -39,6 +40,7 @@ public class GraphicLoader{
 		shootingTexture = new Array<Texture>();
 		specialMoveTexture = new Array<Texture>();
 		shootTexture = new Array<Texture>();
+		hud = new Array<Texture>();
 	}
 	
 	public void importImage () {
@@ -71,6 +73,10 @@ public class GraphicLoader{
 			shootTexture.add(new Texture("Megaman/Shoot/"+i+".png"));
 		}
 			shoot = new Animation<Texture>(0.080f, shootTexture);
+			
+		for (int i = 0; i < 6; i++) {
+			hud.add(new Texture("HUD/"+i+".png"));
+		}
 	}
 	
 	public Animation<Texture> getIdle(){
