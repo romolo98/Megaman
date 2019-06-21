@@ -47,6 +47,9 @@ public class GraphicsManager {
 		else if (controller.getControlli(controller.SHOOT)){
 			batch.draw(graphicLoader.getShoot().getKeyFrame(elapsed,true), megaman.getPositionX(), megaman.getPositionY());
 			bulletShooting = true;
+			updateBullet = true;
+			megaman.increaseBullet();
+			System.out.println(bulletShooting);
 			controller.setControlliFalse(controller.SHOOT);
 		}
 		else if (controller.getControlli(controller.FALL)) {
@@ -101,13 +104,9 @@ public class GraphicsManager {
 	}
 	public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman) {
 		if (bulletShooting) {
-			bullet.setPositionX(megaman.getPositionX()+10);
-			bullet.setPositionY(megaman.getPositionY());
 			updateBullet = true;
 			bulletShooting = false;
 		}
-		
-		bullet.physics(updateBullet);
 		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY());
 		
 		if (bullet.getPositionX() > Gdx.graphics.getWidth()) {
