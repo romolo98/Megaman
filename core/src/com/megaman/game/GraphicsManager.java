@@ -6,6 +6,7 @@ import javax.management.monitor.Monitor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
@@ -41,20 +42,18 @@ public class GraphicsManager {
 		
 		
 		if (controller.controlli[controller.WALK_START]) {
-			batch.draw(graphicLoader.getInizioWalk(),megaman.getPositionX(),megaman.getPositionY());
+			drawImage(batch, megaman, graphicLoader.getInizioWalk(), controller.getDirection());
 			controller.setControlliFalse(controller.WALK_START);
 		}
 		else if (controller.getControlli(controller.SHOOT)){
-			batch.draw(graphicLoader.getShoot().getKeyFrame(elapsed,true), megaman.getPositionX(), megaman.getPositionY());
-			bulletShooting = true;
+			drawImage(batch, megaman, graphicLoader.getShoot().getKeyFrame(elapsed, true), controller.getDirection());bulletShooting = true;
 			updateBullet = true;
 			megaman.increaseBullet();
-			System.out.println(bulletShooting);
 			controller.setControlliFalse(controller.SHOOT);
 		}
 		else if (controller.getControlli(controller.FALL)) {
 			controller.setControlliFalse(controller.JUMP);
-			batch.draw(graphicLoader.getFall().getKeyFrame(elapsed), megaman.getPositionX(), megaman.getPositionY());
+			drawImage(batch, megaman, graphicLoader.getFall().getKeyFrame(elapsed), controller.getDirection());
 			caduta+= Gdx.graphics.getDeltaTime();
 			if (graphicLoader.getFall().isAnimationFinished(caduta)) {
 				caduta = 0;
@@ -64,7 +63,7 @@ public class GraphicsManager {
 		else if (controller.getControlli(controller.WALK_SHOOT)) {
 			controller.setControlliFalse(controller.WALK);
 			bulletShooting = true;
-			batch.draw(graphicLoader.getShooting().getKeyFrame(elapsed, true), megaman.getPositionX(), megaman.getPositionY());
+			drawImage(batch, megaman, graphicLoader.getShooting().getKeyFrame(elapsed,true), controller.getDirection());
 			controller.setControlliFalse(controller.WALK_SHOOT);
 		}
 
@@ -72,7 +71,7 @@ public class GraphicsManager {
 			if (controller.getControlli(controller.WALK_JUMP)) {
 				controller.setControlliFalse(controller.WALK);
 				saltoMoto+= Gdx.graphics.getDeltaTime();
-				batch.draw(graphicLoader.getJump().getKeyFrame(elapsed), megaman.getPositionX(), megaman.getPositionY());
+				drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
 				if (graphicLoader.getJump().isAnimationFinished(saltoMoto)) {
 					controller.setControlliFalse(controller.WALK_JUMP);
 					saltoMoto = 0;
@@ -81,13 +80,13 @@ public class GraphicsManager {
 			}
 			
 			else { 
-					batch.draw(graphicLoader.getWalk().getKeyFrame(elapsed, true), megaman.getPositionX(),megaman.getPositionY());
+					drawImage(batch, megaman, graphicLoader.getWalk().getKeyFrame(elapsed, true), controller.getDirection());
 					controller.setControlliFalse(controller.WALK_JUMP);					
 					controller.setControlliFalse(controller.WALK);
 			}
 		}
 		else if (controller.getControlli(controller.JUMP)) {
-			batch.draw(graphicLoader.getJump().getKeyFrame(elapsed), megaman.getPositionX(), megaman.getPositionY());
+			drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
 			salto+= Gdx.graphics.getDeltaTime();
 			if (graphicLoader.getJump().isAnimationFinished(salto)) {
 				controller.setControlliFalse(controller.JUMP);
@@ -97,7 +96,7 @@ public class GraphicsManager {
 		}
 		else {
 			controller.setTuttiControlliFalse();
-			batch.draw(graphicLoader.getIdle().getKeyFrame(elapsed/2,true), megaman.getPositionX(), megaman.getPositionY());
+			drawImage(batch, megaman, graphicLoader.getIdle().getKeyFrame(elapsed, true), controller.getDirection());
 		}
 	
 		
@@ -114,6 +113,10 @@ public class GraphicsManager {
 			updateBullet = false;
 		}
 		
+	}
+	
+	public void drawImage (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
+		batch.draw(texture, megaman.getPositionX(), megaman.getPositionY(), 64, 64, 0, 0, 64, 64, dir, false);
 	}
 
 }

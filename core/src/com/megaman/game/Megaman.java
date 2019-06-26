@@ -15,9 +15,7 @@ public class Megaman extends Entity {
 	}
 	
 	public void reload () {
-		for (int i=0;i<10;i++) {
-			ammo.add(new Bullet());
-		}
+		ammo.add(new Bullet());
 	}
 	
 	public void increaseBullet() {
@@ -27,11 +25,17 @@ public class Megaman extends Entity {
 		}
 	}
 	
-	public Bullet getBullet () {
-		return ammo.get(bulletCorrente);
+	public Bullet getBullet (int index) {
+		return ammo.get(index);
 	}
 	
 	public void destroyBullet (int index) {
 		ammo.removeIndex(index);
+	}
+	
+	public void bulletSpawn () {
+		for (int i = 0; i < 10; i++) {
+			ammo.get(i).setPositionX(this.getPositionX()+20);
+		}
 	}
 }

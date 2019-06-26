@@ -21,14 +21,6 @@ public class gameManager {
 		
 		
 		gm.drawMegaman(batch, controller, megaman);
-		if (gm.bulletShooting) {
-			megaman.getBullet().setPositionX(megaman.getPositionX()+10);
-			megaman.getBullet().setPositionY(megaman.getPositionY());
-		}
-		if (gm.updateBullet) {
-			megaman.getBullet().physics(true);
-		}
-		gm.drawBullet(batch, megaman.getBullet(), megaman);
 
 	
 	}
