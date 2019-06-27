@@ -1,14 +1,8 @@
 package com.megaman.game;
 
-import java.awt.DisplayMode;
-
-import javax.management.monitor.Monitor;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
 
 public class GraphicsManager {
 	
@@ -18,18 +12,18 @@ public class GraphicsManager {
 	float salto;
 	float caduta;
 	float saltoMoto;
-	boolean bulletShooting;
 	boolean destroyBullet;
-	boolean updateBullet;
+	boolean spawnBullet;
+	boolean[] shootThisBullet;
 	
 	public GraphicsManager (){
 		elapsed = 0;
 		salto = 0;
 		saltoMoto = 0;
 		caduta = 0;
-		bulletShooting = false;
 		destroyBullet = false;
-		updateBullet = false;
+		spawnBullet = false;
+		shootThisBullet = new boolean[50];
 		graphicLoader = new GraphicLoader();
 		graphicLoader.importImage();
 	}
@@ -37,7 +31,6 @@ public class GraphicsManager {
 	public void drawMegaman(SpriteBatch batch, Controller controller, Megaman megaman) {
 		elapsed += Gdx.graphics.getDeltaTime();
 		controller.muoviMegaman(megaman);
-		
 		batch.draw(graphicLoader.getBackground(), 0, -200);
 		
 		
@@ -46,8 +39,8 @@ public class GraphicsManager {
 			controller.setControlliFalse(controller.WALK_START);
 		}
 		else if (controller.getControlli(controller.SHOOT)){
-			drawImage(batch, megaman, graphicLoader.getShoot().getKeyFrame(elapsed, true), controller.getDirection());bulletShooting = true;
-			updateBullet = true;
+			drawImage(batch, megaman, graphicLoader.getShoot().getKeyFrame(elapsed, true), controller.getDirection());
+			spawnBullet = true;
 			megaman.increaseBullet();
 			controller.setControlliFalse(controller.SHOOT);
 		}
@@ -62,7 +55,7 @@ public class GraphicsManager {
 		
 		else if (controller.getControlli(controller.WALK_SHOOT)) {
 			controller.setControlliFalse(controller.WALK);
-			bulletShooting = true;
+			spawnBullet = true;
 			drawImage(batch, megaman, graphicLoader.getShooting().getKeyFrame(elapsed,true), controller.getDirection());
 			controller.setControlliFalse(controller.WALK_SHOOT);
 		}
@@ -101,18 +94,28 @@ public class GraphicsManager {
 	
 		
 	}
-	public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman) {
-		if (bulletShooting) {
-			updateBullet = true;
-			bulletShooting = false;
+	public void drawBullet (SpriteBatch batch, Megaman megaman) {
+		if (spawnBullet) {
+			megaman.getBullet(megaman.getBulletCorrente()).setPositionX(megaman.getPositionX());
+			megaman.getBullet(megaman.getBulletCorrente()).setPositionY(megaman.getPositionY()+10);
+			spawnBullet = false;
+			shootThisBullet[megaman.getBulletCorrente()] = true;
 		}
-		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY());
-		
-		if (bullet.getPositionX() > Gdx.graphics.getWidth()) {
-			destroyBullet = true;
-			updateBullet = false;
+		for (int i=0;i<megaman.getAmmo().size;i++) {
+			if (shootThisBullet[i]) {
+				batch.draw(graphicLoader.getBullet(), megaman.getBullet(i).getPositionX(), megaman.getBullet(i).getPositionY());
+				megaman.getBullet(i).physics(true);
+				//System.out.println("Position x " + megaman.getBullet(i).getPositionX() + " di bullet " + i );
+				
+			}
+			if (megaman.getBullet(i).getPositionX() >= Gdx.graphics.getWidth()) {
+				//System.out.println("mi distruggo " + i);
+				shootThisBullet[i] = false;
+				megaman.destroyBullet(i);
+				megaman.reload(i);
+			}
 		}
-		
+	
 	}
 	
 	public void drawImage (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {

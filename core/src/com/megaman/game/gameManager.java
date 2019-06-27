@@ -14,15 +14,10 @@ public class gameManager {
 		controller = new Controller();
 		megaman = new Megaman();
 		gm = new GraphicsManager();
-		
-		megaman.reload();
 	}
 	public void run(SpriteBatch batch) {
-		
-		
 		gm.drawMegaman(batch, controller, megaman);
-
-	
+		gm.drawBullet(batch, megaman);
 	}
 }
 

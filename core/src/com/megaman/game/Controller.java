@@ -50,7 +50,7 @@ public class Controller {
 				megaman.setPositionY(megaman.getPositionY()+megaman.getSpeed());
 				controlli[WALK_JUMP] = true;
 			}
-			else if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+			else if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
 				controlli[WALK_SHOOT] = true;
 			}
 			else {
@@ -77,7 +77,7 @@ public class Controller {
 			}
 		}
 		
-		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+		if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
 			controlli[SHOOT] = true;
 		}
 		

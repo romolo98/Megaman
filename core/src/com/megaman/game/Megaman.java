@@ -10,19 +10,31 @@ public class Megaman extends Entity {
 	public Megaman (){
 		super();
 		setSpeed(3);
-		ammo = new Array<Bullet>(10);
+		ammo = new Array<Bullet>(50);
 		bulletCorrente = 0;
+		
+		for (int i=0;i<50;i++) {
+			ammo.add(new Bullet());
+		}
 	}
 	
-	public void reload () {
-		ammo.add(new Bullet());
+	public void reload (int index) {
+		ammo.insert(index, new Bullet());
 	}
 	
 	public void increaseBullet() {
 		bulletCorrente++;
-		if (bulletCorrente == 10) {
+		if (bulletCorrente == 50) {
 			bulletCorrente = 0;
+			
 		}
+	}
+	public int getBulletCorrente() {
+		return bulletCorrente;
+	}
+	
+	public Array<Bullet> getAmmo (){
+		return ammo;
 	}
 	
 	public Bullet getBullet (int index) {
@@ -31,11 +43,5 @@ public class Megaman extends Entity {
 	
 	public void destroyBullet (int index) {
 		ammo.removeIndex(index);
-	}
-	
-	public void bulletSpawn () {
-		for (int i = 0; i < 10; i++) {
-			ammo.get(i).setPositionX(this.getPositionX()+20);
-		}
 	}
 }
