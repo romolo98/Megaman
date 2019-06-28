@@ -16,13 +16,14 @@ public class Game extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		graphicsManager = new GraphicsManager();
-		gameManager = new gameManager();
+		gameManager = new gameManager(graphicsManager);
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
 		batch.begin();
 		gameManager.run(batch);
 		batch.end();

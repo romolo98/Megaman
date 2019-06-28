@@ -3,6 +3,7 @@ package com.megaman.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 
 public class GraphicsManager {
 	
@@ -40,9 +41,6 @@ public class GraphicsManager {
 		}
 		else if (controller.getControlli(controller.SHOOT)){
 			drawImage(batch, megaman, graphicLoader.getShoot().getKeyFrame(elapsed, true), controller.getDirection());
-			spawnBullet = true;
-			megaman.increaseBullet();
-			controller.setControlliFalse(controller.SHOOT);
 		}
 		else if (controller.getControlli(controller.FALL)) {
 			controller.setControlliFalse(controller.JUMP);
@@ -55,7 +53,6 @@ public class GraphicsManager {
 		
 		else if (controller.getControlli(controller.WALK_SHOOT)) {
 			controller.setControlliFalse(controller.WALK);
-			spawnBullet = true;
 			drawImage(batch, megaman, graphicLoader.getShooting().getKeyFrame(elapsed,true), controller.getDirection());
 			controller.setControlliFalse(controller.WALK_SHOOT);
 		}
@@ -94,30 +91,10 @@ public class GraphicsManager {
 	
 		
 	}
-	public void drawBullet (SpriteBatch batch, Megaman megaman) {
-		if (spawnBullet) {
-			megaman.getBullet(megaman.getBulletCorrente()).setPositionX(megaman.getPositionX());
-			megaman.getBullet(megaman.getBulletCorrente()).setPositionY(megaman.getPositionY()+10);
-			spawnBullet = false;
-			shootThisBullet[megaman.getBulletCorrente()] = true;
-		}
-		for (int i=0;i<megaman.getAmmo().size;i++) {
-			if (shootThisBullet[i]) {
-				batch.draw(graphicLoader.getBullet(), megaman.getBullet(i).getPositionX(), megaman.getBullet(i).getPositionY());
-				megaman.getBullet(i).physics(true);
-				//System.out.println("Position x " + megaman.getBullet(i).getPositionX() + " di bullet " + i );
-				
-			}
-			if (megaman.getBullet(i).getPositionX() >= Gdx.graphics.getWidth()) {
-				//System.out.println("mi distruggo " + i);
-				shootThisBullet[i] = false;
-				megaman.destroyBullet(i);
-				megaman.reload(i);
-			}
-		}
-	
-	}
-	
+	public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman) {
+		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY());				
+
+}
 	public void drawImage (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
 		batch.draw(texture, megaman.getPositionX(), megaman.getPositionY(), 64, 64, 0, 0, 64, 64, dir, false);
 	}
