@@ -91,12 +91,16 @@ public class GraphicsManager {
 	
 		
 	}
-	public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman) {
-		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY());				
+	public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman, boolean dir) {
+		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY(), 64, 64, 0, 0, 64, 64, dir, false);				
 
 }
 	public void drawImage (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
 		batch.draw(texture, megaman.getPositionX(), megaman.getPositionY(), 64, 64, 0, 0, 64, 64, dir, false);
+	}
+	
+	public void drawHud (SpriteBatch batch, Megaman megaman, HUD hud) {
+			batch.draw(graphicLoader.getHud(hud.getLife()), 0, 280);
 	}
 
 }

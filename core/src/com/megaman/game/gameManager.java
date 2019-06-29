@@ -9,6 +9,7 @@ public class gameManager {
 	Controller controller;
 	Megaman megaman;
 	GraphicsManager gm;
+	HUD hud;
 	Array<Bullet> ammunition;
 	int bulletCorrente;
 	boolean[] shootThisBullet;
@@ -19,6 +20,7 @@ public class gameManager {
 		controller = new Controller();
 		megaman = new Megaman();
 		gm = graphicManager;
+		hud = new HUD();
 		bulletCorrente = 0;
 		for (int i=0;i<50;i++) {
 			ammunition.add(new Bullet());
@@ -26,7 +28,7 @@ public class gameManager {
 	}
 	public void run(SpriteBatch batch) {
 		gm.drawMegaman(batch, controller, megaman);
-		
+		gm.drawHud(batch, megaman, hud);
 		if (controller.getControlli(controller.SHOOT)) {
 			ammunition.get(bulletCorrente).setDirection(controller.getDirection());
 			if (ammunition.get(bulletCorrente).getDirection())
@@ -40,10 +42,11 @@ public class gameManager {
 		}
 		for (int i=0;i<ammunition.size;i++) {
 			if (shootThisBullet[i]) {
-				gm.drawBullet(batch, ammunition.get(i),megaman);
+				gm.drawBullet(batch, ammunition.get(i),megaman, ammunition.get(i).getDirection());
 				ammunition.get(i).physics();
 			}
-			if (ammunition.get(i).getPositionX()-ammunition.get(i).getSpeed() < 0 || ammunition.get(i).getPositionX()+ammunition.get(i).getSpeed() > Gdx.graphics.getWidth()) {
+			if (ammunition.get(i).getPositionX()-ammunition.get(i).getSpeed() < -64 || ammunition.get(i).getPositionX()+ammunition.get(i).getSpeed() > 630) {
+				System.out.println(ammunition.get(i).getPositionX());
 				ammunition.removeIndex(i);
 				addBullet(i);
 				shootThisBullet[i] = false;

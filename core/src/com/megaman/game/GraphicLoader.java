@@ -118,6 +118,10 @@ public class GraphicLoader{
 	public Animation<Texture> getShoot (){
 		return shoot;
 	}
+	
+	public Texture getHud(int HP) {
+		return hud.get(HP);
+	}
 }
 
 
