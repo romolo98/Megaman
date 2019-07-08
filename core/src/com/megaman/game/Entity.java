@@ -35,11 +35,11 @@ public abstract class Entity {
 		speed = x;
 	}
 	
-	void setPositionX (int x) {
+	void setPositionX (float x) {
 		boundingBox.setX(x);
 	}
 	
-	void setPositionY (int y) {
+	void setPositionY (float y) {
 		boundingBox.setY(y);
 	}
 	

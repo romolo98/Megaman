@@ -3,6 +3,9 @@ package com.megaman.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
 
 public class GraphicLoader{
@@ -12,6 +15,7 @@ public class GraphicLoader{
 	private Texture inizioWalk;
 	private Texture background;
 	private Texture bullet;
+	private Array<Texture> spawnTexture;
 	private Array<Texture> shootTexture;
 	private Array<Texture> specialMoveTexture;
 	private Array<Texture> fallTexture;
@@ -20,6 +24,7 @@ public class GraphicLoader{
 	private Array<Texture> jumpTexture;
 	private Array<Texture> shootingTexture;
 	private Array<Texture> hud;
+	private Animation<Texture> spawnAnimation;
 	private Animation<Texture> specialMove;
 	private Animation<Texture> fall;
 	private Animation<Texture> walk;
@@ -28,11 +33,13 @@ public class GraphicLoader{
 	private Animation<Texture> shooting;
 	private Animation<Texture> shoot;
 	
+	
 	public GraphicLoader() {
 		frameRates = 0.060f;
 		inizioWalk = new Texture("Megaman/Walk/inizio.png");
 		bullet = new Texture("Bullets/ChargeShot/1.png");
 		background = new Texture("Background.jpg");
+		spawnTexture = new Array<Texture>();
 		walkTexture = new Array<Texture>();
 		idleTexture = new Array<Texture>();
 		jumpTexture = new Array<Texture>();
@@ -44,6 +51,12 @@ public class GraphicLoader{
 	}
 	
 	public void importImage () {
+		
+		for (int i = 0; i < 6; i++) {
+			spawnTexture.add(new Texture("Megaman/Spawn/"+i+".png"));
+		}
+			spawnAnimation = new Animation<Texture>(0.080f, spawnTexture);
+		
 		for (int i = 0; i < 3; i++) {
 			jumpTexture.add(new Texture("Megaman/Jump/"+i+".png"));
 		}
@@ -54,7 +67,7 @@ public class GraphicLoader{
 		} 
 			walk = new Animation<Texture>(0.080f,walkTexture);
 			
-		for (int i = 0; i < 27; i++) {
+		for (int i = 0; i < 24; i++) {
 			idleTexture.add(new Texture("Megaman/Idle/"+i+".png"));
 		}
 			idle = new Animation<Texture>(frameRates,idleTexture);
@@ -77,6 +90,10 @@ public class GraphicLoader{
 		for (int i = 0; i < 6; i++) {
 			hud.add(new Texture("HUD/"+i+".png"));
 		}
+	}
+	
+	public Animation<Texture> getSpawn(){
+		return spawnAnimation;
 	}
 	
 	public Animation<Texture> getIdle(){
@@ -122,6 +139,7 @@ public class GraphicLoader{
 	public Texture getHud(int HP) {
 		return hud.get(HP);
 	}
+
 }
 
 

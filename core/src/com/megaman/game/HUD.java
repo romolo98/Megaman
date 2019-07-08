@@ -5,7 +5,7 @@ public class HUD {
 	private int HP; 
 	
 	public HUD () {
-		HP = 5;
+		HP = 0;
 	}
 
 	

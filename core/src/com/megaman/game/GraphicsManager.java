@@ -3,8 +3,7 @@ package com.megaman.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
-
+import static com.megaman.game.Utils.Constants.PPM;
 public class GraphicsManager {
 	
 	
@@ -14,26 +13,29 @@ public class GraphicsManager {
 	float caduta;
 	float saltoMoto;
 	boolean destroyBullet;
+	boolean firstspawn;
 	boolean spawnBullet;
 	boolean[] shootThisBullet;
 	
 	public GraphicsManager (){
+		
 		elapsed = 0;
 		salto = 0;
 		saltoMoto = 0;
 		caduta = 0;
+		firstspawn = true;
 		destroyBullet = false;
 		spawnBullet = false;
 		shootThisBullet = new boolean[50];
 		graphicLoader = new GraphicLoader();
 		graphicLoader.importImage();
+		
 	}
 
 	public void drawMegaman(SpriteBatch batch, Controller controller, Megaman megaman) {
-		elapsed += Gdx.graphics.getDeltaTime();
-		controller.muoviMegaman(megaman);
-		batch.draw(graphicLoader.getBackground(), 0, -200);
 		
+		elapsed += Gdx.graphics.getDeltaTime();
+		controller.muoviMegaman(megaman);	
 		
 		if (controller.controlli[controller.WALK_START]) {
 			drawImage(batch, megaman, graphicLoader.getInizioWalk(), controller.getDirection());
@@ -92,17 +94,20 @@ public class GraphicsManager {
 		
 	}
 	public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman, boolean dir) {
-		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY(), 64, 64, 0, 0, 64, 64, dir, false);				
+		batch.draw(graphicLoader.getBullet(), bullet.getPositionX(), bullet.getPositionY(), 64, 64, 0, 0, 64, 64, dir, false);	
 
 }
 	public void drawImage (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
-		batch.draw(texture, megaman.getPositionX(), megaman.getPositionY(), 64, 64, 0, 0, 64, 64, dir, false);
+			batch.draw(texture, megaman.getMegamanBody().getPosition().x * PPM - texture.getWidth()/2, megaman.getMegamanBody().getPosition().y * PPM - texture.getHeight()/2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
 	
 	public void drawHud (SpriteBatch batch, Megaman megaman, HUD hud) {
-			batch.draw(graphicLoader.getHud(hud.getLife()), 0, 280);
+			batch.draw(graphicLoader.getHud(hud.getLife()), 0,5);
 	}
-
+	
+	public GraphicLoader getGL() {
+		return graphicLoader;
+	}
 }
 
 
