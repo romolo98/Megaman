@@ -45,9 +45,8 @@ public class gameManager {
 		world = new World(new Vector2(0,-9.8f), false);
 		map = new TmxMapLoader().load("Levels/Level1.tmx");
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
-		MapParser.parseObjectLayer(world, map.getLayers().get("Collisions").getObjects());
-		MapParser.parseObjectLayer(world, map.getLayers().get("Collisions2").getObjects());
-		MapParser.parseObjectLayer(world, map.getLayers().get("Collisions3").getObjects());
+		MapParser.parseObjectLayer(world, map.getLayers().get("Collision").getObjects());
+
 		
 		
 		megaman = new Megaman();
@@ -130,8 +129,8 @@ public class gameManager {
 	
 	public void cameraUpdate (float delta) {
 		Vector3 position = camera.position;
-		position.x = megaman.getMegamanBody().getPosition().x*PPM;
-		position.y = megaman.getMegamanBody().getPosition().y*PPM;
+		position.x = camera.position.x + (megaman.getMegamanBody().getPosition().x*PPM - camera.position.x) * .1f;
+		position.y = camera.position.y + (megaman.getMegamanBody().getPosition().y*PPM - camera.position.y) * .1f;
 		camera.position.set(position);
 		
 		camera.update();

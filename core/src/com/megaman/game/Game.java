@@ -36,7 +36,7 @@ public class Game extends ApplicationAdapter {
 	
 	@Override
 	public void resize (int width, int height) {
-		com.megaman.game.gameManager.getCamera().setToOrtho(false, width/com.megaman.game.gameManager.getScale()*1.5f, height/com.megaman.game.gameManager.getScale()*1.5f); // MODIFICANDO QUESTO VALORE, SI ALLONTANA LA CAMERA O LA SI AVVICINA
+		com.megaman.game.gameManager.getCamera().setToOrtho(false, width/com.megaman.game.gameManager.getScale()*1f, height/com.megaman.game.gameManager.getScale()*1f); // MODIFICANDO QUESTO VALORE, SI ALLONTANA LA CAMERA O LA SI AVVICINA
 	}
 	
 	@Override
@@ -55,6 +55,7 @@ public class Game extends ApplicationAdapter {
 	
 	public void inputUpdate (float delta) {
 		int force = 0;
+		
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			force-=1;
 		}
@@ -69,9 +70,7 @@ public class Game extends ApplicationAdapter {
 			gameManager.getMegaman().getMegamanBody().setLinearVelocity(gameManager.getMegaman().getMegamanBody().getLinearVelocity().x, (gameManager.getMegaman().getMegamanBody().getLinearVelocity().y)-1);
 
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
-			Gdx.app.exit();
-			
-		
+			Gdx.app.exit();	
 	}
 
 }
