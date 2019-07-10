@@ -1,5 +1,6 @@
 package com.megaman.game;
 
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -14,7 +15,7 @@ public class Megaman extends Entity {
 		setSpeed(3);
 		megamanBodyDef = new BodyDef(); // CREA IL NUOVO BODY PER MEGAMAN
 		megamanBodyDef.type = BodyDef.BodyType.DynamicBody; // SETTA IL BODY COME DINAMICO
-		megamanBodyDef.position.set(5, 10); // IMPOSTA LA POSIZIONE ALLE COORDINATE X,Y;
+		megamanBodyDef.position.set(gameManager.getSpawn().x/PPM, gameManager.getSpawn().y/PPM); // IMPOSTA LA POSIZIONE ALLE COORDINATE X,Y;
 		megamanBodyDef.fixedRotation = true; // FISSA L'IMMAGINE IN MODO DA NON PERMETTERE LA ROTAZIONE
 		megamanBody = gameManager.getWorld().createBody(megamanBodyDef); //CREA IL CORPO NEL MONDO
 		PolygonShape shape = new PolygonShape(); //CREA UNA FORMA PER IL CORPO DI MEGAMAN
@@ -26,4 +27,32 @@ public class Megaman extends Entity {
 	public Body getMegamanBody () {
 		return megamanBody;
 	}
+	
+	public float getSpeed() {
+		return super.getSpeed()/PPM;
+	}
+	
+	public float getPositionX () {
+		return this.megamanBody.getLinearVelocity().x;
+	}
+	
+	public float getPositionY () {
+		return this.megamanBody.getLinearVelocity().y;
+	}
+	
+	public void setPositionX (float x) {
+		this.megamanBody.setLinearVelocity(x, getPositionY());
+	}
+	
+	public void setPositionY (float y) {
+		this.megamanBody.setLinearVelocity(getPositionX(), y);
+	}
+	
 }
+
+
+
+
+
+
+

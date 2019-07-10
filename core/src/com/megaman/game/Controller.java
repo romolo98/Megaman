@@ -4,23 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 
-public class Controller {
+import static com.megaman.game.Utils.Constants.*;
+
+public class Controller{
 	
-	public static final int WALK = 0;
-	public static final int JUMP = 1;
-	public static final int FALL = 2;
-	public static final int SHOOT = 3;
-	public static final int WALK_SHOOT = 4;
-	public static final int WALK_JUMP = 5;
-	public static final int WALK_START = 6;
-	public static final int QUIT = 7;
-	
-	boolean[] controlli;
+	static boolean[] controlli;
+	static boolean shotted;
 	boolean direction;
 	int contJump;
+	double lastTime = 0;
+	double actualTime = 0;
+	double delay = 1200;
+	
 	
 	public Controller () {
-		controlli = new boolean[7];
+		controlli = new boolean[9];
 		contJump = 0;
 		direction = false; //FALSE = DESTRA
 	}
@@ -33,24 +31,28 @@ public class Controller {
 		direction = dir;
 	}
 	
+	public double getLastTime () {
+		return lastTime;
+	}
+	
 	public void muoviMegaman (Megaman megaman) {
+		
+		actualTime = System.currentTimeMillis();
 		
 		//RIGHT
 		if (Gdx.input.isKeyJustPressed(Keys.RIGHT) && !controlli[JUMP]) {
 			direction = false;
-			megaman.setPositionX(megaman.getPositionX()+megaman.getSpeed());
 			controlli[WALK_START] = true;
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			direction = false;
-			megaman.setPositionX(megaman.getPositionX()+megaman.getSpeed());
-
 			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-				megaman.setPositionY(megaman.getPositionY()+megaman.getSpeed());
 				controlli[WALK_JUMP] = true;
 			}
 			else if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
+				lastTime = System.currentTimeMillis();
+				shotted = true;
 				controlli[WALK_SHOOT] = true;
 			}
 			else {
@@ -59,26 +61,35 @@ public class Controller {
 		}
 		
 		//LEFT
-		if (Gdx.input.isKeyJustPressed(Keys.LEFT) && megaman.getPositionX() >-17) {
+		if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
 			direction = true;
-			megaman.setPositionX(megaman.getPositionX()-megaman.getSpeed());
 			controlli[WALK_START] = true;
 			}
-		if (Gdx.input.isKeyPressed(Keys.LEFT) && megaman.getPositionX() >-17) {
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			direction = true;
-			megaman.setPositionX(megaman.getPositionX()-megaman.getSpeed());
 					
 			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-				megaman.setPositionY(megaman.getPositionY()+megaman.getSpeed());
 				controlli[WALK_JUMP] = true;
 				}
+			else if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
+				lastTime = System.currentTimeMillis();
+				shotted = true;
+				controlli[WALK_SHOOT] = true;
+			}
 			else {
 				controlli[WALK] = true;
 			}
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
+		/*if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
 			controlli[SHOOT] = true;
+		}*/
+		
+		if (isAllFalseExeptIdle()) {
+			controlli[IDLE] = true;
+		}
+		else {
+			controlli[IDLE] = false;
 		}
 		
 		
@@ -95,12 +106,10 @@ public class Controller {
 		
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			controlli[JUMP] = true;
-			
 		}
 		
 		if (controlli[JUMP] && !controlli[FALL]) {
 			setFalseExcept(JUMP);
-			
 			megaman.setPositionY(megaman.getPositionY()+megaman.getSpeed());
 		}
 		
@@ -110,25 +119,30 @@ public class Controller {
 
 	}
 	
-	void setTuttiControlliFalse () {
-		for (int i=0;i<6;i++)
-		controlli[i] = false;
+	public boolean isAllFalseExeptIdle() {
+		for (int i=0;i<controlli.length-1;i++) {
+			if (controlli[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
-	void setControlliFalse (int index) {
+	
+	public void setControlliFalse (int index) {
 		controlli[index] = false;
 	}
 	
-	void setFalseExcept (int index) {
+	public void setFalseExcept (int index) {
 		for (int i = 0; i < 6; i++)
 			if (i != index)
 			controlli[i] = false;
 	}
 	
-	boolean getControlli (int index) {
+	public boolean getControlli (int index) {
 		return controlli[index];
 	}
 	
-	void setFallTrue () {
+	public void setFallTrue () {
 		controlli[FALL] = true;
 	}
 	

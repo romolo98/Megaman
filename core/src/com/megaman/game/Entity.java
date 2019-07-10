@@ -5,22 +5,22 @@ import com.badlogic.gdx.math.Rectangle;
 public abstract class Entity {
 	
 	private Rectangle boundingBox;
-	private int speed;
+	private float speed;
 	
 	public Entity () {
 		boundingBox = new Rectangle();
 	}
 	
-	int getSpeed() {
+	float getSpeed() {
 		return speed; 
 	}
 	
-	int getPositionX () {
-		return (int)boundingBox.getX();
+	float getPositionX () {
+		return boundingBox.getX();
 	}
 	
-	int getPositionY () {
-		return (int)boundingBox.getY();
+	float getPositionY () {
+		return boundingBox.getY();
 	}
 	
 	int getWidth () {
