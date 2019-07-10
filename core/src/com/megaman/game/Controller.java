@@ -39,27 +39,6 @@ public class Controller{
 		
 		actualTime = System.currentTimeMillis();
 		
-		//RIGHT
-		if (Gdx.input.isKeyJustPressed(Keys.RIGHT) && !controlli[JUMP]) {
-			direction = false;
-			controlli[WALK_START] = true;
-		}
-		
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			direction = false;
-			if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[WALK_JUMP]) {
-				controlli[WALK_JUMP] = true;
-			}
-			else if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
-				lastTime = System.currentTimeMillis();
-				shot = true;
-				controlli[WALK_SHOOT] = true;
-			}
-			else {
-				controlli[WALK] = true;
-			}
-		}
-		
 		//LEFT
 		if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
 			direction = true;
@@ -81,14 +60,30 @@ public class Controller{
 			}
 		}
 		
-		if (Gdx.input.isKeyPressed(Keys.LEFT) && Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			controlli[WALK] = false;
-			controlli[IDLE] = true;
+		//RIGHT
+		if (Gdx.input.isKeyJustPressed(Keys.RIGHT) && !controlli[JUMP]) {
 			direction = false;
+			controlli[WALK_START] = true;
 		}
 		
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			direction = false;
+			if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[WALK_JUMP]) {
+				controlli[WALK_JUMP] = true;
+			}
+			else if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
+				lastTime = System.currentTimeMillis();
+				shot = true;
+				controlli[WALK_SHOOT] = true;
+			}
+			else {
+				controlli[WALK] = true;
+			}
+		}
+
 		if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT) && !controlli[WALK_SHOOT]) {
 			controlli[SHOOT] = true;
+			shot = true;
 		}
 		
 		
@@ -99,19 +94,17 @@ public class Controller{
 			controlli[IDLE] = false;
 		}
 		
-		
-		if (controlli[FALL]) {
-			controlli[JUMP] = false;
-			controlli[WALK_JUMP] = false;
-		}
-		
-		
-		if (Gdx.input.isKeyJustPressed(Keys.SPACE)  && !controlli[WALK_JUMP] && !controlli[FALL]) {
+		if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[WALK_JUMP] && !controlli[FALL]) {
 			controlli[JUMP] = true;
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			Gdx.app.exit();
+		}
+		
+		if (controlli[FALL]) {
+			controlli[JUMP] = false;
+			controlli[WALK_JUMP] = false;
 		}
 
 	}

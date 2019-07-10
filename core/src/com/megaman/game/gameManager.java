@@ -181,17 +181,22 @@ public class gameManager {
 		actualTime = System.currentTimeMillis();
 		lastTime = controller.getLastTime();
 		
+		
+		//SETTIAMO A FALSE LO SHOOT
+		if (gm.getShootDone()) {
+			controller.setControlliFalse(SHOOT);
+		}
+		
+		//SET FALL TRUE AND FALSE
 		if (isMegamanFalling()) {
 			controller.setFallTrue();
 			numSalto = 0;
 		}
-		
-		if (controller.getControlli(FALL)) {
-			if (!isMegamanFalling()) {
-				controller.setControlliFalse(FALL);
-			}
+		else {
+			controller.setControlliFalse(FALL);
 		}
 		
+		// SET DI WALK_START
 		if (controller.getControlli(WALK_START)){
 			if (!controller.getDirection())
 				forceX = 5;
@@ -199,10 +204,13 @@ public class gameManager {
 				forceX = -5;
 			controller.setControlliFalse(WALK_START);
 		}
+		
+		//SET DI JUMP
 		if (controller.getControlli(JUMP) && !controller.getControlli(FALL) && numSalto < 2) {
-			forceY+=2;
+			forceY+=3;
 			numSalto++;
 		}
+		// SET DI WALK, WALK_SHOOT, WALK_JUMP
 		if (controller.getControlli(WALK)) {
 			if (!controller.getDirection()) 
 				forceX = 5;
@@ -214,17 +222,15 @@ public class gameManager {
 			if (controller.getControlli(WALK_JUMP) && !isMegamanFalling() && numSalto < 1) {
 				forceY += 4;
 				numSalto++;
-				controller.setControlliFalse(WALK_JUMP);
 			}
 			controller.setControlliFalse(WALK);
 		}
-	
-		//System.out.println(megaman.getMegamanBody().getLinearVelocity().y);
+		//SPOSTAMENTO FISICO DI MEGAMAN
 		megaman.getMegamanBody().setLinearVelocity(forceX,forceY);
 	}
 	
 	public void updateBullet(SpriteBatch batch) {
-		if (controller.getControlli(SHOOT) || controller.shot) {
+		if (controller.shot) {
 			ammunition.get(bulletCorrente).setDirection(controller.getDirection());
 			if (ammunition.get(bulletCorrente).getDirection())
 				ammunition.get(bulletCorrente).setPositionX(megaman.getMegamanBody().getPosition().x*PPM-PPM);
@@ -233,7 +239,6 @@ public class gameManager {
 			ammunition.get(bulletCorrente).setPositionY(megaman.getMegamanBody().getPosition().y*PPM-PPM/2);
 			shootThisBullet[bulletCorrente] = true;
 			increaseBullet();
-
 			controller.shot = false;
 		}
 		for (int i=0;i<ammunition.size;i++) {

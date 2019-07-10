@@ -14,10 +14,11 @@ public class GraphicsManager {
 	float caduta;
 	float saltoMoto;
 	float shoot;
+	int cont;
 	boolean destroyBullet;
 	boolean firstspawn;
 	boolean spawnBullet;
-	boolean animationDone;
+	boolean shootDone;
 	boolean[] shootThisBullet;
 	
 	public GraphicsManager (){
@@ -27,10 +28,11 @@ public class GraphicsManager {
 		saltoMoto = 0;
 		caduta = 0;
 		shoot = 0;
+		cont = 0;
 		firstspawn = true;
 		destroyBullet = false;
 		spawnBullet = false;
-		animationDone = false;
+		shootDone = false;
 		shootThisBullet = new boolean[50];
 		graphicLoader = new GraphicLoader();
 		graphicLoader.importImage();
@@ -40,51 +42,39 @@ public class GraphicsManager {
 	public void drawMegaman(SpriteBatch batch, Controller controller, Megaman megaman) {
 		
 		elapsed += Gdx.graphics.getDeltaTime();
-		animationDone = false;
+		shootDone = false;
 		
 		if (controller.controlli[WALK_START]) {
 			drawImage(batch, megaman, graphicLoader.getInizioWalk(), controller.getDirection());
 		}
-		/*else if (controller.getControlli(SHOOT)){
+		if (controller.getControlli(SHOOT)){
 			drawImage(batch, megaman, graphicLoader.getShoot().getKeyFrame(elapsed), controller.getDirection());
 			shoot += Gdx.graphics.getDeltaTime();
 			if (graphicLoader.getShoot().isAnimationFinished(shoot)) {
 				shoot = 0;
-			}
-		}*/
-		else if (controller.getControlli(FALL)) {
-			controller.setControlliFalse(JUMP);
-			drawImage(batch, megaman, graphicLoader.getFall().getKeyFrame(elapsed), controller.getDirection());
-			caduta+= Gdx.graphics.getDeltaTime();
-			if (graphicLoader.getFall().isAnimationFinished(caduta)) {
-				caduta = 0;
+				shootDone = true;
 			}
 		}
-		else if (controller.getControlli(WALK) && !controller.getControlli(FALL)) {
+		if (controller.getControlli(FALL)) {
+			drawImage(batch, megaman, graphicLoader.getFall().getKeyFrame(elapsed), controller.getDirection());
+		}
+		
+		if (controller.getControlli(WALK) && !controller.getControlli(FALL) && !controller.getControlli(JUMP)) {
 			if (controller.getControlli(WALK_SHOOT)) {
 				drawImage(batch, megaman, graphicLoader.getShooting().getKeyFrame(elapsed,true), controller.getDirection());
 			}
 			else if (controller.getControlli(WALK_JUMP)) {
-				saltoMoto+= Gdx.graphics.getDeltaTime();
 				drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
-				if (graphicLoader.getJump().isAnimationFinished(saltoMoto)) {
-					saltoMoto = 0;
-				}
 			}
 			
 			else { 
 				drawImage(batch, megaman, graphicLoader.getWalk().getKeyFrame(elapsed, true), controller.getDirection());
 			}
 		}
-		else if (controller.getControlli(JUMP)) {
+		if (controller.getControlli(JUMP)) {
 			drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
-			salto+= Gdx.graphics.getDeltaTime();
-			if (graphicLoader.getJump().isAnimationFinished(salto)) {
-				salto = 0;
-				animationDone = true;
-			}
 		}
-		else if (controller.getControlli(IDLE)){
+		if (controller.getControlli(IDLE)){
 			drawImage(batch, megaman, graphicLoader.getIdle().getKeyFrame(elapsed, true), controller.getDirection());
 		}
 	
@@ -104,8 +94,8 @@ public class GraphicsManager {
 		return graphicLoader;
 	}
 	
-	public boolean getAnimationDone () {
-		return animationDone;
+	public boolean getShootDone () {
+		return shootDone;
 	}
 }
 
