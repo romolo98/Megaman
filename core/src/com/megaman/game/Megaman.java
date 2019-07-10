@@ -1,5 +1,6 @@
 package com.megaman.game;
 
+import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -46,6 +47,10 @@ public class Megaman extends Entity {
 	
 	public void setPositionY (float y) {
 		this.megamanBody.setLinearVelocity(getPositionX(), y);
+	}
+	
+	public void respawn () {
+		megamanBody.setTransform(gameManager.getSpawn().x/PPM, gameManager.getSpawn().y/PPM, 0);
 	}
 	
 }

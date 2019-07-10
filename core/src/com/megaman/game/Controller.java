@@ -39,6 +39,23 @@ public class Controller{
 		
 		actualTime = System.currentTimeMillis();
 		
+		if (Gdx.input.isKeyJustPressed(Keys.L))
+		{
+			HUD.removeLife();
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.R)) {
+			HUD.resetLife();
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.A)) {
+			HUD.addLife();
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.T))
+		{
+			megaman.respawn();
+		}
+		
 		//LEFT
 		if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
 			direction = true;
@@ -123,7 +140,7 @@ public class Controller{
 	}
 	
 	public void setFalseExcept (int index) {
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 9; i++)
 			if (i != index)
 			controlli[i] = false;
 	}
@@ -135,5 +152,4 @@ public class Controller{
 	public void setFallTrue () {
 		controlli[FALL] = true;
 	}
-	
 }

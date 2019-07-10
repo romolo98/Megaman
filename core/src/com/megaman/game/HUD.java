@@ -2,26 +2,27 @@ package com.megaman.game;
 
 public class HUD {
 
-	private int HP; 
+	private static int HP; 
 	
 	public HUD () {
 		HP = 0;
 	}
-
 	
 	public int getLife () {
 		return HP;
 	}
 	
-	public void setLife (boolean damage, boolean healing) {
-		
-		if (damage)
-			HP--;
-		if (healing)
+	public static void addLife () {
+		if (HP < 5)
 			HP++;
 	}
 	
-	public void resetLife () {
-		HP = 5;
+	public static void removeLife () {
+		if (HP > 0)
+			HP--;
+	}
+	
+	public static void resetLife () {
+		HP = 0;
 	}
 }

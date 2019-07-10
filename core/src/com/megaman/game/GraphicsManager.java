@@ -16,7 +16,7 @@ public class GraphicsManager {
 	float shoot;
 	int cont;
 	boolean destroyBullet;
-	boolean firstspawn;
+	static boolean firstSpawn;
 	boolean spawnBullet;
 	boolean shootDone;
 	boolean[] shootThisBullet;
@@ -29,7 +29,7 @@ public class GraphicsManager {
 		caduta = 0;
 		shoot = 0;
 		cont = 0;
-		firstspawn = true;
+		firstSpawn = true;
 		destroyBullet = false;
 		spawnBullet = false;
 		shootDone = false;
@@ -41,6 +41,11 @@ public class GraphicsManager {
 
 	public void drawMegaman(SpriteBatch batch, Controller controller, Megaman megaman) {
 		
+		if (firstSpawn) {
+			drawImage(batch, megaman, graphicLoader.getSpawn().getKeyFrame(elapsed), controller.getDirection());
+			if (graphicLoader.getSpawn().isAnimationFinished(elapsed))
+				firstSpawn = false;
+		}
 		elapsed += Gdx.graphics.getDeltaTime();
 		shootDone = false;
 		
@@ -55,7 +60,7 @@ public class GraphicsManager {
 				shootDone = true;
 			}
 		}
-		if (controller.getControlli(FALL)) {
+		if (controller.getControlli(FALL) && !firstSpawn) {
 			drawImage(batch, megaman, graphicLoader.getFall().getKeyFrame(elapsed), controller.getDirection());
 		}
 		
@@ -77,8 +82,9 @@ public class GraphicsManager {
 		if (controller.getControlli(IDLE)){
 			drawImage(batch, megaman, graphicLoader.getIdle().getKeyFrame(elapsed, true), controller.getDirection());
 		}
-	
+		
 	}
+	
 	public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman, boolean dir) {
 		batch.draw(graphicLoader.getBullet(), (int)bullet.getPositionX(),(int)bullet.getPositionY(), 64, 64, 0, 0, 64, 64, dir, false);	
 
@@ -87,7 +93,7 @@ public class GraphicsManager {
 			batch.draw(texture, megaman.getMegamanBody().getPosition().x * PPM - texture.getWidth()/2, megaman.getMegamanBody().getPosition().y * PPM - texture.getHeight()/2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
 	public void drawHud (SpriteBatch batch, Megaman megaman, HUD hud) {
-			batch.draw(graphicLoader.getHud(hud.getLife()), 0,5);
+			batch.draw(graphicLoader.getHud(hud.getLife()), gameManager.getCamera().position.x - gameManager.getLevelWidth()*7.5f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
 	}
 	
 	public GraphicLoader getGL() {
@@ -96,6 +102,10 @@ public class GraphicsManager {
 	
 	public boolean getShootDone () {
 		return shootDone;
+	}
+	
+	public static void resetFirstSpawn() {
+		firstSpawn = true;
 	}
 }
 

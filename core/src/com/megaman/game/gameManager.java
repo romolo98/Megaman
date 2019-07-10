@@ -5,19 +5,15 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.megaman.game.Utils.MapParser;
@@ -90,7 +86,7 @@ public class gameManager {
 		
 		controller.muoviMegaman(megaman);
 		gm.drawMegaman(batch, controller, megaman);
-		//gm.drawHud(batch, megaman, hud);
+		gm.drawHud(batch, megaman, hud);
 		
 		batch.end();
 		b2dr.render(world, camera.combined.scl(PPM)); //PIU' E' PICCOLO IL VALORE DI SCALA, PIU' E' GRANDE LA DISTANZA COPERTA DALLA CAMERA
@@ -304,13 +300,23 @@ public class gameManager {
 		return rect.getCenter(position);
 	}
 	
+	public static Vector2 getDeath() {
+		Vector2 deathPos = new Vector2();
+		Rectangle rect = new Rectangle();
+		for (MapObject object : map.getLayers().get("HealthLose").getObjects()) {
+			if (object instanceof RectangleMapObject) {
+				rect = ((RectangleMapObject)object).getRectangle();
+			}
+		}
+		return rect.getPosition(deathPos);
+	}
+	
 	boolean isMegamanFalling () {
 		if (megaman.getMegamanBody().getLinearVelocity().y < -1.3) {
 			return true;
 		}
 		return false;
 	}
-	
 
 }
 

@@ -22,6 +22,7 @@ public class GraphicLoader{
 	private Array<Texture> walkTexture;
 	private Array<Texture> idleTexture;
 	private Array<Texture> jumpTexture;
+	private Array<Texture> jumpShootTexture;
 	private Array<Texture> shootingTexture;
 	private Array<Texture> hud;
 	private Animation<Texture> spawnAnimation;
@@ -30,6 +31,7 @@ public class GraphicLoader{
 	private Animation<Texture> walk;
 	private Animation<Texture> idle;
 	private Animation<Texture> jump;
+	private Animation<Texture> jumpShoot;
 	private Animation<Texture> shooting;
 	private Animation<Texture> shoot;
 	
@@ -43,6 +45,7 @@ public class GraphicLoader{
 		walkTexture = new Array<Texture>();
 		idleTexture = new Array<Texture>();
 		jumpTexture = new Array<Texture>();
+		jumpShootTexture = new Array<Texture>();
 		fallTexture = new Array<Texture>();
 		shootingTexture = new Array<Texture>();
 		specialMoveTexture = new Array<Texture>();
@@ -87,9 +90,26 @@ public class GraphicLoader{
 		}
 			shoot = new Animation<Texture>(0.080f, shootTexture);
 			
+		for (int i = 0; i < 7; i++) {
+			jumpShootTexture.add(new Texture("Megaman/JumpShoot/"+i+".png"));
+		}
+			jumpShoot = new Animation<Texture>(0.080f, jumpShootTexture);
+			
 		for (int i = 0; i < 6; i++) {
 			hud.add(new Texture("HUD/"+i+".png"));
 		}
+	}
+	
+	public Texture getBackground() {
+		return background;
+	}
+	
+	public Texture getBullet() {
+		return bullet;
+	}
+	
+	public Texture getInizioWalk () {
+		return inizioWalk;
 	}
 	
 	public Animation<Texture> getSpawn(){
@@ -104,10 +124,6 @@ public class GraphicLoader{
 		return walk;
 	}
 	
-	public Texture getInizioWalk () {
-		return inizioWalk;
-	}
-	
 	public Animation<Texture> getJump (){
 		return jump;
 	}
@@ -120,20 +136,16 @@ public class GraphicLoader{
 		return shooting;
 	}
 	
-	public Texture getBackground() {
-		return background;
-	}
-	
-	public Texture getBullet() {
-		return bullet;
-	}
-	
 	public Animation<Texture> getSpecialMove() {
 		return specialMove;
 	}
 	
 	public Animation<Texture> getShoot (){
 		return shoot;
+	}
+	
+	public Animation<Texture> getJumpShoot () {
+		return jumpShoot;
 	}
 	
 	public Texture getHud(int HP) {
