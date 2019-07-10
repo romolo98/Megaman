@@ -9,7 +9,7 @@ import static com.megaman.game.Utils.Constants.*;
 public class Controller{
 	
 	static boolean[] controlli;
-	static boolean shotted;
+	static boolean shot;
 	boolean direction;
 	int contJump;
 	double lastTime = 0;
@@ -47,12 +47,12 @@ public class Controller{
 		
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			direction = false;
-			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+			if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[WALK_JUMP]) {
 				controlli[WALK_JUMP] = true;
 			}
 			else if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
 				lastTime = System.currentTimeMillis();
-				shotted = true;
+				shot = true;
 				controlli[WALK_SHOOT] = true;
 			}
 			else {
@@ -64,16 +64,16 @@ public class Controller{
 		if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
 			direction = true;
 			controlli[WALK_START] = true;
-			}
+		}
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			direction = true;
 					
-			if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+			if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[WALK_JUMP]) {
 				controlli[WALK_JUMP] = true;
-				}
+			}
 			else if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
 				lastTime = System.currentTimeMillis();
-				shotted = true;
+				shot = true;
 				controlli[WALK_SHOOT] = true;
 			}
 			else {
@@ -81,9 +81,16 @@ public class Controller{
 			}
 		}
 		
-		/*if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT)) {
+		if (Gdx.input.isKeyPressed(Keys.LEFT) && Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			controlli[WALK] = false;
+			controlli[IDLE] = true;
+			direction = false;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT) && !controlli[WALK_SHOOT]) {
 			controlli[SHOOT] = true;
-		}*/
+		}
+		
 		
 		if (isAllFalseExeptIdle()) {
 			controlli[IDLE] = true;
@@ -96,21 +103,11 @@ public class Controller{
 		if (controlli[FALL]) {
 			controlli[JUMP] = false;
 			controlli[WALK_JUMP] = false;
-			
-			megaman.setPositionY(megaman.getPositionY()-megaman.getSpeed());
-			if (megaman.getPositionY() <= 0) {
-				controlli[FALL] = false;
-			}
 		}
 		
 		
-		if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+		if (Gdx.input.isKeyJustPressed(Keys.SPACE)  && !controlli[WALK_JUMP] && !controlli[FALL]) {
 			controlli[JUMP] = true;
-		}
-		
-		if (controlli[JUMP] && !controlli[FALL]) {
-			setFalseExcept(JUMP);
-			megaman.setPositionY(megaman.getPositionY()+megaman.getSpeed());
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {

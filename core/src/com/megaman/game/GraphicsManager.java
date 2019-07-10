@@ -62,7 +62,6 @@ public class GraphicsManager {
 		}
 		else if (controller.getControlli(WALK) && !controller.getControlli(FALL)) {
 			if (controller.getControlli(WALK_SHOOT)) {
-				System.out.println("entro e sparo");
 				drawImage(batch, megaman, graphicLoader.getShooting().getKeyFrame(elapsed,true), controller.getDirection());
 			}
 			else if (controller.getControlli(WALK_JUMP)) {
@@ -97,7 +96,6 @@ public class GraphicsManager {
 	public void drawImage (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
 			batch.draw(texture, megaman.getMegamanBody().getPosition().x * PPM - texture.getWidth()/2, megaman.getMegamanBody().getPosition().y * PPM - texture.getHeight()/2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
-	
 	public void drawHud (SpriteBatch batch, Megaman megaman, HUD hud) {
 			batch.draw(graphicLoader.getHud(hud.getLife()), 0,5);
 	}

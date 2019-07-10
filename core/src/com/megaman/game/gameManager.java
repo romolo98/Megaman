@@ -203,32 +203,28 @@ public class gameManager {
 			forceY+=2;
 			numSalto++;
 		}
-		if (gm.getAnimationDone()) {
-			controller.setControlliFalse(JUMP);
-		}
 		if (controller.getControlli(WALK)) {
 			if (!controller.getDirection()) 
 				forceX = 5;
 			else
 				forceX = -5;
 			if (controller.getControlli(WALK_SHOOT) && actualTime > delay + lastTime) {
-				System.out.println("last time " +lastTime);
-				System.out.println("actual time " +actualTime);
-				System.out.println("somma " +(delay + lastTime));
 				controller.setControlliFalse(WALK_SHOOT);
 			}
-			if (controller.getControlli(WALK_JUMP)) {
-				//forceY += 4;
+			if (controller.getControlli(WALK_JUMP) && !isMegamanFalling() && numSalto < 1) {
+				forceY += 4;
+				numSalto++;
 				controller.setControlliFalse(WALK_JUMP);
 			}
 			controller.setControlliFalse(WALK);
 		}
 	
+		//System.out.println(megaman.getMegamanBody().getLinearVelocity().y);
 		megaman.getMegamanBody().setLinearVelocity(forceX,forceY);
 	}
 	
 	public void updateBullet(SpriteBatch batch) {
-		if (controller.getControlli(SHOOT) || controller.shotted) {
+		if (controller.getControlli(SHOOT) || controller.shot) {
 			ammunition.get(bulletCorrente).setDirection(controller.getDirection());
 			if (ammunition.get(bulletCorrente).getDirection())
 				ammunition.get(bulletCorrente).setPositionX(megaman.getMegamanBody().getPosition().x*PPM-PPM);
@@ -237,8 +233,8 @@ public class gameManager {
 			ammunition.get(bulletCorrente).setPositionY(megaman.getMegamanBody().getPosition().y*PPM-PPM/2);
 			shootThisBullet[bulletCorrente] = true;
 			increaseBullet();
-			controller.setControlliFalse(SHOOT);
-			controller.shotted = false;
+
+			controller.shot = false;
 		}
 		for (int i=0;i<ammunition.size;i++) {
 			if (shootThisBullet[i]) {
