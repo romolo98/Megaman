@@ -1,6 +1,7 @@
 package com.megaman.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -177,7 +178,14 @@ public class gameManager {
 		actualTime = System.currentTimeMillis();
 		lastTime = controller.getLastTime();
 		
+		controller.setStart(!gm.getStart());
 		
+		//SETTIAMO LO SPAWN DI MEGAMAN
+		if (controller.getControlli(SPAWN)) {
+			gm.resetFirstSpawn();
+			controller.setStart(!gm.getStart());
+			controller.setControlliFalse(SPAWN);
+		}
 		//SETTIAMO A FALSE LO SHOOT
 		if (gm.getShootDone()) {
 			controller.setControlliFalse(SHOOT);
@@ -190,6 +198,7 @@ public class gameManager {
 		}
 		else {
 			controller.setControlliFalse(FALL);
+			gm.setFallAnimationZero();
 		}
 		
 		// SET DI WALK_START
@@ -206,15 +215,24 @@ public class gameManager {
 			forceY+=3;
 			numSalto++;
 		}
-		// SET DI WALK, WALK_SHOOT, WALK_JUMP
+		// SET DI WALK_SHOOT
+		
+		if (!controller.getDirection()) {
+			if ((controller.getControlli(WALK_SHOOT) && actualTime > delay + lastTime) || controller.getNotRight()) {
+				controller.setControlliFalse(WALK_SHOOT);
+			}
+		}
+		else {
+			if ((controller.getControlli(WALK_SHOOT) && actualTime > delay + lastTime) || controller.getNotLeft()) {
+				controller.setControlliFalse(WALK_SHOOT);
+			}
+		}
+		// SET DI WALK, WALK_JUMP
 		if (controller.getControlli(WALK)) {
 			if (!controller.getDirection()) 
 				forceX = 5;
 			else
 				forceX = -5;
-			if (controller.getControlli(WALK_SHOOT) && actualTime > delay + lastTime) {
-				controller.setControlliFalse(WALK_SHOOT);
-			}
 			if (controller.getControlli(WALK_JUMP) && !isMegamanFalling() && numSalto < 1) {
 				forceY += 4;
 				numSalto++;

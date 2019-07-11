@@ -55,10 +55,10 @@ public class GraphicLoader{
 	
 	public void importImage () {
 		
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 9; i++) {
 			spawnTexture.add(new Texture("Megaman/Spawn/"+i+".png"));
 		}
-			spawnAnimation = new Animation<Texture>(0.080f, spawnTexture);
+			spawnAnimation = new Animation<Texture>(0.120f, spawnTexture);
 		
 		for (int i = 0; i < 3; i++) {
 			jumpTexture.add(new Texture("Megaman/Jump/"+i+".png"));
@@ -75,10 +75,10 @@ public class GraphicLoader{
 		}
 			idle = new Animation<Texture>(frameRates,idleTexture);
 			
-		for (int i = 0; i < 11; i++) {
+		for (int i = 0; i < 6; i++) {
 			fallTexture.add(new Texture("Megaman/Fall/"+i+".png"));
 		}
-			fall = new Animation<Texture>(0.040f ,fallTexture);
+			fall = new Animation<Texture>(0.080f ,fallTexture);
 			
 		for (int i = 0; i < 10; i++) {
 			shootingTexture.add(new Texture("Megaman/WalkShoot/"+i+".png"));

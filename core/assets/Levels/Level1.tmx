@@ -111,7 +111,7 @@
   </data>
  </layer>
  <objectgroup id="9" name="Start">
-  <object id="3" name="Start" x="64" y="386" width="64" height="64"/>
+  <object id="3" name="Start" x="64" y="318" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="10" name="End">
   <object id="4" name="Ending Point" x="3710" y="384" width="64" height="64"/>
