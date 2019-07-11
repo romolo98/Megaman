@@ -3,6 +3,8 @@ package com.megaman.game.Utils;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -18,8 +20,7 @@ public class MapParser {
 			if (object instanceof PolylineMapObject) {
 				shape = createPolyline((PolylineMapObject) object);
 			}
-			else {
-				continue; //PROVVISORIO
+			else {continue; //PROVVISORIO
 			}
 			
 			Body collisions;

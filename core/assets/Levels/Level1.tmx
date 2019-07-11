@@ -121,7 +121,7 @@
    <polyline points="-1,-512 0,0 895,0 895,128 1023,128 1023,0 1407,0 1663,-64 1919,-64 2175,0 3327,0 3583,-64 3839,-64 3839,-512"/>
   </object>
  </objectgroup>
- <objectgroup id="30" name="HealthLose" visible="0">
-  <object id="25" name="Death" x="899" y="515" width="123" height="124"/>
+ <objectgroup id="30" name="HealthLose">
+  <object id="25" name="Death" x="899" y="576" width="123" height="63"/>
  </objectgroup>
 </map>

@@ -20,8 +20,9 @@ public class Megaman extends Entity {
 		megamanBodyDef.fixedRotation = true; // FISSA L'IMMAGINE IN MODO DA NON PERMETTERE LA ROTAZIONE
 		megamanBody = gameManager.getWorld().createBody(megamanBodyDef); //CREA IL CORPO NEL MONDO
 		PolygonShape shape = new PolygonShape(); //CREA UNA FORMA PER IL CORPO DI MEGAMAN
-		shape.setAsBox(32 / PPM / 2, 32 / PPM / 2); // CREA UNA FORMA QUADRATA DI 64*64 (32*32 ESTENDENDO DAL CENTRO) - LA DIVISIONE ELIMINA IL CONTORNO
+		shape.setAsBox(PPM/ 2 / PPM / 2, PPM / 2 / PPM / 2); // CREA UNA FORMA QUADRATA DI 64*64 (32*32 ESTENDENDO DAL CENTRO) - LA DIVISIONE ELIMINA IL CONTORNO
 		megamanBody.createFixture(shape, 1.0f); //ASSEGNA LA FORMA AL CORPO ASSEGNANDOGLI UNA MASSA
+		megamanBody.setUserData(this);
 		shape.dispose(); //AVENDO ASSEGNATO LA FORMA, NON NE HO PIÙ BISOGNO E USO IL DISPOSE
 	}
 	

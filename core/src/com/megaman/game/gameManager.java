@@ -15,8 +15,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
+import com.megaman.game.Utils.ContactDetector;
 import com.megaman.game.Utils.MapParser;
 
 import static com.megaman.game.Utils.Constants.*;
@@ -33,6 +39,7 @@ public class gameManager {
 	float forceX;
 	float forceY;
 	boolean[] shootThisBullet;
+	private ContactDetector detector;
 	private static OrthographicCamera camera;
 	private OrthogonalTiledMapRenderer mapRenderer;
 	private static TiledMap map;
@@ -63,9 +70,16 @@ public class gameManager {
 		levelHeight = mapProperties.get("height", Integer.class);
 		MapParser.parseObjectLayer(world, map.getLayers().get("Collision").getObjects());
 		
+		
+		//Body platform = bodyCreator(5, 10, 12, 32, false, 1);
 		megaman = new Megaman();
+		Vector2 death = new Vector2();
+		Body deathZone = sensorCreator(getDeath().getCenter(death).x/PPM,getDeath().getCenter(death).y/PPM, getDeath().getWidth()/PPM/2, getDeath().getHeight()/PPM/2);	
+		detector = new ContactDetector(deathZone, megaman);
+		world.setContactListener(detector);
+		deathZone.setUserData("deathZone");
+		System.out.println(getDeath().x/PPM+64/PPM);
 		numSalto = 0;
-		//Body platform = bodyCreator(5, 10, 128, 32, true);
 		
 		
 		ammunition = new Array<Bullet>(50);
@@ -140,7 +154,7 @@ public class gameManager {
 		return camera;
 	}
 	
-	/*public Body bodyCreator (float x, float y, float width, float height, boolean type) {
+	public Body bodyCreator (float x, float y, float width, float height, boolean type, float fixture) {
 		Body bodyEntity;
 		BodyDef entityDef = new BodyDef();
 		
@@ -154,10 +168,30 @@ public class gameManager {
 		bodyEntity = gameManager.getWorld().createBody(entityDef); //CREA IL CORPO NEL MONDO
 		PolygonShape shape = new PolygonShape(); //CREA UNA FORMA PER IL CORPO DI MEGAMAN
 		shape.setAsBox(width / PPM, height / PPM); // CREA UNA FORMA QUADRATA DI 64*64 (32*32 ESTENDENDO DAL CENTRO)
-		bodyEntity.createFixture(shape, 1.0f); //ASSEGNA LA FORMA AL CORPO ASSEGNANDOGLI UNA MASSA
+		bodyEntity.createFixture(shape, fixture); //ASSEGNA LA FORMA AL CORPO ASSEGNANDOGLI UNA MASSA
 		shape.dispose(); //AVENDO ASSEGNATO LA FORMA, NON NE HO PIÙ BISOGNO E USO IL DISPOSE
 		return bodyEntity;
-	}*/
+	}
+	
+	public Body sensorCreator (float x, float y, float width, float height) {
+		Body sensorBody;
+		BodyDef sensorDef = new BodyDef();
+		sensorDef.fixedRotation = true;
+		sensorDef.type = BodyType.StaticBody;
+		sensorDef.position.set(x, y);
+		
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(width, height);
+		FixtureDef sensorFixtureDef = new FixtureDef();
+		sensorFixtureDef.shape = shape;
+		sensorFixtureDef.density = 1.0f;
+		sensorFixtureDef.isSensor = true;
+		
+		sensorBody = gameManager.getWorld().createBody(sensorDef);
+		sensorBody.createFixture(sensorFixtureDef).setUserData(this);
+		
+		return sensorBody;
+	}
 	
 	public Megaman getMegaman() {
 		return megaman;
@@ -179,6 +213,11 @@ public class gameManager {
 		lastTime = controller.getLastTime();
 		
 		controller.setStart(!gm.getStart());
+		
+		if (detector.getReset()) {
+			controller.setControlliTrue(SPAWN);
+			megaman.respawn();
+		}
 		
 		//SETTIAMO LO SPAWN DI MEGAMAN
 		if (controller.getControlli(SPAWN)) {
@@ -318,7 +357,7 @@ public class gameManager {
 		return rect.getCenter(position);
 	}
 	
-	public static Vector2 getDeath() {
+	public static Rectangle getDeath() {
 		Vector2 deathPos = new Vector2();
 		Rectangle rect = new Rectangle();
 		for (MapObject object : map.getLayers().get("HealthLose").getObjects()) {
@@ -326,7 +365,7 @@ public class gameManager {
 				rect = ((RectangleMapObject)object).getRectangle();
 			}
 		}
-		return rect.getPosition(deathPos);
+		return rect;
 	}
 	
 	boolean isMegamanFalling () {

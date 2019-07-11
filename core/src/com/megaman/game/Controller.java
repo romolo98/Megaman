@@ -56,6 +56,11 @@ public class Controller{
 		
 		actualTime = System.currentTimeMillis();
 		
+		
+		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+			Gdx.app.exit();
+		}
+		
 		if (!start) {
 
 			if (Gdx.input.isKeyJustPressed(Keys.L))
@@ -148,10 +153,7 @@ public class Controller{
 			if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[WALK_JUMP] && !controlli[FALL]) {
 				controlli[JUMP] = true;
 			}
-			
-			if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-				Gdx.app.exit();
-			}
+
 			
 			if (controlli[FALL]) {
 				controlli[JUMP] = false;
@@ -192,5 +194,9 @@ public class Controller{
 	
 	public void setFallTrue () {
 		controlli[FALL] = true;
+	}
+	
+	public void setControlliTrue (int index) {
+		controlli[index] = true;
 	}
 }
