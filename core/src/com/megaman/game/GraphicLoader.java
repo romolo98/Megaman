@@ -25,6 +25,8 @@ public class GraphicLoader{
 	private Array<Texture> jumpShootTexture;
 	private Array<Texture> shootingTexture;
 	private Array<Texture> hud;
+	private Array<Texture> hudPartTwo;
+	private Array<Texture> startText;
 	private Animation<Texture> spawnAnimation;
 	private Animation<Texture> specialMove;
 	private Animation<Texture> fall;
@@ -34,6 +36,8 @@ public class GraphicLoader{
 	private Animation<Texture> jumpShoot;
 	private Animation<Texture> shooting;
 	private Animation<Texture> shoot;
+	private Animation<Texture> animatedHUD;
+	private Animation<Texture> startAnimation;
 	
 	
 	public GraphicLoader() {
@@ -51,6 +55,8 @@ public class GraphicLoader{
 		specialMoveTexture = new Array<Texture>();
 		shootTexture = new Array<Texture>();
 		hud = new Array<Texture>();
+		hudPartTwo = new Array<Texture>();
+		startText = new Array<Texture>();
 	}
 	
 	public void importImage () {
@@ -98,6 +104,16 @@ public class GraphicLoader{
 		for (int i = 0; i < 6; i++) {
 			hud.add(new Texture("HUD/"+i+".png"));
 		}
+		
+		for (int i = 0; i < 44; i++) {
+			hudPartTwo.add(new Texture("HUD/EyesClosedResized/"+i+".png"));
+		}
+		animatedHUD = new Animation<Texture>(0.05f, hudPartTwo);
+		
+		for (int i = 0; i < 11; i++)
+			startText.add(new Texture("Intro/"+i+".png"));
+		
+		startAnimation = new Animation<Texture>(0.08f, startText);
 	}
 	
 	public Texture getBackground() {
@@ -150,6 +166,14 @@ public class GraphicLoader{
 	
 	public Texture getHud(int HP) {
 		return hud.get(HP);
+	}
+	
+	public Animation<Texture> getAnimatedHUD(){
+		return animatedHUD;
+	}
+	
+	public Animation<Texture> getStartText(){
+		return startAnimation;
 	}
 
 }

@@ -16,6 +16,7 @@ public class GraphicsManager {
 	float caduta;
 	float saltoMoto;
 	float shoot;
+	float levelStart;
 	int cont;
 	boolean destroyBullet;
 	boolean firstSpawn;
@@ -26,6 +27,7 @@ public class GraphicsManager {
 	
 	public GraphicsManager (){
 		
+		levelStart = 0;
 		elapsed = 0;
 		salto = 0;
 		saltoMoto = 0;
@@ -47,7 +49,14 @@ public class GraphicsManager {
 	public void drawMegaman(SpriteBatch batch, Controller controller, Megaman megaman) {
 		elapsed += Gdx.graphics.getDeltaTime();
 		shootDone = false;
-		if (firstSpawn) {
+		
+		/*if (firstSpawn && !graphicLoader.getStartText().isAnimationFinished(levelStart)) {
+			levelStart += Gdx.graphics.getDeltaTime();
+			drawLevelStart(batch);
+		}
+		*/
+		
+		if (firstSpawn && graphicLoader.getStartText().isAnimationFinished(levelStart)) {
 			drawImage(batch, megaman, graphicLoader.getSpawn().getKeyFrame(spawn), controller.getDirection());
 			spawn += Gdx.graphics.getDeltaTime();
 			if (graphicLoader.getSpawn().isAnimationFinished(spawn)) {
@@ -108,7 +117,13 @@ public class GraphicsManager {
 	}
 	public void drawHud (SpriteBatch batch, Megaman megaman, HUD hud) {
 			batch.draw(graphicLoader.getHud(hud.getLife()), gameManager.getCamera().position.x - gameManager.getLevelWidth()*7.5f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
+			batch.draw(graphicLoader.getAnimatedHUD().getKeyFrame(elapsed, true), gameManager.getCamera().position.x - gameManager.getLevelWidth()*7.5f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
 	}
+	
+	/*public void drawLevelStart (SpriteBatch batch) {
+		batch.draw(graphicLoader.getStartText().getKeyFrame(elapsed), gameManager.getCamera().position.x - PPM*4, gameManager.getCamera().position.y);
+	}
+	*/
 	
 	public GraphicLoader getGL() {
 		return graphicLoader;
