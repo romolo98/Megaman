@@ -13,5 +13,6 @@ public class Constants {
 	public static final int QUIT = 7;
 	public static final int IDLE = 8;
 	public static final int SPAWN = 9;
-//	public static final int JUMPSHOOT = 9;
+	public static final int JUMP_SHOOT = 10;
+	public static final int FALL_SHOOT = 11;
 }

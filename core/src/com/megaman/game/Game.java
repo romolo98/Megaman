@@ -37,7 +37,7 @@ public class Game extends ApplicationAdapter {
 	
 	@Override
 	public void resize (int width, int height) {
-		com.megaman.game.gameManager.getCamera().setToOrtho(false, width/com.megaman.game.gameManager.getScale()*1f, height/com.megaman.game.gameManager.getScale()*1f); // MODIFICANDO QUESTO VALORE, SI ALLONTANA LA CAMERA O LA SI AVVICINA
+		com.megaman.game.gameManager.getCamera().setToOrtho(false, width/com.megaman.game.gameManager.getScale(), height/com.megaman.game.gameManager.getScale()); // MODIFICANDO QUESTO VALORE, SI ALLONTANA LA CAMERA O LA SI AVVICINA
 	}
 	
 	@Override

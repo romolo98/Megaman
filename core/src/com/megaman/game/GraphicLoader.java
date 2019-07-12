@@ -27,6 +27,7 @@ public class GraphicLoader{
 	private Array<Texture> hud;
 	private Array<Texture> hudPartTwo;
 	private Array<Texture> startText;
+	private Array<Texture> fallShootTexture;
 	private Animation<Texture> spawnAnimation;
 	private Animation<Texture> specialMove;
 	private Animation<Texture> fall;
@@ -38,6 +39,7 @@ public class GraphicLoader{
 	private Animation<Texture> shoot;
 	private Animation<Texture> animatedHUD;
 	private Animation<Texture> startAnimation;
+	private Animation<Texture> fallShoot;
 	
 	
 	public GraphicLoader() {
@@ -50,6 +52,7 @@ public class GraphicLoader{
 		idleTexture = new Array<Texture>();
 		jumpTexture = new Array<Texture>();
 		jumpShootTexture = new Array<Texture>();
+		fallShootTexture = new Array<Texture>();
 		fallTexture = new Array<Texture>();
 		shootingTexture = new Array<Texture>();
 		specialMoveTexture = new Array<Texture>();
@@ -96,11 +99,16 @@ public class GraphicLoader{
 		}
 			shoot = new Animation<Texture>(0.080f, shootTexture);
 			
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 3; i++) {
 			jumpShootTexture.add(new Texture("Megaman/JumpShoot/"+i+".png"));
 		}
 			jumpShoot = new Animation<Texture>(0.080f, jumpShootTexture);
 			
+		for (int i = 0; i < 3; i++) {
+			fallShootTexture.add(new Texture("Megaman/FallShoot/"+i+".png"));
+		}
+			fallShoot = new Animation<Texture>(0.080f,fallShootTexture);
+		
 		for (int i = 0; i < 6; i++) {
 			hud.add(new Texture("HUD/"+i+".png"));
 		}
@@ -170,6 +178,10 @@ public class GraphicLoader{
 	
 	public Animation<Texture> getAnimatedHUD(){
 		return animatedHUD;
+	}
+	
+	public Animation<Texture> getFallShoot(){
+		return fallShoot;
 	}
 	
 	public Animation<Texture> getStartText(){

@@ -50,15 +50,10 @@ public class GraphicsManager {
 		elapsed += Gdx.graphics.getDeltaTime();
 		shootDone = false;
 		
-		/*if (firstSpawn && !graphicLoader.getStartText().isAnimationFinished(levelStart)) {
-			levelStart += Gdx.graphics.getDeltaTime();
-			drawLevelStart(batch);
-		}
-		*/
-		
-		if (firstSpawn && graphicLoader.getStartText().isAnimationFinished(levelStart)) {
+		if (firstSpawn) {
 			drawImage(batch, megaman, graphicLoader.getSpawn().getKeyFrame(spawn), controller.getDirection());
 			spawn += Gdx.graphics.getDeltaTime();
+			controller.direction = false;
 			if (graphicLoader.getSpawn().isAnimationFinished(spawn)) {
 				spawn = 0;
 				firstSpawn = false;
@@ -78,16 +73,12 @@ public class GraphicsManager {
 					shootDone = true;
 				}
 			}
-			if (controller.getControlli(FALL) && !firstSpawn) {
+			if (controller.getControlli(FALL)) {
 				drawImage(batch, megaman, graphicLoader.getFall().getKeyFrame(fall), controller.getDirection());
 				fall+= Gdx.graphics.getDeltaTime();
-				if (graphicLoader.getFall().isAnimationFinished(fall)) {
-					System.out.println("entro");
-					fall = 0;
-				}
 			}
 			
-			if (controller.getControlli(WALK) && !controller.getControlli(FALL) && !controller.getControlli(JUMP)) {
+			if (controller.getControlli(WALK) && !controller.getControlli(FALL) && !controller.getControlli(JUMP) && !controller.getControlli(JUMP_SHOOT) && !controller.getControlli(FALL_SHOOT)) {
 				if (controller.getControlli(WALK_SHOOT)) {
 					drawImage(batch, megaman, graphicLoader.getShooting().getKeyFrame(elapsed,true), controller.getDirection());
 				}
@@ -99,9 +90,22 @@ public class GraphicsManager {
 					drawImage(batch, megaman, graphicLoader.getWalk().getKeyFrame(elapsed, true), controller.getDirection());
 				}
 			}
-			if (controller.getControlli(JUMP)) {
+			if (controller.getControlli(JUMP) && !controller.getControlli(JUMP_SHOOT)) {
 				drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
 			}
+		    if (controller.getControlli(WALK_JUMP) && !controller.getControlli(JUMP_SHOOT)) {
+				drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
+			}
+			
+			if (controller.getControlli(JUMP_SHOOT)) {
+				drawImage(batch, megaman, graphicLoader.getJumpShoot().getKeyFrame(elapsed), controller.getDirection());
+			}
+			
+			if (controller.getControlli(FALL_SHOOT)) {
+				drawImage(batch, megaman, graphicLoader.getFallShoot().getKeyFrame(fall), controller.getDirection());
+				fall += Gdx.graphics.getDeltaTime();
+			}
+			
 			if (controller.getControlli(IDLE)){
 				drawImage(batch, megaman, graphicLoader.getIdle().getKeyFrame(elapsed, true), controller.getDirection());
 			}

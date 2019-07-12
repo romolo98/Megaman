@@ -214,29 +214,50 @@ public class gameManager {
 		
 		controller.setStart(!gm.getStart());
 		
+		// DEBUG DOPPIO INPUT
+		if (controller.getControlli(JUMP) && controller.getControlli(SHOOT)) {
+			controller.setControlliFalse(SHOOT);
+		}
+		if (controller.getControlli(FALL) && controller.getControlli(FALL_SHOOT)) {
+			controller.setControlliFalse(FALL);
+		}
+		
+		// RESPAWN
 		if (detector.getReset()) {
 			controller.setControlliTrue(SPAWN);
 			megaman.respawn();
 		}
 		
-		//SETTIAMO LO SPAWN DI MEGAMAN
+		// SETTIAMO LO SPAWN DI MEGAMAN
 		if (controller.getControlli(SPAWN)) {
 			gm.resetFirstSpawn();
 			controller.setStart(!gm.getStart());
 			controller.setControlliFalse(SPAWN);
 		}
-		//SETTIAMO A FALSE LO SHOOT
+		// SETTIAMO A FALSE LO SHOOT
 		if (gm.getShootDone()) {
 			controller.setControlliFalse(SHOOT);
 		}
 		
-		//SET FALL TRUE AND FALSE
+		// SET FALL TRUE AND FALSE
 		if (isMegamanFalling()) {
-			controller.setFallTrue();
+			if (!controller.getControlli(FALL_SHOOT))
+				controller.setFallTrue();
+			else {
+				controller.setControlliFalse(FALL);
+			}
 			numSalto = 0;
+			// DEBUG VISNU
+			controller.setControlliFalse(WALK_SHOOT);
+			controller.setControlliFalse(JUMP);
+			controller.setControlliFalse(SHOOT);
+			controller.setControlliFalse(WALK_JUMP);
+			controller.setControlliFalse(WALK_START);
+			controller.setControlliFalse(JUMP_SHOOT);
 		}
 		else {
 			controller.setControlliFalse(FALL);
+			controller.setControlliFalse(FALL_SHOOT);
 			gm.setFallAnimationZero();
 		}
 		
@@ -249,10 +270,13 @@ public class gameManager {
 			controller.setControlliFalse(WALK_START);
 		}
 		
-		//SET DI JUMP
-		if (controller.getControlli(JUMP) && !controller.getControlli(FALL) && numSalto < 2) {
-			forceY+=3;
+		// SET DI JUMP
+		if (controller.getControlli(JUMP) && !controller.getControlli(FALL) && numSalto < 1) {
+			forceY+=6;
 			numSalto++;
+			if (controller.getControlli(JUMP_SHOOT)) {
+				controller.setControlliFalse(JUMP);
+			}
 		}
 		// SET DI WALK_SHOOT
 		
@@ -278,7 +302,7 @@ public class gameManager {
 			}
 			controller.setControlliFalse(WALK);
 		}
-		//SPOSTAMENTO FISICO DI MEGAMAN
+		// SPOSTAMENTO FISICO DI MEGAMAN
 		megaman.getMegamanBody().setLinearVelocity(forceX,forceY);
 	}
 	
