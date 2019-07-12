@@ -13,7 +13,6 @@ public class GraphicLoader{
 	//ArrayList <Texture> walk;
 	float frameRates;
 	private Texture inizioWalk;
-	private Texture background;
 	private Texture bullet;
 	private Array<Texture> spawnTexture;
 	private Array<Texture> shootTexture;
@@ -46,7 +45,6 @@ public class GraphicLoader{
 		frameRates = 0.060f;
 		inizioWalk = new Texture("Megaman/Walk/inizio.png");
 		bullet = new Texture("Bullets/ChargeShot/1.png");
-		background = new Texture("Background.jpg");
 		spawnTexture = new Array<Texture>();
 		walkTexture = new Array<Texture>();
 		idleTexture = new Array<Texture>();
@@ -122,10 +120,6 @@ public class GraphicLoader{
 			startText.add(new Texture("Intro/"+i+".png"));
 		
 		startAnimation = new Animation<Texture>(0.08f, startText);
-	}
-	
-	public Texture getBackground() {
-		return background;
 	}
 	
 	public Texture getBullet() {

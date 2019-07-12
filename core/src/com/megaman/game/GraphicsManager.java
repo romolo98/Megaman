@@ -90,10 +90,10 @@ public class GraphicsManager {
 					drawImage(batch, megaman, graphicLoader.getWalk().getKeyFrame(elapsed, true), controller.getDirection());
 				}
 			}
-			if (controller.getControlli(JUMP) && !controller.getControlli(JUMP_SHOOT)) {
+			if (controller.getControlli(JUMP) && !controller.getControlli(JUMP_SHOOT) && !controller.getControlli(FALL)) {
 				drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
 			}
-		    if (controller.getControlli(WALK_JUMP) && !controller.getControlli(JUMP_SHOOT)) {
+		    if (controller.getControlli(WALK_JUMP) && !controller.getControlli(JUMP_SHOOT) && !controller.getControlli(FALL)) {
 				drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
 			}
 			
