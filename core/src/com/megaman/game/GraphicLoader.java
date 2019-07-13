@@ -16,7 +16,6 @@ public class GraphicLoader{
 	private Texture bullet;
 	private Array<Texture> spawnTexture;
 	private Array<Texture> shootTexture;
-	private Array<Texture> specialMoveTexture;
 	private Array<Texture> fallTexture;
 	private Array<Texture> walkTexture;
 	private Array<Texture> idleTexture;
@@ -53,7 +52,7 @@ public class GraphicLoader{
 		fallShootTexture = new Array<Texture>();
 		fallTexture = new Array<Texture>();
 		shootingTexture = new Array<Texture>();
-		specialMoveTexture = new Array<Texture>();
+		new Array<Texture>();
 		shootTexture = new Array<Texture>();
 		hud = new Array<Texture>();
 		hudPartTwo = new Array<Texture>();

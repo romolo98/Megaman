@@ -112,12 +112,12 @@ public class GraphicsManager {
 		}
 	}
 	
-	public void drawBullet (SpriteBatch batch, Bullet bullet, Megaman megaman, boolean dir) {
-		batch.draw(graphicLoader.getBullet(), (int)bullet.getPositionX(),(int)bullet.getPositionY(), 64, 64, 0, 0, 64, 64, dir, false);	
-
-}
+	public void drawBullet (SpriteBatch batch, Bullet bullet, boolean dir) {
+		batch.draw(graphicLoader.getBullet(), bullet.getBody().getPosition().x, bullet.getBody().getPosition().y, 64, 64, 0, 0, 64, 64, dir, false);
+		System.out.println("movimento in x "+bullet.getBody().getPosition().x);
+	}
 	public void drawImage (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
-			batch.draw(texture, megaman.getMegamanBody().getPosition().x * PPM - texture.getWidth()/2, megaman.getMegamanBody().getPosition().y * PPM - texture.getHeight()/2, 64, 64, 0, 0, 64, 64, dir, false);
+			batch.draw(texture, megaman.getBody().getPosition().x * PPM - texture.getWidth()/2, megaman.getBody().getPosition().y * PPM - texture.getHeight()/2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
 	public void drawHud (SpriteBatch batch, Megaman megaman, HUD hud) {
 			batch.draw(graphicLoader.getHud(hud.getLife()), gameManager.getCamera().position.x - gameManager.getLevelWidth()*7.5f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
@@ -140,6 +140,10 @@ public class GraphicsManager {
 	public void resetFirstSpawn() {
 		firstSpawn = true;
 		start = false;
+	}
+	
+	public boolean getFirstSpawn() {
+		return firstSpawn;
 	}
 	
 	public boolean getStart () {

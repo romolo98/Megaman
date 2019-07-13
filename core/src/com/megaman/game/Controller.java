@@ -1,10 +1,7 @@
 package com.megaman.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
-import com.sun.javafx.fxml.expression.KeyPath;
-
 import static com.megaman.game.Utils.Constants.*;
 
 public class Controller{
@@ -86,7 +83,6 @@ public class Controller{
 				controlli[JUMP_SHOOT] = true;
 				controlli[WALK_SHOOT] = false;
 				shot = true;
-				System.out.println("entro");
 			}
 			
 			if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT) && (controlli[JUMP] || controlli[WALK_JUMP] || controlli[JUMP_SHOOT]) && !controlli[FALL]) {

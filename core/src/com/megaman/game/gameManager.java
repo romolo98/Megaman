@@ -29,6 +29,7 @@ import static com.megaman.game.Utils.Constants.*;
 
 public class gameManager {
 	
+	Entity deathZone;
 	Controller controller;
 	Megaman megaman;
 	GraphicsManager gm;
@@ -70,28 +71,30 @@ public class gameManager {
 		levelHeight = mapProperties.get("height", Integer.class);
 		MapParser.parseObjectLayer(world, map.getLayers().get("Collision").getObjects());
 		
-		
-		//Body platform = bodyCreator(5, 10, 12, 32, false, 1);
+		Entity platform = new Entity();
+		platform.bodyCreator(5, 2,12 / PPM, 32 / PPM, true, 1);
+		platform.getBody().setUserData("platform");
 		megaman = new Megaman();
 		Vector2 death = new Vector2();
-		Body deathZone = sensorCreator(getDeath().getCenter(death).x/PPM,getDeath().getCenter(death).y/PPM, getDeath().getWidth()/PPM/2, getDeath().getHeight()/PPM/2);	
-		detector = new ContactDetector(deathZone, megaman);
-		world.setContactListener(detector);
-		deathZone.setUserData("deathZone");
-		System.out.println(getDeath().x/PPM+64/PPM);
-		numSalto = 0;
-		
-		
-		ammunition = new Array<Bullet>(50);
+		deathZone = new Entity();	
+		deathZone.sensorCreator(getDeath().getCenter(death).x/PPM,getDeath().getCenter(death).y/PPM, getDeath().getWidth()/PPM/2, getDeath().getHeight()/PPM/2, true);
+		deathZone.getBody().setUserData("deathZone");
 		shootThisBullet = new boolean[50];
+		ammunition = new Array<Bullet>(50);
+		for (int i=0;i<50;i++) {
+			ammunition.add(new Bullet(megaman));
+			ammunition.get(i).getBody().setGravityScale(0);
+		}
+		
+		detector = new ContactDetector(deathZone, megaman, ammunition, platform);
+		world.setContactListener(detector);
+		numSalto = 0;
 		controller = new Controller();
 		
 		gm = graphicManager;
 		hud = new HUD();
 		bulletCorrente = 0;
-		for (int i=0;i<50;i++) {
-			ammunition.add(new Bullet());
-		}
+
 	}
 	public void run(SpriteBatch batch) {
 		//UTILIZZA IL RENDER DELLA MAPPA SULLO STESSO SPRITEBATCH
@@ -114,7 +117,8 @@ public class gameManager {
 	
 	
 	public void addBullet (int index) {
-		ammunition.insert(index, new Bullet());
+		ammunition.insert(index, new Bullet(megaman));
+		ammunition.get(index).getBody().setGravityScale(0);
 	}
 	
 	public void increaseBullet() {
@@ -138,8 +142,8 @@ public class gameManager {
 	public void cameraUpdate (float delta) {
 		Vector3 position = camera.position;
 		//INTERPOLAZIONE DELLA CAMERA		
-		position.x = camera.position.x + (megaman.getMegamanBody().getPosition().x*PPM - camera.position.x) * .1f;
-		position.y = camera.position.y + (megaman.getMegamanBody().getPosition().y*PPM - camera.position.y) * .1f;
+		position.x = camera.position.x + (megaman.getBody().getPosition().x*PPM - camera.position.x) * .1f;
+		position.y = camera.position.y + (megaman.getBody().getPosition().y*PPM - camera.position.y) * .1f;
 		
 		startWidth = camera.viewportWidth/2;
 		startHeight = camera.viewportHeight/2;
@@ -152,45 +156,6 @@ public class gameManager {
 	
 	public static OrthographicCamera getCamera() {
 		return camera;
-	}
-	
-	public Body bodyCreator (float x, float y, float width, float height, boolean type, float fixture) {
-		Body bodyEntity;
-		BodyDef entityDef = new BodyDef();
-		
-		if (type)
-		entityDef.type = BodyDef.BodyType.StaticBody; // SETTA IL BODY COME DINAMICO
-		else
-		entityDef.type = BodyDef.BodyType.DynamicBody;
-		
-		entityDef.position.set(x, y); // IMPOSTA LA POSIZIONE ALLE COORDINATE X = 0; Y = 0;
-		entityDef.fixedRotation = true; // FISSA L'IMMAGINE IN MODO DA NON PERMETTERE LA ROTAZIONE
-		bodyEntity = gameManager.getWorld().createBody(entityDef); //CREA IL CORPO NEL MONDO
-		PolygonShape shape = new PolygonShape(); //CREA UNA FORMA PER IL CORPO DI MEGAMAN
-		shape.setAsBox(width / PPM, height / PPM); // CREA UNA FORMA QUADRATA DI 64*64 (32*32 ESTENDENDO DAL CENTRO)
-		bodyEntity.createFixture(shape, fixture); //ASSEGNA LA FORMA AL CORPO ASSEGNANDOGLI UNA MASSA
-		shape.dispose(); //AVENDO ASSEGNATO LA FORMA, NON NE HO PIÙ BISOGNO E USO IL DISPOSE
-		return bodyEntity;
-	}
-	
-	public Body sensorCreator (float x, float y, float width, float height) {
-		Body sensorBody;
-		BodyDef sensorDef = new BodyDef();
-		sensorDef.fixedRotation = true;
-		sensorDef.type = BodyType.StaticBody;
-		sensorDef.position.set(x, y);
-		
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(width, height);
-		FixtureDef sensorFixtureDef = new FixtureDef();
-		sensorFixtureDef.shape = shape;
-		sensorFixtureDef.density = 1.0f;
-		sensorFixtureDef.isSensor = true;
-		
-		sensorBody = gameManager.getWorld().createBody(sensorDef);
-		sensorBody.createFixture(sensorFixtureDef).setUserData(this);
-		
-		return sensorBody;
 	}
 	
 	public Megaman getMegaman() {
@@ -208,6 +173,13 @@ public class gameManager {
 	public void updateMegaman () {
 		forceX = 0;
 		forceY = megaman.getPositionY();
+		for (int i = 0; i < ammunition.size; i++)
+		{
+			if (!shootThisBullet[i]) {
+				ammunition.get(i).setPositionX(megaman.getBody().getPosition().x*PPM - PPM/2);
+				ammunition.get(i).setPositionY(megaman.getBody().getPosition().y*PPM - PPM/2);
+			}
+		}
 		
 		actualTime = System.currentTimeMillis();
 		lastTime = controller.getLastTime();
@@ -303,27 +275,30 @@ public class gameManager {
 			controller.setControlliFalse(WALK);
 		}
 		// SPOSTAMENTO FISICO DI MEGAMAN
-		megaman.getMegamanBody().setLinearVelocity(forceX,forceY);
+		megaman.getBody().setLinearVelocity(forceX,forceY);
 	}
 	
 	public void updateBullet(SpriteBatch batch) {
 		if (controller.shot) {
 			ammunition.get(bulletCorrente).setDirection(controller.getDirection());
 			if (ammunition.get(bulletCorrente).getDirection())
-				ammunition.get(bulletCorrente).setPositionX(megaman.getMegamanBody().getPosition().x*PPM-PPM);
-			else if (!ammunition.get(bulletCorrente).getDirection())
-				ammunition.get(bulletCorrente).setPositionX(megaman.getMegamanBody().getPosition().x*PPM);
-			ammunition.get(bulletCorrente).setPositionY(megaman.getMegamanBody().getPosition().y*PPM-PPM/2);
+				ammunition.get(bulletCorrente).setPositionX(megaman.getBody().getPosition().x*PPM-PPM);
+			else
+				ammunition.get(bulletCorrente).setPositionX(megaman.getBody().getPosition().x*PPM);
+			ammunition.get(bulletCorrente).setPositionY(megaman.getBody().getPosition().y*PPM-PPM/2);
 			shootThisBullet[bulletCorrente] = true;
 			increaseBullet();
 			controller.shot = false;
 		}
 		for (int i=0;i<ammunition.size;i++) {
 			if (shootThisBullet[i]) {
-				gm.drawBullet(batch, ammunition.get(i),megaman, ammunition.get(i).getDirection());
+				gm.drawBullet(batch, ammunition.get(i),ammunition.get(i).getDirection());
 				ammunition.get(i).physics();
-			}
-			if (ammunition.get(i).getPositionX()-ammunition.get(i).getSpeed() < -64 || ammunition.get(i).getPositionX()+ammunition.get(i).getSpeed() > megaman.getMegamanBody().getPosition().x+640*PPM){
+			} 
+			//THE PROBLEM DOESN'T LIE HERE! SEARCH ELSEWHERE!
+			if (ammunition.get(i).getPositionX() + PPM < 0 || ammunition.get(i).getPositionX()+ammunition.get(i).getPositionX() > 1280){
+				world.destroyBody(ammunition.get(i).getBody());
+				System.out.println("DISTRUGGERE! DISTRUGGERE!");
 				ammunition.removeIndex(i);
 				addBullet(i);
 				shootThisBullet[i] = false;
@@ -393,7 +368,7 @@ public class gameManager {
 	}
 	
 	boolean isMegamanFalling () {
-		if (megaman.getMegamanBody().getLinearVelocity().y < -1.3) {
+		if (megaman.getBody().getLinearVelocity().y < -1.3) {
 			return true;
 		}
 		return false;
