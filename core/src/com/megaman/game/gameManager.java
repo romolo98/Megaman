@@ -35,11 +35,11 @@ public class gameManager {
 	GraphicsManager gm;
 	HUD hud;
 	Array<Bullet> ammunition;
-	int bulletCorrente;
+	Array<Bullet> ammunitionToDestroy;
+	Array<Enemy> axeBot;
 	int numSalto;
 	float forceX;
 	float forceY;
-	boolean[] shootThisBullet;
 	private ContactDetector detector;
 	private static OrthographicCamera camera;
 	private OrthogonalTiledMapRenderer mapRenderer;
@@ -56,6 +56,7 @@ public class gameManager {
 	double actualTime = 0;
 	
 	
+	
 	public gameManager(GraphicsManager graphicManager) {
 		
 		float w = Gdx.graphics.getWidth();
@@ -70,31 +71,34 @@ public class gameManager {
 		levelWidth = mapProperties.get("width", Integer.class);
 		levelHeight = mapProperties.get("height", Integer.class);
 		MapParser.parseObjectLayer(world, map.getLayers().get("Collision").getObjects());
-		
-		Entity platform = new Entity();
-		platform.bodyCreator(5, 2,12 / PPM, 32 / PPM, true, 1);
-		platform.getBody().setUserData("platform");
+		ammunitionToDestroy = new Array<Bullet>();
+		//Entity platform = new Entity();
+		//platform.bodyCreator(5, 2,12 / PPM, 32 / PPM, true, 1);
+		//platform.getBody().setUserData("platform");
+		axeBot = new Array<Enemy>(getEnemySpawn().size);
+		for (int i = 0; i < getEnemySpawn().size; i++) {
+			axeBot.add(new Enemy(i));
+		}
+
 		megaman = new Megaman();
+		
 		Vector2 death = new Vector2();
 		deathZone = new Entity();	
 		deathZone.sensorCreator(getDeath().getCenter(death).x/PPM,getDeath().getCenter(death).y/PPM, getDeath().getWidth()/PPM/2, getDeath().getHeight()/PPM/2, true);
 		deathZone.getBody().setUserData("deathZone");
-		shootThisBullet = new boolean[50];
-		ammunition = new Array<Bullet>(50);
-		for (int i=0;i<50;i++) {
-			ammunition.add(new Bullet(megaman));
-			ammunition.get(i).getBody().setGravityScale(0);
-		}
 		
-		detector = new ContactDetector(deathZone, megaman, ammunition, platform);
+		ammunition = new Array<Bullet>();
+		
+		controller = new Controller();
+		
+		detector = new ContactDetector(deathZone, megaman, ammunition, axeBot, controller);
 		world.setContactListener(detector);
 		numSalto = 0;
-		controller = new Controller();
+		
 		
 		gm = graphicManager;
 		hud = new HUD();
-		bulletCorrente = 0;
-
+		
 	}
 	public void run(SpriteBatch batch) {
 		//UTILIZZA IL RENDER DELLA MAPPA SULLO STESSO SPRITEBATCH
@@ -106,6 +110,9 @@ public class gameManager {
 		gm.drawMegaman(batch, controller, megaman);
 		gm.drawHud(batch, megaman, hud);
 		
+		for (int i = 0; i < getEnemySpawn().size; i++)
+			gm.drawEnemy(batch, axeBot.get(i));
+		
 		batch.end();
 		b2dr.render(world, camera.combined.scl(PPM)); //PIU' E' PICCOLO IL VALORE DI SCALA, PIU' E' GRANDE LA DISTANZA COPERTA DALLA CAMERA
 		batch.begin();
@@ -114,20 +121,7 @@ public class gameManager {
 		updateBullet(batch);
 		
 	}
-	
-	
-	public void addBullet (int index) {
-		ammunition.insert(index, new Bullet(megaman));
-		ammunition.get(index).getBody().setGravityScale(0);
-	}
-	
-	public void increaseBullet() {
-		bulletCorrente++;
-		if (bulletCorrente == 50) {
-			bulletCorrente = 0;
-			
-		}
-	}
+
 	public void disposer () {
 		b2dr.dispose();
 		world.dispose();
@@ -173,13 +167,6 @@ public class gameManager {
 	public void updateMegaman () {
 		forceX = 0;
 		forceY = megaman.getPositionY();
-		for (int i = 0; i < ammunition.size; i++)
-		{
-			if (!shootThisBullet[i]) {
-				ammunition.get(i).setPositionX(megaman.getBody().getPosition().x*PPM - PPM/2);
-				ammunition.get(i).setPositionY(megaman.getBody().getPosition().y*PPM - PPM/2);
-			}
-		}
 		
 		actualTime = System.currentTimeMillis();
 		lastTime = controller.getLastTime();
@@ -279,29 +266,24 @@ public class gameManager {
 	}
 	
 	public void updateBullet(SpriteBatch batch) {
+		for (Bullet i: ammunitionToDestroy) {
+			world.destroyBody(i.getBody());
+		}
+		ammunition.removeAll(ammunitionToDestroy, true);
+		ammunitionToDestroy.clear();
+		
 		if (controller.shot) {
-			ammunition.get(bulletCorrente).setDirection(controller.getDirection());
-			if (ammunition.get(bulletCorrente).getDirection())
-				ammunition.get(bulletCorrente).setPositionX(megaman.getBody().getPosition().x*PPM-PPM);
-			else
-				ammunition.get(bulletCorrente).setPositionX(megaman.getBody().getPosition().x*PPM);
-			ammunition.get(bulletCorrente).setPositionY(megaman.getBody().getPosition().y*PPM-PPM/2);
-			shootThisBullet[bulletCorrente] = true;
-			increaseBullet();
+			ammunition.add(new Bullet(megaman));
+			ammunition.peek().setDirection(controller.getDirection());
+			
 			controller.shot = false;
 		}
-		for (int i=0;i<ammunition.size;i++) {
-			if (shootThisBullet[i]) {
-				gm.drawBullet(batch, ammunition.get(i),ammunition.get(i).getDirection());
-				ammunition.get(i).physics();
-			} 
+		for (Bullet i: ammunition) {
+				gm.drawBullet(batch, i,i.getDirection());
+				i.physics(); 
 			//THE PROBLEM DOESN'T LIE HERE! SEARCH ELSEWHERE!
-			if (ammunition.get(i).getPositionX() + PPM < 0 || ammunition.get(i).getPositionX()+ammunition.get(i).getPositionX() > 1280){
-				world.destroyBody(ammunition.get(i).getBody());
-				System.out.println("DISTRUGGERE! DISTRUGGERE!");
-				ammunition.removeIndex(i);
-				addBullet(i);
-				shootThisBullet[i] = false;
+			if (i.getPositionX() < 0 || i.getPositionX()+ i.getPositionX() > 1280/PPM){
+				ammunitionToDestroy.add(i);
 			}
 		}
 	}
@@ -357,7 +339,6 @@ public class gameManager {
 	}
 	
 	public static Rectangle getDeath() {
-		Vector2 deathPos = new Vector2();
 		Rectangle rect = new Rectangle();
 		for (MapObject object : map.getLayers().get("HealthLose").getObjects()) {
 			if (object instanceof RectangleMapObject) {
@@ -365,6 +346,16 @@ public class gameManager {
 			}
 		}
 		return rect;
+	}
+	
+	public static Array<Rectangle> getEnemySpawn() {
+		Array<Rectangle> enemySpawn = new Array<Rectangle>();
+		for (MapObject object : map.getLayers().get("EnemySpawn").getObjects()) {
+			if (object instanceof RectangleMapObject) {
+				enemySpawn.add(((RectangleMapObject)object).getRectangle());
+			}
+		}
+		return enemySpawn;
 	}
 	
 	boolean isMegamanFalling () {

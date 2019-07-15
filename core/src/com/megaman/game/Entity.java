@@ -1,9 +1,11 @@
 package com.megaman.game;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 
@@ -50,9 +52,9 @@ public class Entity {
 	public void bodyCreator (float x, float y, float width, float height, boolean type, float mass) {
 
 		if (type)
-			entityBodyDef.type = BodyDef.BodyType.StaticBody; // SETTA IL BODY COME DINAMICO
+			entityBodyDef.type = BodyType.StaticBody; // SETTA IL BODY COME DINAMICO
 		else
-			entityBodyDef.type = BodyDef.BodyType.DynamicBody;
+			entityBodyDef.type = BodyType.DynamicBody;
 		
 		entityBodyDef.position.set(x, y); // IMPOSTA LA POSIZIONE ALLE COORDINATE X = 0; Y = 0;
 		entityBodyDef.fixedRotation = true; // FISSA L'IMMAGINE IN MODO DA NON PERMETTERE LA ROTAZIONE
@@ -60,7 +62,7 @@ public class Entity {
 		PolygonShape shape = new PolygonShape(); //CREA UNA FORMA PER IL CORPO DI MEGAMAN
 		shape.setAsBox(width, height); // CREA UNA FORMA QUADRATA DI 64*64 (32*32 ESTENDENDO DAL CENTRO)
 		entityBody.createFixture(shape, mass); //ASSEGNA LA FORMA AL CORPO ASSEGNANDOGLI UNA MASSA
-		shape.dispose(); //AVENDO ASSEGNATO LA FORMA, NON NE HO PIÙ BISOGNO E USO IL DISPOSE
+		shape.dispose();
 		entityBody.setUserData(this);
 	}
 	
@@ -82,7 +84,20 @@ public class Entity {
 		entityBody = gameManager.getWorld().createBody(entityBodyDef);
 		entityBody.createFixture(entityBodyFixtureDef).setUserData(this);
 	}
+	
+	public void feetSensorCreator () {
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(0.15f, 0, new Vector2(0, -0.30f), 0);
+		FixtureDef feetDef = new FixtureDef();
+		feetDef.shape = shape;
+		feetDef.isSensor = true;
+		entityBody.createFixture(feetDef).setUserData("feet");
+		
+		shape.dispose();
+	}
+
 }
+
 
 
 

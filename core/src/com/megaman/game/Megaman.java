@@ -6,6 +6,7 @@ public class Megaman extends Entity {
 	public Megaman (){
 		super();
 		super.bodyCreator(gameManager.getSpawn().x/PPM, gameManager.getSpawn().y/PPM, PPM/2/PPM/2, PPM/2/PPM/2, false, 1.0f);
+		super.feetSensorCreator();
 		setSpeed(3);
 	}
 	
@@ -32,7 +33,6 @@ public class Megaman extends Entity {
 	public void respawn () {
 		this.getBody().setTransform(gameManager.getSpawn().x/PPM, gameManager.getSpawn().y/PPM, 0);
 	}
-	
 }
 
 

@@ -1,7 +1,5 @@
 package com.megaman.game;
 
-import static com.megaman.game.Utils.Constants.*;
-
 
 public class Bullet extends Entity {
 	
@@ -11,6 +9,7 @@ public class Bullet extends Entity {
 	public Bullet(Megaman megaman) {
 		super();
 		super.sensorCreator(megaman.getBody().getPosition().x, megaman.getBody().getPosition().y, 0.25f, 0.25f, false);
+		super.getBody().setGravityScale(0);
 		speedBullet = 7;
 	}
 	
@@ -19,9 +18,9 @@ public class Bullet extends Entity {
 	}
 	public void physics () {
 		if (!direction)
-			this.getBody().setLinearVelocity(4, 0);
+			this.getBody().setLinearVelocity(speedBullet, 0);
 		else
-			this.getBody().setLinearVelocity(-4, 0);
+			this.getBody().setLinearVelocity(-speedBullet, 0);
 	}
 	
 	public float getPositionX() {
@@ -30,14 +29,6 @@ public class Bullet extends Entity {
 	
 	public float getPositionY() {
 		return this.getBody().getPosition().y;
-	}
-	
-	public void setPositionX (float x) {
-		this.getBody().setTransform(x, this.getBody().getPosition().y, 0);
-	}
-	
-	public void setPositionY (float y) {
-		this.getBody().setTransform(this.getBody().getPosition().x, y, 0);
 	}
 	
 	public boolean getDirection() {

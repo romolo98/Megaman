@@ -5,7 +5,7 @@ public class HUD {
 	private static int HP; 
 	
 	public HUD () {
-		HP = 0;
+		HP = 5;
 	}
 	
 	public int getLife () {
@@ -23,6 +23,6 @@ public class HUD {
 	}
 	
 	public static void resetLife () {
-		HP = 0;
+		HP = 5;
 	}
 }

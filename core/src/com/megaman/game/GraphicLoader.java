@@ -26,6 +26,7 @@ public class GraphicLoader{
 	private Array<Texture> hudPartTwo;
 	private Array<Texture> startText;
 	private Array<Texture> fallShootTexture;
+	private Array<Texture> axeBotTexture;
 	private Animation<Texture> spawnAnimation;
 	private Animation<Texture> specialMove;
 	private Animation<Texture> fall;
@@ -38,6 +39,7 @@ public class GraphicLoader{
 	private Animation<Texture> animatedHUD;
 	private Animation<Texture> startAnimation;
 	private Animation<Texture> fallShoot;
+	private Animation<Texture> axeBot;
 	
 	
 	public GraphicLoader() {
@@ -57,6 +59,7 @@ public class GraphicLoader{
 		hud = new Array<Texture>();
 		hudPartTwo = new Array<Texture>();
 		startText = new Array<Texture>();
+		axeBotTexture = new Array<Texture>();
 	}
 	
 	public void importImage () {
@@ -119,6 +122,10 @@ public class GraphicLoader{
 			startText.add(new Texture("Intro/"+i+".png"));
 		
 		startAnimation = new Animation<Texture>(0.08f, startText);
+		
+		for (int i = 0; i < 7; i++)
+			axeBotTexture.add(new Texture("Enemies/Axebot/"+i+".png"));
+		axeBot = new Animation<Texture>(0.08f, axeBotTexture);
 	}
 	
 	public Texture getBullet() {
@@ -179,6 +186,10 @@ public class GraphicLoader{
 	
 	public Animation<Texture> getStartText(){
 		return startAnimation;
+	}
+	
+	public Animation<Texture> getAxebot () {
+		return axeBot;
 	}
 
 }
