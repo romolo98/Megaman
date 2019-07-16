@@ -75,8 +75,8 @@ public class gameManager {
 		//Entity platform = new Entity();
 		//platform.bodyCreator(5, 2,12 / PPM, 32 / PPM, true, 1);
 		//platform.getBody().setUserData("platform");
-		axeBot = new Array<Enemy>(getEnemySpawn().size);
-		for (int i = 0; i < getEnemySpawn().size; i++) {
+		axeBot = new Array<Enemy>(getAxebotSpawn().size);
+		for (int i = 0; i < getAxebotSpawn().size; i++) {
 			axeBot.add(new Enemy(i));
 		}
 
@@ -110,7 +110,7 @@ public class gameManager {
 		gm.drawMegaman(batch, controller, megaman);
 		gm.drawHud(batch, megaman, hud);
 		
-		for (int i = 0; i < getEnemySpawn().size; i++)
+		for (int i = 0; i < getAxebotSpawn().size; i++)
 			gm.drawEnemy(batch, axeBot.get(i));
 		
 		batch.end();
@@ -223,9 +223,9 @@ public class gameManager {
 		// SET DI WALK_START
 		if (controller.getControlli(WALK_START)){
 			if (!controller.getDirection())
-				forceX = 5;
+				forceX = 5f;
 			else
-				forceX = -5;
+				forceX = -5f;
 			controller.setControlliFalse(WALK_START);
 		}
 		
@@ -252,9 +252,9 @@ public class gameManager {
 		// SET DI WALK, WALK_JUMP
 		if (controller.getControlli(WALK)) {
 			if (!controller.getDirection()) 
-				forceX = 5;
+				forceX = 5f;
 			else
-				forceX = -5;
+				forceX = -5f;
 			if (controller.getControlli(WALK_JUMP) && !isMegamanFalling() && numSalto < 1) {
 				forceY += 4;
 				numSalto++;
@@ -262,10 +262,13 @@ public class gameManager {
 			controller.setControlliFalse(WALK);
 		}
 		// SPOSTAMENTO FISICO DI MEGAMAN
-		megaman.getBody().setLinearVelocity(forceX,forceY);
-	}
+
+			megaman.getBody().setLinearVelocity(forceX, forceY);
+		}
 	
 	public void updateBullet(SpriteBatch batch) {
+		ammunitionToDestroy.addAll(detector.ammoToRemove());
+		detector.allLostAmmo();
 		for (Bullet i: ammunitionToDestroy) {
 			world.destroyBody(i.getBody());
 		}
@@ -281,10 +284,6 @@ public class gameManager {
 		for (Bullet i: ammunition) {
 				gm.drawBullet(batch, i,i.getDirection());
 				i.physics(); 
-			//THE PROBLEM DOESN'T LIE HERE! SEARCH ELSEWHERE!
-			if (i.getPositionX() < 0 || i.getPositionX()+ i.getPositionX() > 1280/PPM){
-				ammunitionToDestroy.add(i);
-			}
 		}
 	}
 	
@@ -348,14 +347,14 @@ public class gameManager {
 		return rect;
 	}
 	
-	public static Array<Rectangle> getEnemySpawn() {
-		Array<Rectangle> enemySpawn = new Array<Rectangle>();
-		for (MapObject object : map.getLayers().get("EnemySpawn").getObjects()) {
+	public static Array<Rectangle> getAxebotSpawn() {
+		Array<Rectangle> axebotSpawn = new Array<Rectangle>();
+		for (MapObject object : map.getLayers().get("AxebotSpawn").getObjects()) {
 			if (object instanceof RectangleMapObject) {
-				enemySpawn.add(((RectangleMapObject)object).getRectangle());
+				axebotSpawn.add(((RectangleMapObject)object).getRectangle());
 			}
 		}
-		return enemySpawn;
+		return axebotSpawn;
 	}
 	
 	boolean isMegamanFalling () {

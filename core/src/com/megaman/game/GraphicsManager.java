@@ -113,7 +113,6 @@ public class GraphicsManager {
 	
 	public void drawBullet (SpriteBatch batch, Bullet bullet, boolean dir) {
 		batch.draw(graphicLoader.getBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
-		System.out.println("movimento in x "+bullet.getBody().getPosition().x);
 	}
 	public void drawImage (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
 			batch.draw(texture, megaman.getBody().getPosition().x * PPM - PPM / 2, megaman.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);

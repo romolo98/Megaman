@@ -84,17 +84,6 @@ public class Entity {
 		entityBody = gameManager.getWorld().createBody(entityBodyDef);
 		entityBody.createFixture(entityBodyFixtureDef).setUserData(this);
 	}
-	
-	public void feetSensorCreator () {
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(0.15f, 0, new Vector2(0, -0.30f), 0);
-		FixtureDef feetDef = new FixtureDef();
-		feetDef.shape = shape;
-		feetDef.isSensor = true;
-		entityBody.createFixture(feetDef).setUserData("feet");
-		
-		shape.dispose();
-	}
 
 }
 

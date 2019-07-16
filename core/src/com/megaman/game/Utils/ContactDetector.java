@@ -18,19 +18,23 @@ public class ContactDetector implements ContactListener{
 	
 	private Body deathZone;
 	private Megaman megaman;
+	private boolean collidingBullet;
 	private Array<Enemy> axebots;
 	private boolean reset;
 	private Array<Bullet> ammo;
+	private Array<Bullet> lostAmmo;
 	private Controller sameController;
-	private Entity test;
+	int ciao = 0;
 	
 	public ContactDetector(Entity dZ, Megaman m, Array<Bullet> ammunition, Array<Enemy> axebot, Controller controller) {
 		deathZone = dZ.getBody();
 		megaman = m;
 		reset = false;
 		ammo = ammunition;
+		lostAmmo = new Array<Bullet>();
 		axebots = axebot;
 		sameController = controller;
+		collidingBullet = false;
 	}
 
 	@Override
@@ -48,6 +52,26 @@ public class ContactDetector implements ContactListener{
 			}
 		}
 		
+		//GROUND COLLISIONS
+		if (A.getUserData() == "feet" || B.getUserData() == "feet") {
+			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground")
+				System.out.println("Tocco il terreno");
+		}
+		
+		//LEFT COLLISIONS
+		if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
+			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground")
+				System.out.println("Tocco da sinistra");
+		}
+		
+		if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
+			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground")
+				System.out.println("Tocco da destra");
+		}
+		
+		
+		//RIGHT COLLISIONS
+		
 		//ENEMY COLLIDING
 		for (int i = 0; i < axebots.size; i++) {
 			if (A.getBody().getUserData() == axebots.get(i).getBody().getUserData() || B.getBody().getUserData() == axebots.get(0).getBody().getUserData()) {
@@ -60,6 +84,17 @@ public class ContactDetector implements ContactListener{
 				}
 			}
 		}
+
+	//BULLET COLLISIONS WITH MAP
+		for (int i = 0; i < ammo.size; i++) {
+				for (int j = 0; j < axebots.size; j++) {
+					if (A.getBody().getUserData() == axebots.get(j).getBody().getUserData() || B.getBody().getUserData() == axebots.get(j).getBody().getUserData())
+							if (A.getBody().getUserData() == ammo.get(i).getBody().getUserData() || B.getBody().getUserData() == ammo.get(i).getBody().getUserData()) {
+								lostAmmo.add(ammo.get(i));
+							}
+					}
+		}
+		
 }
 	
 	@Override
@@ -79,6 +114,14 @@ public class ContactDetector implements ContactListener{
 	
 	public boolean getReset() {
 		return reset;
+	}
+	
+	public Array<Bullet> ammoToRemove () {
+		return lostAmmo;
+	}
+	
+	public void allLostAmmo () {
+		lostAmmo.clear();
 	}
 
 }

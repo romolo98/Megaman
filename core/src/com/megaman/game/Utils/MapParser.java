@@ -28,6 +28,7 @@ public class MapParser {
 			collisionDef.type = BodyDef.BodyType.StaticBody; 
 			collisions = world.createBody(collisionDef);
 			collisions.createFixture(shape, 1.0f);
+			collisions.setUserData("ground");
 			shape.dispose();
 	}
 }

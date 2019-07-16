@@ -116,7 +116,7 @@ public class GraphicLoader{
 		for (int i = 0; i < 44; i++) {
 			hudPartTwo.add(new Texture("HUD/EyesClosedResized/"+i+".png"));
 		}
-		animatedHUD = new Animation<Texture>(0.05f, hudPartTwo);
+		animatedHUD = new Animation<Texture>(0.015f, hudPartTwo);
 		
 		for (int i = 0; i < 11; i++)
 			startText.add(new Texture("Intro/"+i+".png"));
