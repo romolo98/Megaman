@@ -7,6 +7,13 @@ public class Bullet extends Entity {
 	int speedBullet;
 	static int bull = 0;
 	
+	public Bullet(Boss boss) {
+		super();
+		super.sensorCreator(boss.getBody().getPosition().x, boss.getBody().getPosition().y, 0.10f, 0.10f, false);
+		super.getBody().setGravityScale(0);
+		speedBullet = 5;
+	}
+	
 	public Bullet(Megaman megaman) {
 		super();
 		super.sensorCreator(megaman.getBody().getPosition().x, megaman.getBody().getPosition().y, 0.15f, 0.15f, false);

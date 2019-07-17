@@ -11,46 +11,76 @@ public class GraphicsManager {
 	float spawn;
 	float fall;
 	float elapsed;
+	float bossElapsed;
 	float salto;
 	float caduta;
 	float saltoMoto;
 	float shoot;
 	float levelStart;
+	float bossPunch;
+	float bossJump;
 	int cont;
 	boolean destroyBullet;
 	boolean firstSpawn;
 	boolean spawnBullet;
 	boolean shootDone;
 	boolean start;
-	boolean[] shootThisBullet;
+	boolean animationBossJumpDone;
+	boolean animationBossPunchDone;
 	
 	public GraphicsManager (){
 		
 		levelStart = 0;
 		elapsed = 0;
+		bossElapsed = 0;
 		salto = 0;
 		saltoMoto = 0;
 		caduta = 0;
 		shoot = 0;
 		cont = 0;
 		spawn = 0;
+		bossJump = 0;
+		bossPunch = 0;
 		firstSpawn = true;
 		destroyBullet = false;
 		spawnBullet = false;
 		shootDone = false;
 		start = false;
-		shootThisBullet = new boolean[50];
+		animationBossJumpDone = false;
+		animationBossPunchDone = false;
 		graphicLoader = new GraphicLoader();
 		graphicLoader.importImage();
 		
 	}
 
-	public void drawMegaman(SpriteBatch batch, Controller controller, Megaman megaman) {
+	public void drawBossX(SpriteBatch batch, Boss boss) {
+		bossElapsed += Gdx.graphics.getDeltaTime();
+		
+		if (boss.getBossAction(BOSS_WALK) && !boss.getBossAction(BOSS_PUNCH) && !boss.getBossAction(BOSS_JUMP)) {
+			drawBoss(batch, boss, graphicLoader.getBossWalk().getKeyFrame(bossElapsed,true), boss.getDirection());
+		}
+		if (boss.getBossAction(BOSS_PUNCH) && !boss.getBossAction(BOSS_WALK) && !boss.getBossAction(BOSS_JUMP)) {
+			drawBoss(batch, boss, graphicLoader.getBossPunch().getKeyFrame(bossPunch), boss.getDirection());
+			bossPunch += Gdx.graphics.getDeltaTime();
+			if (graphicLoader.getBossPunch().isAnimationFinished(bossPunch)) {
+				animationBossPunchDone = true;
+			}
+		}
+		if (boss.getBossAction(BOSS_JUMP) && !boss.getBossAction(BOSS_WALK) && !boss.getBossAction(BOSS_PUNCH)) {
+			drawBoss(batch, boss, graphicLoader.getBossJump().getKeyFrame(bossJump), boss.getDirection());
+			bossJump += Gdx.graphics.getDeltaTime();
+			if (graphicLoader.getBossJump().isAnimationFinished(bossJump)) {
+				animationBossJumpDone = true;
+			}
+		}
+	}
+	
+	public void drawMegamanX(SpriteBatch batch, Controller controller, Megaman megaman) {
 		elapsed += Gdx.graphics.getDeltaTime();
 		shootDone = false;
 		
 		if (firstSpawn) {
-			drawImage(batch, megaman, graphicLoader.getSpawn().getKeyFrame(spawn), controller.getDirection());
+			drawMegaman(batch, megaman, graphicLoader.getSpawn().getKeyFrame(spawn), controller.getDirection());
 			spawn += Gdx.graphics.getDeltaTime();
 			controller.direction = false;
 			if (graphicLoader.getSpawn().isAnimationFinished(spawn)) {
@@ -62,10 +92,10 @@ public class GraphicsManager {
 		else {
 			
 			if (controller.controlli[WALK_START]) {
-				drawImage(batch, megaman, graphicLoader.getInizioWalk(), controller.getDirection());
+				drawMegaman(batch, megaman, graphicLoader.getInizioWalk(), controller.getDirection());
 			}
 			if (controller.getControlli(SHOOT)){
-				drawImage(batch, megaman, graphicLoader.getShoot().getKeyFrame(shoot), controller.getDirection());
+				drawMegaman(batch, megaman, graphicLoader.getShoot().getKeyFrame(shoot), controller.getDirection());
 				shoot += Gdx.graphics.getDeltaTime();
 				if (graphicLoader.getShoot().isAnimationFinished(shoot)) {
 					shoot = 0;
@@ -73,40 +103,46 @@ public class GraphicsManager {
 				}
 			}
 			if (controller.getControlli(FALL)) {
-				drawImage(batch, megaman, graphicLoader.getFall().getKeyFrame(fall), controller.getDirection());
+				drawMegaman(batch, megaman, graphicLoader.getFall().getKeyFrame(fall), controller.getDirection());
 				fall+= Gdx.graphics.getDeltaTime();
+				if (graphicLoader.getFall().isAnimationFinished(fall)) {
+					fall = 0;
+				}
 			}
 			
 			if (controller.getControlli(WALK) && !controller.getControlli(FALL) && !controller.getControlli(JUMP) && !controller.getControlli(JUMP_SHOOT) && !controller.getControlli(FALL_SHOOT)) {
 				if (controller.getControlli(WALK_SHOOT)) {
-					drawImage(batch, megaman, graphicLoader.getShooting().getKeyFrame(elapsed,true), controller.getDirection());
+					drawMegaman(batch, megaman, graphicLoader.getShooting().getKeyFrame(elapsed,true), controller.getDirection());
 				}
 				else if (controller.getControlli(WALK_JUMP)) {
-					drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
+					drawMegaman(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
 				}
 				
 				else { 
-					drawImage(batch, megaman, graphicLoader.getWalk().getKeyFrame(elapsed, true), controller.getDirection());
+					drawMegaman(batch, megaman, graphicLoader.getWalk().getKeyFrame(elapsed, true), controller.getDirection());
 				}
 			}
 			if (controller.getControlli(JUMP) && !controller.getControlli(JUMP_SHOOT) && !controller.getControlli(FALL)) {
-				drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
+				drawMegaman(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
 			}
 		    if (controller.getControlli(WALK_JUMP) && !controller.getControlli(JUMP_SHOOT) && !controller.getControlli(FALL)) {
-				drawImage(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
+				drawMegaman(batch, megaman, graphicLoader.getJump().getKeyFrame(elapsed), controller.getDirection());
 			}
 			
 			if (controller.getControlli(JUMP_SHOOT)) {
-				drawImage(batch, megaman, graphicLoader.getJumpShoot().getKeyFrame(elapsed), controller.getDirection());
+				drawMegaman(batch, megaman, graphicLoader.getJumpShoot().getKeyFrame(elapsed), controller.getDirection());
 			}
 			
 			if (controller.getControlli(FALL_SHOOT)) {
-				drawImage(batch, megaman, graphicLoader.getFallShoot().getKeyFrame(fall), controller.getDirection());
+				drawMegaman(batch, megaman, graphicLoader.getFallShoot().getKeyFrame(fall), controller.getDirection());
 				fall += Gdx.graphics.getDeltaTime();
+				if (graphicLoader.getFall().isAnimationFinished(fall)) {
+					fall = 0;
+				}
 			}
 			
 			if (controller.getControlli(IDLE)){
-				drawImage(batch, megaman, graphicLoader.getIdle().getKeyFrame(elapsed, true), controller.getDirection());
+				drawMegaman(batch, megaman, graphicLoader.getIdle().getKeyFrame(elapsed, true), controller.getDirection());
 			}
 		}
 	}
@@ -114,7 +150,13 @@ public class GraphicsManager {
 	public void drawBullet (SpriteBatch batch, Bullet bullet, boolean dir) {
 		batch.draw(graphicLoader.getBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
-	public void drawImage (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
+	public void drawBossBullet (SpriteBatch batch, Bullet bullet, boolean dir) {
+		batch.draw(graphicLoader.getBossBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
+	}
+	public void drawBoss (SpriteBatch batch, Boss boss, Texture texture, boolean dir) {
+		batch.draw(texture, boss.getBody().getPosition().x * PPM - 48, boss.getBody().getPosition().y * PPM - 48, 96, 96, 0, 0, 96, 96, dir, false);
+	}
+	public void drawMegaman (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
 			batch.draw(texture, megaman.getBody().getPosition().x * PPM - PPM / 2, megaman.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
 	public void drawHud (SpriteBatch batch, Megaman megaman, HUD hud) {
@@ -125,11 +167,28 @@ public class GraphicsManager {
 	public void drawEnemy (SpriteBatch batch, Enemy axeBot) {
 		batch.draw(graphicLoader.getAxebot().getKeyFrame(elapsed, true), axeBot.getBody().getPosition().x * PPM - PPM / 2, axeBot.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, false, false);
 	}
-	
+
+	// LEVEL START (WORK IN PROGRESS)
 	/*public void drawLevelStart (SpriteBatch batch) {
 		batch.draw(graphicLoader.getStartText().getKeyFrame(elapsed), gameManager.getCamera().position.x - PPM*4, gameManager.getCamera().position.y);
 	}
 	*/
+	
+	public boolean getAnimationBossJumpDone () {
+		return animationBossJumpDone;
+	}
+	
+	public boolean getAnimationBossPunchDone () {
+		return animationBossPunchDone;
+	}
+	
+	public void setAnimationBossPunchDoneFalse () {
+		animationBossPunchDone = false;
+	}
+	
+	public void setAnimationBossJumpDoneFalse () {
+		animationBossJumpDone = false;
+	}
 	
 	public GraphicLoader getGL() {
 		return graphicLoader;
@@ -154,6 +213,14 @@ public class GraphicsManager {
 	
 	public void setFallAnimationZero () {
 		fall = 0;
+	}
+	
+	public void setBossJumpFrame () {
+		bossJump = 0;
+	}
+	
+	public void setBossPunchFrame () {
+		bossPunch = 0;
 	}
 }
 

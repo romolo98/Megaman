@@ -2,6 +2,8 @@ package com.megaman.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.megaman.game.Utils.ContactDetector;
+
 import static com.megaman.game.Utils.Constants.*;
 
 public class Controller{
@@ -50,7 +52,7 @@ public class Controller{
 		return notWalkLeft;
 	}
 	
-	public void muoviMegaman (Megaman megaman) {
+	public void muoviMegaman (Megaman megaman, ContactDetector detector) {
 		
 		actualTime = System.currentTimeMillis();
 
@@ -79,10 +81,9 @@ public class Controller{
 				megaman.respawn();
 			}
 			
-			if (Gdx.input.isKeyJustPressed(Keys.SPACE) && controlli[WALK_SHOOT]) {
+			if (Gdx.input.isKeyJustPressed(Keys.SPACE) && controlli[WALK_SHOOT]  && !detector.getMustFall()) {
 				controlli[JUMP_SHOOT] = true;
 				controlli[WALK_SHOOT] = false;
-				shot = true;
 			}
 			
 			if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT) && (controlli[JUMP] || controlli[WALK_JUMP] || controlli[JUMP_SHOOT]) && !controlli[FALL]) {
@@ -105,7 +106,7 @@ public class Controller{
 				direction = true;
 				controlli[WALK_START] = true;
 			}
-			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			if (Gdx.input.isKeyPressed(Keys.LEFT) && !detector.getMustFall()) {
 				direction = true;
 						
 				if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[WALK_JUMP] && !controlli[JUMP_SHOOT]) {
@@ -127,7 +128,7 @@ public class Controller{
 				controlli[WALK_START] = true;
 			}
 			
-			if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			if (Gdx.input.isKeyPressed(Keys.RIGHT) && !detector.getMustFall()) {
 				direction = false;
 				if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[WALK_JUMP] && !controlli[JUMP_SHOOT]) {
 					controlli[WALK_JUMP] = true;
@@ -161,12 +162,13 @@ public class Controller{
 				shot = true;
 			}
 			
-			if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[WALK_JUMP] && !controlli[FALL]) {
+			if (Gdx.input.isKeyJustPressed(Keys.SPACE) && !controlli[FALL]  && !detector.getMustFall()) {
 				controlli[JUMP] = true;
 			}
 	
 			if (isAllFalseExeptIdle()) {
 				controlli[IDLE] = true;
+				detector.setMustFallFalse();
 			}
 			else {
 				controlli[IDLE] = false;

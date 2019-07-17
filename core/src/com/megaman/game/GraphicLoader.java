@@ -14,6 +14,7 @@ public class GraphicLoader{
 	float frameRates;
 	private Texture inizioWalk;
 	private Texture bullet;
+	private Texture bossBullet;
 	private Array<Texture> spawnTexture;
 	private Array<Texture> shootTexture;
 	private Array<Texture> fallTexture;
@@ -27,6 +28,9 @@ public class GraphicLoader{
 	private Array<Texture> startText;
 	private Array<Texture> fallShootTexture;
 	private Array<Texture> axeBotTexture;
+	private Array<Texture> jumpBossTexture;
+	private Array<Texture> walkBossTexture;
+	private Array<Texture> punchBossTexture;
 	private Animation<Texture> spawnAnimation;
 	private Animation<Texture> specialMove;
 	private Animation<Texture> fall;
@@ -40,12 +44,15 @@ public class GraphicLoader{
 	private Animation<Texture> startAnimation;
 	private Animation<Texture> fallShoot;
 	private Animation<Texture> axeBot;
+	private Animation<Texture> jumpBoss;
+	private Animation<Texture> walkBoss;
+	private Animation<Texture> punchBoss;
 	
-	
-	public GraphicLoader() {
+ 	public GraphicLoader() {
 		frameRates = 0.060f;
 		inizioWalk = new Texture("Megaman/Walk/inizio.png");
 		bullet = new Texture("Bullets/ChargeShot/1.png");
+		bossBullet = new Texture("Boss/Bullet.png");
 		spawnTexture = new Array<Texture>();
 		walkTexture = new Array<Texture>();
 		idleTexture = new Array<Texture>();
@@ -60,6 +67,10 @@ public class GraphicLoader{
 		hudPartTwo = new Array<Texture>();
 		startText = new Array<Texture>();
 		axeBotTexture = new Array<Texture>();
+		jumpBossTexture = new Array<Texture>();
+		walkBossTexture = new Array<Texture>();
+		punchBossTexture = new Array<Texture>();
+		
 	}
 	
 	public void importImage () {
@@ -116,47 +127,67 @@ public class GraphicLoader{
 		for (int i = 0; i < 44; i++) {
 			hudPartTwo.add(new Texture("HUD/EyesClosedResized/"+i+".png"));
 		}
-		animatedHUD = new Animation<Texture>(0.015f, hudPartTwo);
+			animatedHUD = new Animation<Texture>(0.015f, hudPartTwo);
 		
-		for (int i = 0; i < 11; i++)
+		for (int i = 0; i < 11; i++) {
 			startText.add(new Texture("Intro/"+i+".png"));
+		}
+			startAnimation = new Animation<Texture>(0.08f, startText);
 		
-		startAnimation = new Animation<Texture>(0.08f, startText);
-		
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < 7; i++) {
 			axeBotTexture.add(new Texture("Enemies/Axebot/"+i+".png"));
-		axeBot = new Animation<Texture>(0.08f, axeBotTexture);
+		}
+			axeBot = new Animation<Texture>(0.08f, axeBotTexture);
+		
+		for (int i = 0; i < 5; i++) {
+			jumpBossTexture.add(new Texture("Boss/Jump/"+i+".png"));
+		}
+			jumpBoss = new Animation<Texture>(0.130f,jumpBossTexture);
+			
+		for (int i = 0; i < 3; i++) {
+			punchBossTexture.add(new Texture("Boss/Punch/"+i+".png"));
+		}
+			punchBoss = new Animation<Texture>(0.080f,punchBossTexture);
+			
+		for (int i = 0; i < 9; i++) {
+			walkBossTexture.add(new Texture("Boss/Walk/"+i+".png"));
+		}
+			walkBoss = new Animation<Texture>(0.080f,walkBossTexture);
 	}
 	
-	public Texture getBullet() {
+	public Texture getBullet () {
 		return bullet;
+	}
+	
+	public Texture getBossBullet () {
+		return bossBullet;
 	}
 	
 	public Texture getInizioWalk () {
 		return inizioWalk;
 	}
 	
-	public Animation<Texture> getSpawn(){
+	public Animation<Texture> getSpawn () {
 		return spawnAnimation;
 	}
 	
-	public Animation<Texture> getIdle(){
+	public Animation<Texture> getIdle () {
 		return idle;
 	}
 	
-	public Animation<Texture> getWalk (){
+	public Animation<Texture> getWalk () {
 		return walk;
 	}
 	
-	public Animation<Texture> getJump (){
+	public Animation<Texture> getJump () {
 		return jump;
 	}
 	
-	public Animation<Texture> getFall (){
+	public Animation<Texture> getFall () {
 		return fall;
 	}
 	
-	public Animation<Texture> getShooting (){
+	public Animation<Texture> getShooting () {
 		return shooting;
 	}
 	
@@ -176,15 +207,15 @@ public class GraphicLoader{
 		return hud.get(HP);
 	}
 	
-	public Animation<Texture> getAnimatedHUD(){
+	public Animation<Texture> getAnimatedHUD () {
 		return animatedHUD;
 	}
 	
-	public Animation<Texture> getFallShoot(){
+	public Animation<Texture> getFallShoot () {
 		return fallShoot;
 	}
 	
-	public Animation<Texture> getStartText(){
+	public Animation<Texture> getStartText () {
 		return startAnimation;
 	}
 	
@@ -192,4 +223,15 @@ public class GraphicLoader{
 		return axeBot;
 	}
 
+	public Animation<Texture> getBossJump () {
+		return jumpBoss;
+	}
+	
+	public Animation<Texture> getBossWalk () {
+		return walkBoss;
+	}
+	
+	public Animation<Texture> getBossPunch () {
+		return punchBoss;
+	}
 }

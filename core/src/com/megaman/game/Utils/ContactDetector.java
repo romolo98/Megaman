@@ -19,8 +19,10 @@ public class ContactDetector implements ContactListener{
 	private Body deathZone;
 	private Megaman megaman;
 	private boolean collidingBullet;
+	private boolean onTheGround;
 	private Array<Enemy> axebots;
 	private boolean reset;
+	private boolean mustFall;
 	private Array<Bullet> ammo;
 	private Array<Bullet> lostAmmo;
 	private Controller sameController;
@@ -30,6 +32,8 @@ public class ContactDetector implements ContactListener{
 		deathZone = dZ.getBody();
 		megaman = m;
 		reset = false;
+		onTheGround = false;
+		mustFall = false;
 		ammo = ammunition;
 		lostAmmo = new Array<Bullet>();
 		axebots = axebot;
@@ -54,23 +58,21 @@ public class ContactDetector implements ContactListener{
 		
 		//GROUND COLLISIONS
 		if (A.getUserData() == "feet" || B.getUserData() == "feet") {
-			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground")
-				System.out.println("Tocco il terreno");
+				onTheGround = true;
 		}
 		
 		//LEFT COLLISIONS
 		if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
-			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground")
-				System.out.println("Tocco da sinistra");
+			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground") {
+				mustFall = true;
+			}
 		}
-		
-		if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
-			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground")
-				System.out.println("Tocco da destra");
-		}
-		
-		
 		//RIGHT COLLISIONS
+		if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
+			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground") {
+				mustFall = true;
+			}
+		}
 		
 		//ENEMY COLLIDING
 		for (int i = 0; i < axebots.size; i++) {
@@ -100,6 +102,12 @@ public class ContactDetector implements ContactListener{
 	@Override
 	public void endContact(Contact contact) {
 		reset = false;
+		Fixture A = contact.getFixtureA();
+		Fixture B = contact.getFixtureB();
+		
+		if (A.getUserData() != "feet" && B.getUserData() != "feet") {
+			onTheGround = false;
+		}
 	}
 
 	@Override
@@ -109,7 +117,7 @@ public class ContactDetector implements ContactListener{
 
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
-		
+
 	}
 	
 	public boolean getReset() {
@@ -123,5 +131,15 @@ public class ContactDetector implements ContactListener{
 	public void allLostAmmo () {
 		lostAmmo.clear();
 	}
+	
+	public boolean getOnTheGround () {
+		return onTheGround;
+	}
+	public boolean getMustFall () {
+		return mustFall;
+	}
 
+	public void setMustFallFalse (){
+		mustFall = false;
+	}
 }

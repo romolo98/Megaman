@@ -1,7 +1,6 @@
 package com.megaman.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,12 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.megaman.game.Utils.ContactDetector;
 import com.megaman.game.Utils.MapParser;
@@ -32,6 +26,7 @@ public class gameManager {
 	Entity deathZone;
 	Controller controller;
 	Megaman megaman;
+	Boss boss;
 	GraphicsManager gm;
 	HUD hud;
 	Array<Bullet> ammunition;
@@ -72,15 +67,14 @@ public class gameManager {
 		levelHeight = mapProperties.get("height", Integer.class);
 		MapParser.parseObjectLayer(world, map.getLayers().get("Collision").getObjects());
 		ammunitionToDestroy = new Array<Bullet>();
-		//Entity platform = new Entity();
-		//platform.bodyCreator(5, 2,12 / PPM, 32 / PPM, true, 1);
-		//platform.getBody().setUserData("platform");
+
 		axeBot = new Array<Enemy>(getAxebotSpawn().size);
 		for (int i = 0; i < getAxebotSpawn().size; i++) {
 			axeBot.add(new Enemy(i));
 		}
 
 		megaman = new Megaman();
+		boss = new Boss();
 		
 		Vector2 death = new Vector2();
 		deathZone = new Entity();	
@@ -106,9 +100,11 @@ public class gameManager {
 		mapRenderer.render();
 		batch.begin();
 		
-		controller.muoviMegaman(megaman);
-		gm.drawMegaman(batch, controller, megaman);
+		updateBoss(boss,megaman);
+		controller.muoviMegaman(megaman,detector);
+		gm.drawMegamanX(batch, controller, megaman);
 		gm.drawHud(batch, megaman, hud);
+		gm.drawBossX(batch, boss);
 		
 		for (int i = 0; i < getAxebotSpawn().size; i++)
 			gm.drawEnemy(batch, axeBot.get(i));
@@ -119,7 +115,7 @@ public class gameManager {
 		
 		updateMegaman();
 		updateBullet(batch);
-		
+		updateBulletBoss(batch);
 	}
 
 	public void disposer () {
@@ -231,7 +227,7 @@ public class gameManager {
 		
 		// SET DI JUMP
 		if (controller.getControlli(JUMP) && !controller.getControlli(FALL) && numSalto < 1) {
-			forceY+=6;
+			forceY+=5;
 			numSalto++;
 			if (controller.getControlli(JUMP_SHOOT)) {
 				controller.setControlliFalse(JUMP);
@@ -284,6 +280,31 @@ public class gameManager {
 		for (Bullet i: ammunition) {
 				gm.drawBullet(batch, i,i.getDirection());
 				i.physics(); 
+		}
+	}
+	
+	public void updateBoss (Boss boss,Megaman megaman) {
+		boss.bossIA(megaman);
+		if (gm.getAnimationBossJumpDone()) {
+			if (!boss.isBossFalling()) {
+				gm.setAnimationBossJumpDoneFalse();
+				gm.setBossJumpFrame();
+				boss.setBossActionFalse(BOSS_JUMP);
+			}
+		}
+		if (gm.getAnimationBossPunchDone()) {
+			if ((megaman.getBody().getPosition().x - boss.getBody().getPosition().x) > 1 || ((boss.getBody().getPosition().x - megaman.getBody().getPosition().x) > 1)) {
+			gm.setAnimationBossPunchDoneFalse();
+			gm.setBossPunchFrame();
+			boss.setBossActionFalse(BOSS_PUNCH);
+			}
+		}
+	}
+	
+	public void updateBulletBoss (SpriteBatch batch) {
+		for (Bullet i: boss.getBossBullets()) {
+			gm.drawBossBullet(batch,i,i.getDirection());
+			i.physics();
 		}
 	}
 	
@@ -357,13 +378,22 @@ public class gameManager {
 		return axebotSpawn;
 	}
 	
+	public static Rectangle getBossSpawn() {
+		Rectangle rect = new Rectangle();
+		for (MapObject object : map.getLayers().get("BossSpawn").getObjects()) {
+			if (object instanceof RectangleMapObject) {
+				rect = ((RectangleMapObject)object).getRectangle();
+			}
+		}
+		return rect;
+	}
+	
 	boolean isMegamanFalling () {
 		if (megaman.getBody().getLinearVelocity().y < -1.3) {
 			return true;
 		}
 		return false;
 	}
-
 }
 
 
