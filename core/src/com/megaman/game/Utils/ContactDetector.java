@@ -7,18 +7,21 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
+import com.megaman.game.Boss;
 import com.megaman.game.Bullet;
 import com.megaman.game.Controller;
 import com.megaman.game.Enemy;
 import com.megaman.game.Entity;
 import com.megaman.game.HUD;
 import com.megaman.game.Megaman;
+import com.megaman.game.gameManager;
 
 public class ContactDetector implements ContactListener{
 	
-	private Body deathZone;
-	private Megaman megaman;
+	private Boss levelboss;
 	private boolean collidingBullet;
+	private Array<Entity> death;
+	private Megaman megaman;
 	private boolean onTheGround;
 	private Array<Enemy> axebots;
 	private boolean reset;
@@ -28,8 +31,8 @@ public class ContactDetector implements ContactListener{
 	private Controller sameController;
 	int ciao = 0;
 	
-	public ContactDetector(Entity dZ, Megaman m, Array<Bullet> ammunition, Array<Enemy> axebot, Controller controller) {
-		deathZone = dZ.getBody();
+	public ContactDetector(Array<Entity> deathzones, Megaman m, Array<Bullet> ammunition, Array<Enemy> axebot, Controller controller, Boss boss) {
+		death = deathzones;
 		megaman = m;
 		reset = false;
 		onTheGround = false;
@@ -39,6 +42,7 @@ public class ContactDetector implements ContactListener{
 		axebots = axebot;
 		sameController = controller;
 		collidingBullet = false;
+		levelboss = boss;
 	}
 
 	@Override
@@ -50,9 +54,11 @@ public class ContactDetector implements ContactListener{
 		if (A.getBody().getUserData() == null || B.getBody().getUserData() == null) return;
 		
 		//DEATHZONE COLLISIONS
-		if (A.getBody().getUserData() == deathZone.getUserData() || B.getBody().getUserData() == deathZone.getUserData()) {
-			if (A.getBody().getUserData() == megaman.getBody().getUserData() || B.getBody().getUserData() == megaman.getBody().getUserData()) {
-				reset = true;
+		for (int i = 0; i < death.size; i++) {
+			if (A.getBody().getUserData() == death.get(i).getBody().getUserData() || B.getBody().getUserData() == death.get(i).getBody().getUserData()) {
+				if (A.getBody().getUserData() == megaman.getBody().getUserData() || B.getBody().getUserData() == megaman.getBody().getUserData()) {
+					reset = true;
+				}
 			}
 		}
 		
@@ -74,20 +80,62 @@ public class ContactDetector implements ContactListener{
 			}
 		}
 		
-		//ENEMY COLLIDING
+		//ENEMY COLLIDING RIGHT
 		for (int i = 0; i < axebots.size; i++) {
 			if (A.getBody().getUserData() == axebots.get(i).getBody().getUserData() || B.getBody().getUserData() == axebots.get(0).getBody().getUserData()) {
-				if (A.getBody().getUserData() == megaman.getBody().getUserData() || B.getBody().getUserData() == megaman.getBody().getUserData()) {
-					if (sameController.getDirection())
-						megaman.getBody().setLinearVelocity(75, 1);
-					else
+				if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
 						megaman.getBody().setLinearVelocity(-75, 1);
 					HUD.removeLife();
 				}
+				else if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
+						megaman.getBody().setLinearVelocity(75, 1);
+					HUD.removeLife();
 			}
 		}
-
-	//BULLET COLLISIONS WITH MAP
+	}
+		
+		//BOSS COLLISIONS
+		if (A.getBody().getUserData() == levelboss.getBody().getUserData() || B.getBody().getUserData() == levelboss.getBody().getUserData()) {
+			if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
+					megaman.getBody().setLinearVelocity(150, 1);
+					HUD.removeLife(levelboss.getPunchDamage());
+			}
+			else if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
+					megaman.getBody().setLinearVelocity(-150, 1);
+					HUD.removeLife(levelboss.getPunchDamage());
+			}
+		}
+		
+		//BOSS BULLETS COLLISIONS 
+		if (A.getBody().getUserData() == "bossBullet" || B.getBody().getUserData() == "bossBullet") {
+			if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
+					megaman.getBody().setLinearVelocity(-75, 1);
+					HUD.removeLife(levelboss.getBulletDamage());
+					levelboss.addBulletsToDestroy(levelboss.getBossBullets().peek());
+			}
+			else if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
+				megaman.getBody().setLinearVelocity(75, 1);
+					HUD.removeLife(levelboss.getBulletDamage());
+					levelboss.addBulletsToDestroy(levelboss.getBossBullets().peek());
+			}
+		}
+		
+		if (A.getBody().getUserData() == "bossBullet" || B.getBody().getUserData() == "bossBullet") {
+			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground")
+				levelboss.addBulletsToDestroy(levelboss.getBossBullets().peek());
+		}
+		
+		
+		for(int i = 0; i < ammo.size; i++) {
+			if (A.getBody().getUserData() == ammo.get(i).getBody().getUserData() || B.getBody().getUserData() == ammo.get(i).getBody().getUserData()) {
+				if (A.getBody().getUserData() == levelboss.getBody().getUserData() || B.getBody().getUserData() == levelboss.getBody().getUserData()) {
+					levelboss.removeLife();
+					lostAmmo.add(ammo.get(i));
+				}
+			}
+		}
+		
+	//BULLETS COLLISIONS WITH ENEMIES
 		for (int i = 0; i < ammo.size; i++) {
 				for (int j = 0; j < axebots.size; j++) {
 					if (A.getBody().getUserData() == axebots.get(j).getBody().getUserData() || B.getBody().getUserData() == axebots.get(j).getBody().getUserData())
@@ -95,8 +143,16 @@ public class ContactDetector implements ContactListener{
 								lostAmmo.add(ammo.get(i));
 							}
 					}
-		}
+			}
 		
+	/*//MEGAMAN BULLETS COLLISION WITH MAP
+		for (int i = 0; i < ammo.size; i++) {
+			if (A.getBody().getUserData() == ammo.get(i).getBody().getUserData() || B.getBody().getUserData() == ammo.get(i).getBody().getUserData()) {
+				if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground")
+					lostAmmo.add(ammo.get(i));
+			}
+		}
+	*/
 }
 	
 	@Override

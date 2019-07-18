@@ -48,6 +48,7 @@ public class Game extends ApplicationAdapter {
 	public void update (float delta) {
 		
 		com.megaman.game.gameManager.getWorld().step(1/60f, 6, 2);
+		gameManager.bossDestroyer();
 		gameManager.cameraUpdate(delta);
 		gameManager.getRenderer().setView(gameManager.getCamera());
 		batch.setProjectionMatrix(gameManager.getCamera().combined);

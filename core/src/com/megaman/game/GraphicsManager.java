@@ -154,14 +154,17 @@ public class GraphicsManager {
 		batch.draw(graphicLoader.getBossBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
 	public void drawBoss (SpriteBatch batch, Boss boss, Texture texture, boolean dir) {
+		if (!boss.getIsDead())
 		batch.draw(texture, boss.getBody().getPosition().x * PPM - 48, boss.getBody().getPosition().y * PPM - 48, 96, 96, 0, 0, 96, 96, dir, false);
 	}
 	public void drawMegaman (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
 			batch.draw(texture, megaman.getBody().getPosition().x * PPM - PPM / 2, megaman.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
 	public void drawHud (SpriteBatch batch, Megaman megaman, HUD hud) {
-			batch.draw(graphicLoader.getHud(hud.getLife()), gameManager.getCamera().position.x - gameManager.getLevelWidth()*7.5f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
-			batch.draw(graphicLoader.getAnimatedHUD().getKeyFrame(elapsed, true), gameManager.getCamera().position.x - gameManager.getLevelWidth()*7.5f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
+			batch.draw(graphicLoader.getHud(hud.getLife()), gameManager.getCamera().position.x - gameManager.getLevelWidth()*3.75f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
+			batch.draw(graphicLoader.getAnimatedHUD().getKeyFrame(elapsed, true), gameManager.getCamera().position.x - gameManager.getLevelWidth()*3.75f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
+			if (hud.getHealthBars() != 0)
+			batch.draw(graphicLoader.getHealthBars(hud.getHealthBars()), gameManager.getCamera().position.x - gameManager.getLevelWidth()*3.75f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
 	}
 	
 	public void drawEnemy (SpriteBatch batch, Enemy axeBot) {

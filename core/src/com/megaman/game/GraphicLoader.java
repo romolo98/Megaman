@@ -25,6 +25,7 @@ public class GraphicLoader{
 	private Array<Texture> shootingTexture;
 	private Array<Texture> hud;
 	private Array<Texture> hudPartTwo;
+	private Array<Texture> hudPartThree;
 	private Array<Texture> startText;
 	private Array<Texture> fallShootTexture;
 	private Array<Texture> axeBotTexture;
@@ -65,6 +66,7 @@ public class GraphicLoader{
 		shootTexture = new Array<Texture>();
 		hud = new Array<Texture>();
 		hudPartTwo = new Array<Texture>();
+		hudPartThree = new Array<Texture>();
 		startText = new Array<Texture>();
 		axeBotTexture = new Array<Texture>();
 		jumpBossTexture = new Array<Texture>();
@@ -129,6 +131,10 @@ public class GraphicLoader{
 		}
 			animatedHUD = new Animation<Texture>(0.015f, hudPartTwo);
 		
+		for (int i = 0; i < 6; i++) {
+			hudPartThree.add(new Texture("HUD/Bolts/"+i+".png"));
+		}
+			
 		for (int i = 0; i < 11; i++) {
 			startText.add(new Texture("Intro/"+i+".png"));
 		}
@@ -205,6 +211,10 @@ public class GraphicLoader{
 	
 	public Texture getHud(int HP) {
 		return hud.get(HP);
+	}
+	
+	public Texture getHealthBars(int HB) {
+		return hudPartThree.get(HB);
 	}
 	
 	public Animation<Texture> getAnimatedHUD () {

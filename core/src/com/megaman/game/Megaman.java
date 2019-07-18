@@ -10,7 +10,6 @@ public class Megaman extends Entity {
 	public Megaman (){
 		super();
 		super.bodyCreator(gameManager.getSpawn().x/PPM, gameManager.getSpawn().y/PPM, PPM/2/PPM/2, PPM/2/PPM/2, false, 2.0f);
-		
 		feetSensorCreator();
 		leftCollisionCreator();
 		rightCollisionCreator();

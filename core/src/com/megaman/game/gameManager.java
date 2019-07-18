@@ -22,13 +22,13 @@ import com.megaman.game.Utils.MapParser;
 import static com.megaman.game.Utils.Constants.*;
 
 public class gameManager {
-	
 	Entity deathZone;
 	Controller controller;
 	Megaman megaman;
 	Boss boss;
 	GraphicsManager gm;
 	HUD hud;
+	Array<Entity> deathzones;
 	Array<Bullet> ammunition;
 	Array<Bullet> ammunitionToDestroy;
 	Array<Enemy> axeBot;
@@ -53,7 +53,7 @@ public class gameManager {
 	
 	
 	public gameManager(GraphicsManager graphicManager) {
-		
+
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		camera = new OrthographicCamera();
@@ -72,20 +72,24 @@ public class gameManager {
 		for (int i = 0; i < getAxebotSpawn().size; i++) {
 			axeBot.add(new Enemy(i));
 		}
+		
+		deathzones = new Array<Entity>(getDeath().size);
+		for (int i = 0; i < getDeath().size; i++) {
+			deathzones.add(new Entity());
+			deathzones.get(i).sensorCreator(getDeath().get(i).x/PPM+getDeath().get(i).getWidth()/PPM/2, getDeath().get(i).y/PPM+getDeath().get(i).getHeight()/PPM/2, getDeath().get(i).getWidth()/PPM/2, getDeath().get(i).getHeight()/PPM/2, true);
+			deathzones.get(i).getBody().setUserData("death");
+		}
 
 		megaman = new Megaman();
 		boss = new Boss();
 		
-		Vector2 death = new Vector2();
-		deathZone = new Entity();	
-		deathZone.sensorCreator(getDeath().getCenter(death).x/PPM,getDeath().getCenter(death).y/PPM, getDeath().getWidth()/PPM/2, getDeath().getHeight()/PPM/2, true);
-		deathZone.getBody().setUserData("deathZone");
+
 		
 		ammunition = new Array<Bullet>();
 		
 		controller = new Controller();
 		
-		detector = new ContactDetector(deathZone, megaman, ammunition, axeBot, controller);
+		detector = new ContactDetector(deathzones, megaman, ammunition, axeBot, controller, boss);
 		world.setContactListener(detector);
 		numSalto = 0;
 		
@@ -105,6 +109,7 @@ public class gameManager {
 		gm.drawMegamanX(batch, controller, megaman);
 		gm.drawHud(batch, megaman, hud);
 		gm.drawBossX(batch, boss);
+		hud.updateLife();
 		
 		for (int i = 0; i < getAxebotSpawn().size; i++)
 			gm.drawEnemy(batch, axeBot.get(i));
@@ -359,14 +364,14 @@ public class gameManager {
 		return rect.getCenter(position);
 	}
 	
-	public static Rectangle getDeath() {
-		Rectangle rect = new Rectangle();
+	public static Array<Rectangle> getDeath() {
+		Array<Rectangle> death = new Array<Rectangle>();
 		for (MapObject object : map.getLayers().get("HealthLose").getObjects()) {
 			if (object instanceof RectangleMapObject) {
-				rect = ((RectangleMapObject)object).getRectangle();
+				death.add(((RectangleMapObject)object).getRectangle());
 			}
 		}
-		return rect;
+		return death;
 	}
 	
 	public static Array<Rectangle> getAxebotSpawn() {
@@ -394,6 +399,14 @@ public class gameManager {
 			return true;
 		}
 		return false;
+	}
+	
+	public void bossDestroyer() {
+		if (boss.getMustDIE())
+		{
+			world.destroyBody(boss.getBody());
+			boss.mustDieOrNot();
+		}
 	}
 }
 
