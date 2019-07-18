@@ -33,6 +33,13 @@ public class Bullet extends Entity {
 			this.getBody().setLinearVelocity(-speedBullet, 0);
 	}
 	
+	public void physicsIA (Megaman megaman) {
+		if (!direction)
+			this.getBody().applyForce(speedBullet, megaman.getPositionY(), megaman.getPositionX(), megaman.getPositionY(), true);
+		else
+			this.getBody().applyForce(-speedBullet, megaman.getPositionY(), megaman.getPositionX(), megaman.getPositionY(), true);
+	}
+	
 	public float getPositionX() {
 		return this.getBody().getPosition().x;
 	}

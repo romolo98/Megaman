@@ -65,6 +65,7 @@ public class Boss extends Entity{
 		bulletsToDestroy.clear();
 		bullets.add(new Bullet(this));
 		bullets.peek().setDirection(direction);
+		
 		lastTimeShoot = System.currentTimeMillis();
 	}
 	

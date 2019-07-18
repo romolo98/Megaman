@@ -302,9 +302,10 @@ public class gameManager {
 	}
 	
 	public void updateBulletBoss (SpriteBatch batch) {
+		
 		for (Bullet i: boss.getBossBullets()) {
 			gm.drawBossBullet(batch,i,i.getDirection());
-			i.physics();
+			i.physicsIA(megaman);
 		}
 	}
 	
