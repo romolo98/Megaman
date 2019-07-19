@@ -19,7 +19,7 @@ public class Boss extends Entity{
 	private int delayShoot;
 	private int delayJump;
 	private double actualTime;
-	private static boolean mustDIE = false;
+	private static boolean mustDie = false;
 	public static boolean isDead = false;
 	
 	public Boss () {
@@ -62,7 +62,7 @@ public class Boss extends Entity{
 		if (life > 0)
 		life--;
 		if (life == 0) {
-		mustDIE = true;
+		mustDie = true;
 		}
 	}
 
@@ -171,12 +171,12 @@ public class Boss extends Entity{
 		bulletsToDestroy.add(bullet);
 	}
 	
-	public static boolean getMustDIE() {
-		return mustDIE;
+	public static boolean getMustDie() {
+		return mustDie;
 	}
 	
-	public static void mustDieOrNot() {
-		mustDIE = false;
+	public static void setDeath() {
+		mustDie = false;
 		isDead = true;
 	}
 	

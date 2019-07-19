@@ -111,9 +111,11 @@ public class gameManager {
 		gm.drawBossX(batch, boss);
 		hud.updateLife();
 		
-		for (int i = 0; i < getAxebotSpawn().size; i++)
+		for (int i = 0; i < getAxebotSpawn().size; i++) {
+			if (!axeBot.get(i).isDead)
 			gm.drawEnemy(batch, axeBot.get(i));
-		
+		}
+			
 		batch.end();
 		b2dr.render(world, camera.combined.scl(PPM)); //PIU' E' PICCOLO IL VALORE DI SCALA, PIU' E' GRANDE LA DISTANZA COPERTA DALLA CAMERA
 		batch.begin();
@@ -402,12 +404,23 @@ public class gameManager {
 	}
 	
 	public void bossDestroyer() {
-		if (boss.getMustDIE())
+		if (boss.getMustDie())
 		{
 			world.destroyBody(boss.getBody());
 			boss.getBody().setUserData(null);
 			boss.setBodyNull();
-			boss.mustDieOrNot();
+			boss.setDeath();
+		}
+	}
+	
+	public void enemiesDestroyer() {
+		for (int i = 0; i < axeBot.size; i++) {
+			if (axeBot.get(i).getMustDie()) {
+				world.destroyBody(axeBot.get(i).getBody());
+				axeBot.get(i).getBody().setUserData(null);
+				axeBot.get(i).setBodyNull();
+				axeBot.get(i).setDeath();
+			}
 		}
 	}
 }

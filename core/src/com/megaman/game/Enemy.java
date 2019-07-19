@@ -18,6 +18,29 @@ public class Enemy extends Entity{
 	}
 	
 	public void removeLife() {
-		HP--;
+		if (HP > 0) {
+			HP--;
+		}
+		if (HP == 0) {
+			mustDie = true;
+		}
 	}
+	
+	public boolean getIsDead () {
+		return isDead;
+	}
+	
+	public void setDeath() {
+		mustDie = false;
+		isDead = true;
+	}
+	
+	public boolean getMustDie() {
+		return mustDie;
+	}
+	
+	public void setBodyNull() {
+		this.entityBody = null;
+	}
+	
 }
