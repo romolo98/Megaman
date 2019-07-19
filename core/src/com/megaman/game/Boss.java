@@ -94,6 +94,7 @@ public class Boss extends Entity{
 			
 			if (megaman.getBody().getPosition().x > this.getBody().getPosition().x) {
 				if ((megaman.getBody().getPosition().x - this.getBody().getPosition().x) < 13) {
+					this.getBody().setActive(true);
 					forceX += 0.5f;
 					
 					if (actualTime > delayShoot + lastTimeShoot) {
@@ -114,6 +115,7 @@ public class Boss extends Entity{
 			}
 			else {
 				if ((this.getBody().getPosition().x - megaman.getBody().getPosition().x) < 13) {
+					this.getBody().setActive(true);
 					forceX += 0.5f;
 					if (actualTime > delayShoot + lastTimeShoot) {
 						shoot();
@@ -180,5 +182,9 @@ public class Boss extends Entity{
 	
 	public static boolean getIsDead() {
 		return isDead;
+	}
+	
+	public void setBodyNull () {
+		this.entityBody = null;
 	}
 }

@@ -405,6 +405,8 @@ public class gameManager {
 		if (boss.getMustDIE())
 		{
 			world.destroyBody(boss.getBody());
+			boss.getBody().setUserData(null);
+			boss.setBodyNull();
 			boss.mustDieOrNot();
 		}
 	}

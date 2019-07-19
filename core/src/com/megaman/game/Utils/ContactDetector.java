@@ -29,6 +29,7 @@ public class ContactDetector implements ContactListener{
 	private Array<Bullet> ammo;
 	private Array<Bullet> lostAmmo;
 	private Controller sameController;
+	private Array<Enemy> destroyedEnemies;
 	int ciao = 0;
 	
 	public ContactDetector(Array<Entity> deathzones, Megaman m, Array<Bullet> ammunition, Array<Enemy> axebot, Controller controller, Boss boss) {
@@ -43,6 +44,7 @@ public class ContactDetector implements ContactListener{
 		sameController = controller;
 		collidingBullet = false;
 		levelboss = boss;
+		destroyedEnemies = new Array<Enemy>();
 	}
 
 	@Override
@@ -95,6 +97,8 @@ public class ContactDetector implements ContactListener{
 	}
 		
 		//BOSS COLLISIONS
+		
+		if (!levelboss.getIsDead()) {
 		if (A.getBody().getUserData() == levelboss.getBody().getUserData() || B.getBody().getUserData() == levelboss.getBody().getUserData()) {
 			if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
 					megaman.getBody().setLinearVelocity(150, 1);
@@ -134,16 +138,16 @@ public class ContactDetector implements ContactListener{
 				}
 			}
 		}
-		
+	}
 	//BULLETS COLLISIONS WITH ENEMIES
 		for (int i = 0; i < ammo.size; i++) {
 				for (int j = 0; j < axebots.size; j++) {
 					if (A.getBody().getUserData() == axebots.get(j).getBody().getUserData() || B.getBody().getUserData() == axebots.get(j).getBody().getUserData())
 							if (A.getBody().getUserData() == ammo.get(i).getBody().getUserData() || B.getBody().getUserData() == ammo.get(i).getBody().getUserData()) {
 								lostAmmo.add(ammo.get(i));
+								}
 							}
 					}
-			}
 		
 	/*//MEGAMAN BULLETS COLLISION WITH MAP
 		for (int i = 0; i < ammo.size; i++) {
