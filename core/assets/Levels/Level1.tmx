@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="120" height="10" tilewidth="64" tileheight="64" infinite="0" nextlayerid="58" nextobjectid="798">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="120" height="10" tilewidth="64" tileheight="64" infinite="0" nextlayerid="58" nextobjectid="1084">
  <tileset firstgid="1" name="Level1Tilemap" tilewidth="64" tileheight="64" tilecount="68" columns="4">
   <image source="../TileMap/Level1Tilesheet.png" trans="000000" width="256" height="1088"/>
   <tile id="0">
@@ -138,38 +138,8 @@
   <object id="730" x="4610" y="417" width="64" height="64"/>
   <object id="731" x="2693" y="423" width="64" height="64"/>
   <object id="732" x="1280" y="423" width="64" height="64"/>
-  <object id="758" x="1810" y="177" width="64" height="64"/>
-  <object id="759" x="1810" y="177" width="64" height="64"/>
-  <object id="760" x="1810" y="181" width="64" height="64"/>
-  <object id="761" x="1805" y="210" width="64" height="64"/>
-  <object id="762" x="1803" y="224" width="64" height="64"/>
-  <object id="763" x="1802" y="224" width="64" height="64"/>
-  <object id="764" x="1802" y="224" width="64" height="64"/>
-  <object id="765" x="1802" y="224" width="64" height="64"/>
-  <object id="776" x="1813" y="212" width="64" height="64"/>
-  <object id="777" x="1813" y="212" width="64" height="64"/>
-  <object id="778" x="1813" y="212" width="64" height="64"/>
-  <object id="779" x="1813" y="212" width="64" height="64"/>
-  <object id="780" x="1797" y="211" width="64" height="64"/>
-  <object id="781" x="1787" y="198" width="64" height="64"/>
-  <object id="782" x="1785" y="178" width="64" height="64"/>
-  <object id="783" x="1785" y="160" width="64" height="64"/>
-  <object id="784" x="1798" y="148" width="64" height="64"/>
-  <object id="785" x="1803" y="130" width="64" height="64"/>
-  <object id="786" x="1805" y="121" width="64" height="64"/>
-  <object id="787" x="1814" y="96" width="64" height="64"/>
-  <object id="788" x="1812" y="76" width="64" height="64"/>
-  <object id="789" x="1806" y="45" width="64" height="64"/>
-  <object id="790" x="1803" y="48" width="64" height="64"/>
-  <object id="791" x="1801" y="110" width="64" height="64"/>
-  <object id="792" x="1808" y="171" width="64" height="64"/>
-  <object id="793" x="1810" y="207" width="64" height="64"/>
-  <object id="794" x="1811" y="226" width="64" height="64"/>
-  <object id="795" x="1808" y="246" width="64" height="64"/>
-  <object id="796" x="1807" y="250" width="64" height="64"/>
-  <object id="797" x="1803" y="177" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="57" name="BossSpawn">
-  <object id="757" x="713" y="329" width="96" height="96"/>
+  <object id="1083" x="7339" y="210" width="96" height="96"/>
  </objectgroup>
 </map>

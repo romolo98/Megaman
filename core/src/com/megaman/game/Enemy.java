@@ -5,6 +5,7 @@ import static com.megaman.game.Utils.Constants.*;
 public class Enemy extends Entity{
 
 	private int HP = 5;
+	private int maxHP = 5;
 	boolean isDead = false;
 	boolean mustDie = false;
 	
@@ -15,6 +16,10 @@ public class Enemy extends Entity{
 	
 	public int getLife() {
 		return HP;
+	}
+	
+	public int getMaxHP () {
+		return maxHP;
 	}
 	
 	public void removeLife() {

@@ -10,6 +10,7 @@ public class Boss extends Entity{
 	private float forceY;
 	private boolean direction;
 	private int life;
+	private int totalLife;
 	private int bulletDamage;
 	private int punchDamage;
 	private Array<Bullet> bullets;
@@ -29,6 +30,7 @@ public class Boss extends Entity{
 		forceX = 0;
 		forceY = 0;
 		life = 50;
+		totalLife = 50;
 		lastTimeShoot = 0;
 		lastTimeJump = 0;
 		actualTime = 0;
@@ -48,6 +50,10 @@ public class Boss extends Entity{
 
 	public void setLife(int life) {
 		this.life = life;
+	}
+	
+	public int getTotalLife () {
+		return totalLife;
 	}
 
 	public int getBulletDamage() {

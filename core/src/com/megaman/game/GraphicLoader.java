@@ -15,6 +15,8 @@ public class GraphicLoader{
 	private Texture inizioWalk;
 	private Texture bullet;
 	private Texture bossBullet;
+	private Texture emptyHP;
+	private Texture fullHP;
 	private Array<Texture> spawnTexture;
 	private Array<Texture> shootTexture;
 	private Array<Texture> fallTexture;
@@ -32,6 +34,7 @@ public class GraphicLoader{
 	private Array<Texture> jumpBossTexture;
 	private Array<Texture> walkBossTexture;
 	private Array<Texture> punchBossTexture;
+	private Array<Texture> explosionTexture;
 	private Animation<Texture> spawnAnimation;
 	private Animation<Texture> specialMove;
 	private Animation<Texture> fall;
@@ -48,12 +51,15 @@ public class GraphicLoader{
 	private Animation<Texture> jumpBoss;
 	private Animation<Texture> walkBoss;
 	private Animation<Texture> punchBoss;
+	private Animation<Texture> explosion;
 	
  	public GraphicLoader() {
 		frameRates = 0.060f;
 		inizioWalk = new Texture("Megaman/Walk/inizio.png");
 		bullet = new Texture("Bullets/ChargeShot/1.png");
 		bossBullet = new Texture("Boss/Bullet.png");
+		emptyHP = new Texture("HealthBar/Empty.png");
+		fullHP = new Texture("HealthBar/Full.png");
 		spawnTexture = new Array<Texture>();
 		walkTexture = new Array<Texture>();
 		idleTexture = new Array<Texture>();
@@ -72,6 +78,7 @@ public class GraphicLoader{
 		jumpBossTexture = new Array<Texture>();
 		walkBossTexture = new Array<Texture>();
 		punchBossTexture = new Array<Texture>();
+		explosionTexture = new Array<Texture>();
 		
 	}
 	
@@ -159,6 +166,11 @@ public class GraphicLoader{
 			walkBossTexture.add(new Texture("Boss/Walk/"+i+".png"));
 		}
 			walkBoss = new Animation<Texture>(0.080f,walkBossTexture);
+			
+		for (int i = 0; i < 16; i++) {
+			explosionTexture.add(new Texture("Explosions/"+i+".png"));
+		}
+			explosion = new Animation<Texture>(0.08f, explosionTexture);
 	}
 	
 	public Texture getBullet () {
@@ -243,5 +255,17 @@ public class GraphicLoader{
 	
 	public Animation<Texture> getBossPunch () {
 		return punchBoss;
+	}
+	
+	public Animation<Texture> getExplosion () {
+		return explosion;
+	}
+	
+	public Texture getFullHP () {
+		return fullHP;
+	}
+	
+	public Texture getEmptyHP () {
+		return emptyHP;
 	}
 }

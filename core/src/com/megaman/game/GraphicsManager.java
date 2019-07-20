@@ -152,12 +152,21 @@ public class GraphicsManager {
 	}
 	public void drawBossBullet (SpriteBatch batch, Bullet bullet, boolean dir) {
 		if (!Boss.isDead)
-		batch.draw(graphicLoader.getBossBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
-	}
+			batch.draw(graphicLoader.getBossBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
+		}
 	public void drawBoss (SpriteBatch batch, Boss boss, Texture texture, boolean dir) {
-		if (!boss.getIsDead())
+		if (!boss.getIsDead()) {
 		batch.draw(texture, boss.getBody().getPosition().x * PPM - 48, boss.getBody().getPosition().y * PPM - 48, 96, 96, 0, 0, 96, 96, dir, false);
+		
+		//HP BAR
+		if (boss.getLife() != boss.getTotalLife()) {
+			float healthValue = (float)boss.getTotalLife() / (float)boss.getLife();
+			batch.draw(graphicLoader.getEmptyHP(), boss.getBody().getPosition().x * PPM - PPM / 3.15f, boss.getBody().getPosition().y * PPM - PPM / 4, 64, 64, 0, 0, 64, 64, false, false);
+			batch.draw(graphicLoader.getFullHP(), boss.getBody().getPosition().x * PPM - PPM / 3.15f, boss.getBody().getPosition().y * PPM - PPM / 4, 64 / healthValue, 64, 0, 0, 64, 64, false, false);	
+			}
+		}
 	}
+	
 	public void drawMegaman (SpriteBatch batch, Megaman megaman, Texture texture, boolean dir) {
 			batch.draw(texture, megaman.getBody().getPosition().x * PPM - PPM / 2, megaman.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
@@ -168,10 +177,21 @@ public class GraphicsManager {
 			batch.draw(graphicLoader.getHealthBars(hud.getHealthBars()), gameManager.getCamera().position.x - gameManager.getLevelWidth()*3.75f, gameManager.getCamera().position.y + gameManager.getLevelHeight()*16);
 	}
 	
+	public void drawExplosion (SpriteBatch batch, float posX, float posY) {
+		batch.draw(graphicLoader.getExplosion().getKeyFrame(elapsed,true), posX, posY, 64, 64, 0, 0, 64, 64);
+	}
+	
 	public void drawEnemy (SpriteBatch batch, Enemy axeBot) {
 		batch.draw(graphicLoader.getAxebot().getKeyFrame(elapsed, true), axeBot.getBody().getPosition().x * PPM - PPM / 2, axeBot.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, false, false);
+		
+		//HP BAR
+		if (axeBot.getLife() != axeBot.getMaxHP()) {
+		float healthValue = (float)axeBot.getMaxHP() / (float)axeBot.getLife();
+		batch.draw(graphicLoader.getEmptyHP(), axeBot.getBody().getPosition().x * PPM - PPM / 2, axeBot.getBody().getPosition().y * PPM - PPM / 1.75f, 64, 64, 0, 0, 64, 64, false, false);
+		batch.draw(graphicLoader.getFullHP(), axeBot.getBody().getPosition().x * PPM - PPM / 2 , axeBot.getBody().getPosition().y * PPM - PPM / 1.75f, 64 / healthValue, 64, 0, 0, 64, 64, false, false);	
+		}
+	
 	}
-
 	// LEVEL START (WORK IN PROGRESS)
 	/*public void drawLevelStart (SpriteBatch batch) {
 		batch.draw(graphicLoader.getStartText().getKeyFrame(elapsed), gameManager.getCamera().position.x - PPM*4, gameManager.getCamera().position.y);

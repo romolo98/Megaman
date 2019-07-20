@@ -1,8 +1,11 @@
 package com.megaman.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -32,6 +35,7 @@ public class gameManager {
 	Array<Bullet> ammunition;
 	Array<Bullet> ammunitionToDestroy;
 	Array<Enemy> axeBot;
+	Music level1;
 	int numSalto;
 	float forceX;
 	float forceY;
@@ -67,6 +71,7 @@ public class gameManager {
 		levelHeight = mapProperties.get("height", Integer.class);
 		MapParser.parseObjectLayer(world, map.getLayers().get("Collision").getObjects());
 		ammunitionToDestroy = new Array<Bullet>();
+		level1 = Gdx.audio.newMusic(Gdx.files.internal("Audio/Level1Theme.mp3"));
 
 		axeBot = new Array<Enemy>(getAxebotSpawn().size);
 		for (int i = 0; i < getAxebotSpawn().size; i++) {
@@ -104,6 +109,7 @@ public class gameManager {
 		mapRenderer.render();
 		batch.begin();
 		
+		level1.play();
 		
 		updateBoss(boss,megaman);
 		
@@ -114,10 +120,10 @@ public class gameManager {
 		hud.updateLife();
 		
 		for (int i = 0; i < getAxebotSpawn().size; i++) {
-			if (!axeBot.get(i).isDead)
+			if (!axeBot.get(i).isDead) {
 				gm.drawEnemy(batch, axeBot.get(i));
+			}
 		}
-			
 		batch.end();
 		b2dr.render(world, camera.combined.scl(PPM)); //PIU' E' PICCOLO IL VALORE DI SCALA, PIU' E' GRANDE LA DISTANZA COPERTA DALLA CAMERA
 		batch.begin();
@@ -449,7 +455,6 @@ public class gameManager {
 		ammunition.removeAll(ammunitionToDestroy, true);
 		ammunitionToDestroy.clear();
 	}
-
 }
 
 
