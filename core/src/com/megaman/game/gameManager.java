@@ -104,7 +104,9 @@ public class gameManager {
 		mapRenderer.render();
 		batch.begin();
 		
+		
 		updateBoss(boss,megaman);
+		
 		controller.muoviMegaman(megaman,detector);
 		gm.drawMegamanX(batch, controller, megaman);
 		gm.drawHud(batch, megaman, hud);
@@ -113,7 +115,7 @@ public class gameManager {
 		
 		for (int i = 0; i < getAxebotSpawn().size; i++) {
 			if (!axeBot.get(i).isDead)
-			gm.drawEnemy(batch, axeBot.get(i));
+				gm.drawEnemy(batch, axeBot.get(i));
 		}
 			
 		batch.end();
@@ -269,15 +271,7 @@ public class gameManager {
 			megaman.getBody().setLinearVelocity(forceX, forceY);
 		}
 	
-	public void updateBullet(SpriteBatch batch) {
-		ammunitionToDestroy.addAll(detector.ammoToRemove());
-		detector.allLostAmmo();
-		for (Bullet i: ammunitionToDestroy) {
-			world.destroyBody(i.getBody());
-		}
-		ammunition.removeAll(ammunitionToDestroy, true);
-		ammunitionToDestroy.clear();
-		
+	public void updateBullet(SpriteBatch batch) {		
 		if (controller.shot) {
 			ammunition.add(new Bullet(megaman));
 			ammunition.peek().setDirection(controller.getDirection());
@@ -291,23 +285,24 @@ public class gameManager {
 	}
 	
 	public void updateBoss (Boss boss,Megaman megaman) {
-		boss.bossIA(megaman);
-		if (gm.getAnimationBossJumpDone()) {
-			if (!boss.isBossFalling()) {
-				gm.setAnimationBossJumpDoneFalse();
-				gm.setBossJumpFrame();
-				boss.setBossActionFalse(BOSS_JUMP);
+			boss.bossIA(megaman);
+			if (!boss.isDead) {
+			if (gm.getAnimationBossJumpDone()) {
+				if (!boss.isBossFalling()) {
+					gm.setAnimationBossJumpDoneFalse();
+					gm.setBossJumpFrame();
+					boss.setBossActionFalse(BOSS_JUMP);
+				}
 			}
-		}
-		if (gm.getAnimationBossPunchDone()) {
-			if ((megaman.getBody().getPosition().x - boss.getBody().getPosition().x) > 1 || ((boss.getBody().getPosition().x - megaman.getBody().getPosition().x) > 1)) {
-			gm.setAnimationBossPunchDoneFalse();
-			gm.setBossPunchFrame();
-			boss.setBossActionFalse(BOSS_PUNCH);
+			if (gm.getAnimationBossPunchDone()) {
+				if ((megaman.getBody().getPosition().x - boss.getBody().getPosition().x) > 1 || ((boss.getBody().getPosition().x - megaman.getBody().getPosition().x) > 1)) {
+				gm.setAnimationBossPunchDoneFalse();
+				gm.setBossPunchFrame();
+				boss.setBossActionFalse(BOSS_PUNCH);
+				}
 			}
 		}
 	}
-	
 	public void updateBulletBoss (SpriteBatch batch) {
 		
 		for (Bullet i: boss.getBossBullets()) {
@@ -424,6 +419,33 @@ public class gameManager {
 			}
 		}
 	}
+	
+	public void bossBulletDestroyer() {
+		for (int i = 0; i < boss.getBossBullets().size; i++) {
+			if (boss.getBossBullets().get(i).getMustDie()) {
+				world.destroyBody(boss.getBossBullets().get(i).getBody());
+				boss.getBossBullets().get(i).setBodyNull();
+				boss.getBossBullets().get(i).setDeath();
+			}
+		}
+		boss.getBossBullets().removeAll(boss.getBulletsToDestroy(), true);
+		boss.clearBulletsToDestroy();
+	}
+	
+	public void MegamanBulletDestroyer() {
+		ammunitionToDestroy = detector.ammoToRemove();
+		
+		for (int i = 0; i < ammunition.size; i++) {
+			if (ammunition.get(i).getMustDie()) {
+				world.destroyBody(ammunition.get(i).getBody());
+				ammunition.get(i).setBodyNull();
+				ammunition.get(i).setDeath();
+			}
+		}
+		ammunition.removeAll(ammunitionToDestroy, true);
+		ammunitionToDestroy.clear();
+	}
+
 }
 
 

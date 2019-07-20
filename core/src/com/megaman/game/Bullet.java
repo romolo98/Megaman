@@ -10,7 +10,11 @@ public class Bullet extends Entity {
 	boolean direction;
 	int speedMegamanBullet;
 	int speedBossBullet;
-	static int bull = 0;
+	private boolean isDead = false;
+	private boolean mustDie = false;
+	static int bulletType1 = 0;
+	static int bulletType2 = 0;
+	private int existenceTime = 5;
 	
 	public Bullet(Boss boss) {
 		super();
@@ -19,20 +23,21 @@ public class Bullet extends Entity {
 		else 
 			super.sensorCreator(boss.getBody().getPosition().x-0.35f, boss.getBody().getPosition().y+0.45f, 0.10f, 0.10f, false);
 		super.getBody().setGravityScale(0);
-		super.getBody().setUserData("bossBullet");
+		super.getBody().setUserData("bossBullet" + bulletType2);
 		speedBossBullet = 7;
 		isShot = false;
 		vectorBoss = new Vector2();
 		vectorMegaman = new Vector2();
+		bulletType2++;
 	}
 	
 	public Bullet(Megaman megaman) {
 		super();
 		super.sensorCreator(megaman.getBody().getPosition().x, megaman.getBody().getPosition().y, 0.15f, 0.15f, false);
 		super.getBody().setGravityScale(0);
-		super.getBody().setUserData("bullet"+ bull);
+		super.getBody().setUserData("bullet"+ bulletType1);
 		speedMegamanBullet = 7;
-		bull++;
+		bulletType1++;
 	}
 	
 	public void setDirection (boolean direction) {
@@ -71,5 +76,36 @@ public class Bullet extends Entity {
 	
 	public void setShoot (boolean ok) {
 		isShot = ok;
+	}
+	
+	public boolean getIsDead() {
+		return isDead;
+	}
+	
+	public boolean getMustDie () {
+		return mustDie;
+	}
+	
+	public void setMustDie() {
+		mustDie = true;
+	}
+	
+	public void setDeath() {
+		mustDie = false;
+		isDead = true;
+	}
+	
+	
+	public void setBodyNull() {
+		this.entityBody.setUserData(null);
+		this.entityBody = null;
+	}
+	
+	public int getExistenceTime () {
+		return existenceTime;
+	}
+	
+	public void decreaseExistenceTime() {
+		existenceTime--;
 	}
 }

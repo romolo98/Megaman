@@ -79,14 +79,7 @@ public class Boss extends Entity{
 	}
 
 	public void bossIA (Megaman megaman) {
-		if (!isDead) {
-			for (Bullet i: bulletsToDestroy) {
-				gameManager.getWorld().destroyBody(i.getBody());
-			}
-			
-			bullets.removeAll(bulletsToDestroy, true);
-			bulletsToDestroy.clear();
-			
+		if (!isDead) {			
 			
 			actualTime = System.currentTimeMillis();
 			forceX = 0;
@@ -175,6 +168,14 @@ public class Boss extends Entity{
 	
 	public void addBulletsToDestroy (Bullet bullet) {
 		bulletsToDestroy.add(bullet);
+	}
+	
+	public Array<Bullet> getBulletsToDestroy(){
+		return bulletsToDestroy;
+	}
+	
+	public void clearBulletsToDestroy() {
+		bulletsToDestroy.clear();
 	}
 	
 	public static boolean getMustDie() {

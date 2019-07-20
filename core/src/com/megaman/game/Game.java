@@ -50,6 +50,8 @@ public class Game extends ApplicationAdapter {
 		com.megaman.game.gameManager.getWorld().step(1/60f, 6, 2);
 		gameManager.bossDestroyer();
 		gameManager.enemiesDestroyer();
+		gameManager.bossBulletDestroyer();
+		gameManager.MegamanBulletDestroyer();
 		gameManager.cameraUpdate(delta);
 		gameManager.getRenderer().setView(gameManager.getCamera());
 		batch.setProjectionMatrix(gameManager.getCamera().combined);
