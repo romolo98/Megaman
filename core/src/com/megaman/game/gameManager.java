@@ -406,6 +406,10 @@ public class gameManager {
 			boss.getBody().setUserData(null);
 			boss.setBodyNull();
 			boss.setDeath();
+			
+			for (int i = 0; i < boss.getBossBullets().size; i++) {
+				boss.getBossBullets().get(i).setMustDie();
+			}
 		}
 	}
 	

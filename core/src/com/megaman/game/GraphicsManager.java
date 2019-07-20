@@ -151,6 +151,7 @@ public class GraphicsManager {
 		batch.draw(graphicLoader.getBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
 	public void drawBossBullet (SpriteBatch batch, Bullet bullet, boolean dir) {
+		if (!Boss.isDead)
 		batch.draw(graphicLoader.getBossBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
 	}
 	public void drawBoss (SpriteBatch batch, Boss boss, Texture texture, boolean dir) {
