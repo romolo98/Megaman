@@ -126,10 +126,10 @@ public class ContactDetector implements ContactListener{
 				}
 			}
 			
-			if (A.getBody().getUserData() == "bossBullet" || B.getBody().getUserData() == "bossBullet") {
+			/*if (A.getBody().getUserData() == "bossBullet" || B.getBody().getUserData() == "bossBullet") {
 				if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground")
 					levelboss.addBulletsToDestroy(levelboss.getBossBullets().peek());
-			}
+			}*/
 			
 			
 			for(int i = 0; i < ammo.size; i++) {

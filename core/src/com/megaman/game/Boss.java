@@ -33,7 +33,7 @@ public class Boss extends Entity{
 		lastTimeJump = 0;
 		actualTime = 0;
 		delayShoot = 1500;
-		delayJump = 5000;
+		delayJump = 100000000;
 		bulletDamage = 1;
 		punchDamage = 2;
 		direction = true;
@@ -95,7 +95,7 @@ public class Boss extends Entity{
 			if (megaman.getBody().getPosition().x > this.getBody().getPosition().x) {
 				if ((megaman.getBody().getPosition().x - this.getBody().getPosition().x) < 13) {
 					this.getBody().setActive(true);
-					forceX += 0.5f;
+					forceX += 1.5f;
 					
 					if (actualTime > delayShoot + lastTimeShoot) {
 						shoot();
@@ -116,7 +116,7 @@ public class Boss extends Entity{
 			else {
 				if ((this.getBody().getPosition().x - megaman.getBody().getPosition().x) < 13) {
 					this.getBody().setActive(true);
-					forceX += 0.5f;
+					forceX += 1.5f;
 					if (actualTime > delayShoot + lastTimeShoot) {
 						shoot();
 					}
@@ -140,10 +140,16 @@ public class Boss extends Entity{
 			
 			//MOVEMENTS
 			if (!direction) {
-				this.getBody().setLinearVelocity(forceX,forceY);
+				if ((megaman.getBody().getPosition().x - this.getBody().getPosition().x) > 4)
+					this.getBody().setLinearVelocity(forceX+2,forceY);
+				else
+					this.getBody().setLinearVelocity(forceX,forceY);
 			}
 			else {
-				this.getBody().setLinearVelocity(-forceX,forceY);
+				if ((this.getBody().getPosition().x - megaman.getBody().getPosition().x) > 4)
+					this.getBody().setLinearVelocity(-forceX-2,forceY);
+				else
+					this.getBody().setLinearVelocity(-forceX,forceY);
 			}
 		}
 	}

@@ -312,7 +312,8 @@ public class gameManager {
 		
 		for (Bullet i: boss.getBossBullets()) {
 			gm.drawBossBullet(batch,i,i.getDirection());
-			i.physicsIA(megaman);
+			i.physicsIA(megaman,boss);
+			i.setShoot(true);
 		}
 	}
 	
