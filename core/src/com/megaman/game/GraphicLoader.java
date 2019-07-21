@@ -170,7 +170,7 @@ public class GraphicLoader{
 		for (int i = 0; i < 16; i++) {
 			explosionTexture.add(new Texture("Explosions/"+i+".png"));
 		}
-			explosion = new Animation<Texture>(0.150f, explosionTexture);
+			explosion = new Animation<Texture>(0.080f, explosionTexture);
 	}
 	
 	public Texture getBullet () {

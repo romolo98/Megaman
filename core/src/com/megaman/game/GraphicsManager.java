@@ -19,6 +19,7 @@ public class GraphicsManager {
 	float levelStart;
 	float bossPunch;
 	float bossJump;
+	float explosion;
 	int cont;
 	boolean destroyBullet;
 	boolean firstSpawn;
@@ -41,6 +42,7 @@ public class GraphicsManager {
 		spawn = 0;
 		bossJump = 0;
 		bossPunch = 0;
+		explosion = 0;
 		firstSpawn = true;
 		destroyBullet = false;
 		spawnBullet = false;
@@ -178,7 +180,11 @@ public class GraphicsManager {
 	}
 	
 	public void drawExplosion (SpriteBatch batch, float posX, float posY) {
-		batch.draw(graphicLoader.getExplosion().getKeyFrame(elapsed), posX * PPM - PPM / 2, posY * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, false, false);
+		batch.draw(graphicLoader.getExplosion().getKeyFrame(explosion), posX * PPM - PPM / 2, posY * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, false, false);
+		explosion += Gdx.graphics.getDeltaTime();
+		if (graphicLoader.getExplosion().isAnimationFinished(explosion)) {
+			explosion = 0;
+		}
 	}
 	
 	public void drawEnemy (SpriteBatch batch, Enemy axeBot) {

@@ -24,21 +24,30 @@ public class HUD {
 	}
 	
 	public static void removeLife () {
-		if (HP > 0)
+		if (HP > 0) {
 			HP--;
+		if (HP == 0 && HB > 0) {
+			resetLife();
+			removeBar();
+			}
+		if (HP == 0 && HB == 0)
+			return;
+		}
 	}
 	
 	public static void removeLife (int damage) {
 		for (int i = 0; i < damage; i++) {
-			if (HP == 0 && HB == 0)
-				return;
-			if (HP == 0 && HB > 0) 
-					resetLife();	
-				HP--;
-			} 
+			HP--;
+			if (HP == 0 && HB > 0) {
+				resetLife();
+				removeBar();
+			}
+			if (HP <= 0 && HB == 0)
+				HP = 0;
+		}
 	}
 	public static void addBar() {
-		if (HB < 4)
+		if (HB < 5)
 			HB++;
 	}
 	
@@ -49,17 +58,5 @@ public class HUD {
 	
 	public static void resetLife () {
 		HP = 5;
-	}
-	
-	public void updateLife () {
-		if (HP == 0) {
-			if (HB > 0) {
-				removeBar();
-				resetLife();
-			}
-			if (HB == 0 && HP == 0) {
-				System.out.println("SARESTI TEORICAMENTE MORTO");
-			}
-		}
 	}
 }

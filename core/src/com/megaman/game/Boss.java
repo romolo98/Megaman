@@ -5,6 +5,7 @@ import static com.megaman.game.Utils.Constants.*;
 
 public class Boss extends Entity{
 	
+	private boolean superPunch;
 	private boolean[] bossAction;
 	private float forceX;
 	private float forceY;
@@ -15,10 +16,12 @@ public class Boss extends Entity{
 	private int punchDamage;
 	private Array<Bullet> bullets;
 	private Array<Bullet> bulletsToDestroy;
+	private double lastTimePunch;
 	private double lastTimeShoot;
 	private double lastTimeJump;
 	private int delayShoot;
 	private int delayJump;
+	private int delayPunch;
 	private double actualTime;
 	private static boolean mustDie = false;
 	public static boolean isDead = false;
@@ -29,16 +32,19 @@ public class Boss extends Entity{
 		super.getBody().setUserData("boss");
 		forceX = 0;
 		forceY = 0;
-		life = 50;
-		totalLife = 50;
+		life = 100;
+		totalLife = 100;
 		lastTimeShoot = 0;
 		lastTimeJump = 0;
+		lastTimePunch = 5;
 		actualTime = 0;
 		delayShoot = 1500;
-		delayJump = 100000000;
-		bulletDamage = 1;
-		punchDamage = 2;
+		delayJump = 5000;
+		delayPunch = 10000;
+		bulletDamage = 3;
+		punchDamage = 5;
 		direction = true;
+		superPunch = false;
 		bullets = new Array<Bullet>();
 		bulletsToDestroy = new Array<Bullet>();
 		bossAction = new boolean[3];
@@ -99,7 +105,7 @@ public class Boss extends Entity{
 					if (actualTime > delayShoot + lastTimeShoot) {
 						shoot();
 					}
-					if (!isBossFalling() && actualTime > delayJump + lastTimeJump && !bossAction[BOSS_PUNCH]) {
+					if (!isBossFalling() && actualTime > delayJump + lastTimeJump && !bossAction[BOSS_PUNCH] && !superPunch) {
 						bossAction[BOSS_WALK] = false;
 						bossAction[BOSS_JUMP] = true;
 						lastTimeJump = System.currentTimeMillis();
@@ -108,6 +114,10 @@ public class Boss extends Entity{
 					if ((megaman.getBody().getPosition().x - this.getBody().getPosition().x) < 1 && !bossAction[BOSS_JUMP]) {
 						bossAction[BOSS_WALK] = false;
 						bossAction[BOSS_PUNCH] = true;
+					}
+					if (actualTime > delayPunch + lastTimePunch && !bossAction[BOSS_JUMP] && !bossAction[BOSS_PUNCH]) {
+						superPunch = true;
+						lastTimePunch = System.currentTimeMillis();
 					}
 				}
 				direction = false;
@@ -119,7 +129,7 @@ public class Boss extends Entity{
 					if (actualTime > delayShoot + lastTimeShoot) {
 						shoot();
 					}
-					if (!isBossFalling() && actualTime > delayJump + lastTimeJump && !bossAction[BOSS_PUNCH]) {
+					if (!isBossFalling() && actualTime > delayJump + lastTimeJump && !bossAction[BOSS_PUNCH]&& !superPunch) {
 						bossAction[BOSS_WALK] = false;
 						bossAction[BOSS_JUMP] = true;
 						lastTimeJump = System.currentTimeMillis();
@@ -128,6 +138,10 @@ public class Boss extends Entity{
 					if ((this.getBody().getPosition().x - megaman.getBody().getPosition().x) < 1 && !bossAction[BOSS_JUMP]) {
 						bossAction[BOSS_WALK] = false;
 						bossAction[BOSS_PUNCH] = true;
+					}
+					if (actualTime > delayPunch + lastTimePunch && !bossAction[BOSS_JUMP] && !bossAction[BOSS_PUNCH]) {
+						superPunch = true;
+						lastTimePunch = System.currentTimeMillis();
 					}
 				}
 				direction = true;
@@ -139,14 +153,34 @@ public class Boss extends Entity{
 			
 			//MOVEMENTS
 			if (!direction) {
-				if ((megaman.getBody().getPosition().x - this.getBody().getPosition().x) > 4)
-					this.getBody().setLinearVelocity(forceX+2,forceY);
+				if (superPunch) {
+					this.getBody().setLinearVelocity(forceX+7,forceY);
+					if ((megaman.getBody().getPosition().x - this.getBody().getPosition().x) < 1) {
+						superPunch = false;
+						bossAction[BOSS_JUMP] = false;
+						bossAction[BOSS_WALK] = false;
+						bossAction[BOSS_PUNCH] = true;
+						lastTimeJump = System.currentTimeMillis();
+					}
+				}
+				else if ((megaman.getBody().getPosition().x - this.getBody().getPosition().x) > 4 && (megaman.getBody().getPosition().x - this.getBody().getPosition().x) < 13)
+					this.getBody().setLinearVelocity(forceX+4,forceY);
 				else
 					this.getBody().setLinearVelocity(forceX,forceY);
 			}
 			else {
-				if ((this.getBody().getPosition().x - megaman.getBody().getPosition().x) > 4)
-					this.getBody().setLinearVelocity(-forceX-2,forceY);
+				if (superPunch) {
+					this.getBody().setLinearVelocity(-forceX-7,forceY);
+					if ((this.getBody().getPosition().x - megaman.getBody().getPosition().x) < 1) {
+						bossAction[BOSS_JUMP] = false;
+						bossAction[BOSS_WALK] = false;
+						bossAction[BOSS_PUNCH] = true;
+						superPunch = false;
+						lastTimeJump = System.currentTimeMillis();
+					}
+				}
+				else if ((this.getBody().getPosition().x - megaman.getBody().getPosition().x) > 4 && (this.getBody().getPosition().x - megaman.getBody().getPosition().x) < 13)
+					this.getBody().setLinearVelocity(-forceX-4,forceY);
 				else
 					this.getBody().setLinearVelocity(-forceX,forceY);
 			}

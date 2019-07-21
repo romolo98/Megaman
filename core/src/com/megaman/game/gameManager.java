@@ -120,7 +120,6 @@ public class gameManager {
 		gm.drawMegamanX(batch, controller, megaman);
 		gm.drawHud(batch, megaman, hud);
 		gm.drawBossX(batch, boss);
-		hud.updateLife();
 		
 		for (int i = 0; i < getAxebotSpawn().size; i++) {
 			if (!axeBot.get(i).isDead) {
