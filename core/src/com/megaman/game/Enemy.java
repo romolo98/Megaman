@@ -8,6 +8,7 @@ public class Enemy extends Entity{
 	private int maxHP = 5;
 	boolean isDead = false;
 	boolean mustDie = false;
+	boolean hasExploded = false;
 	
 	public Enemy(int index) {
 		super();
@@ -46,6 +47,14 @@ public class Enemy extends Entity{
 	
 	public void setBodyNull() {
 		this.entityBody = null;
+	}
+	
+	public boolean getExplosionState() {
+		return hasExploded;
+	}
+	
+	public void setHasExploded () {
+		hasExploded = true;
 	}
 	
 }

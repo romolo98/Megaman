@@ -178,7 +178,7 @@ public class GraphicsManager {
 	}
 	
 	public void drawExplosion (SpriteBatch batch, float posX, float posY) {
-		batch.draw(graphicLoader.getExplosion().getKeyFrame(elapsed,true), posX, posY, 64, 64, 0, 0, 64, 64);
+		batch.draw(graphicLoader.getExplosion().getKeyFrame(elapsed), posX * PPM - PPM / 2, posY * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, false, false);
 	}
 	
 	public void drawEnemy (SpriteBatch batch, Enemy axeBot) {

@@ -35,6 +35,7 @@ public class gameManager {
 	Array<Bullet> ammunition;
 	Array<Bullet> ammunitionToDestroy;
 	Array<Enemy> axeBot;
+	Array<Float> explosionTimers;
 	Music level1;
 	int numSalto;
 	float forceX;
@@ -74,8 +75,10 @@ public class gameManager {
 		level1 = Gdx.audio.newMusic(Gdx.files.internal("Audio/Level1Theme.mp3"));
 
 		axeBot = new Array<Enemy>(getAxebotSpawn().size);
+		explosionTimers = new Array<Float>(getAxebotSpawn().size);
 		for (int i = 0; i < getAxebotSpawn().size; i++) {
 			axeBot.add(new Enemy(i));
+			explosionTimers.add(0f);
 		}
 		
 		deathzones = new Array<Entity>(getDeath().size);
@@ -123,7 +126,16 @@ public class gameManager {
 			if (!axeBot.get(i).isDead) {
 				gm.drawEnemy(batch, axeBot.get(i));
 			}
+			if (axeBot.get(i).getIsDead() && !axeBot.get(i).getExplosionState()) {
+				gm.drawExplosion(batch, getAxebotSpawn().get(i).x/PPM, getAxebotSpawn().get(i).y/PPM);
+				explosionTimers.set(i, explosionTimers.get(i) + Gdx.graphics.getDeltaTime());
+			}
+			if (gm.getGL().getExplosion().isAnimationFinished(explosionTimers.get(i))) {
+				explosionTimers.set(i, 0f);
+				axeBot.get(i).setHasExploded();
+			}
 		}
+		
 		batch.end();
 		b2dr.render(world, camera.combined.scl(PPM)); //PIU' E' PICCOLO IL VALORE DI SCALA, PIU' E' GRANDE LA DISTANZA COPERTA DALLA CAMERA
 		batch.begin();
