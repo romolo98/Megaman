@@ -18,14 +18,12 @@ public class Constants {
 	public static final int SPAWN = 9;
 	public static final int JUMP_SHOOT = 10;
 	public static final int FALL_SHOOT = 11;
+	public static final int ENTER = 12;
+	public static final int EXIT = 13;
+	public static final int MUTE = 14;
 	
 	//ANIMATION BOSS
 	public static final int BOSS_PUNCH = 0;
 	public static final int BOSS_WALK = 1;
 	public static final int BOSS_JUMP = 2;
-	
-	//FIXTURE FILTERS
-	public static final short DEFAULT_BIT = 1; 
-	public static final short MEGAMAN_BIT = 2;
-	public static final short ENEMY_BIT = 4;
 }

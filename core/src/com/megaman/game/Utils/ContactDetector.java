@@ -7,33 +7,31 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
-import com.megaman.game.Boss;
-import com.megaman.game.Bullet;
-import com.megaman.game.Controller;
-import com.megaman.game.Enemy;
-import com.megaman.game.Entity;
-import com.megaman.game.HUD;
-import com.megaman.game.Megaman;
-import com.megaman.game.gameManager;
+import com.megaman.logic.Boss;
+import com.megaman.logic.Bullet;
+import com.megaman.logic.Controller;
+import com.megaman.logic.Enemy;
+import com.megaman.logic.Entity;
+import com.megaman.logic.HUD;
+import com.megaman.logic.Megaman;
+import com.megaman.logic.gameManager;
 
 public class ContactDetector implements ContactListener{
 	
+	private boolean fall = false;
 	private Boss levelboss;
 	private Array<Entity> death;
 	private Megaman megaman;
-	private boolean onTheGround;
 	private Array<Enemy> axebots;
 	private boolean reset;
 	private boolean mustFall;
 	private Array<Bullet> ammo;
 	private Array<Bullet> lostAmmo;
-	int ciao = 0;
 	
 	public ContactDetector(Array<Entity> deathzones, Megaman m, Array<Bullet> ammunition, Array<Enemy> axebot, Controller controller, Boss boss) {
 		death = deathzones;
 		megaman = m;
 		reset = false;
-		onTheGround = false;
 		mustFall = false;
 		ammo = ammunition;
 		lostAmmo = new Array<Bullet>();
@@ -57,12 +55,6 @@ public class ContactDetector implements ContactListener{
 				}
 			}
 		}
-		
-		//GROUND COLLISIONS
-		if (A.getUserData() == "feet" || B.getUserData() == "feet") {
-				onTheGround = true;
-		}
-		
 		//LEFT COLLISIONS
 		if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
 			if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground") {
@@ -80,29 +72,36 @@ public class ContactDetector implements ContactListener{
 		for (int i = 0; i < axebots.size; i++) {
 			if (!axebots.get(i).getIsDead()) {
 				if (A.getBody().getUserData() == axebots.get(i).getBody().getUserData() || B.getBody().getUserData() == axebots.get(i).getBody().getUserData()) {
-					if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
-							megaman.getBody().setLinearVelocity(-75, 0);
-							HUD.removeLife();
+					if (A.getUserData() == "feet" || B.getUserData() == "feet") {
+						megaman.getBody().setLinearVelocity(-75, 3);
+						HUD.removeLife();
+					}
+					else if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
+						megaman.getBody().setLinearVelocity(-75, 0);
+						HUD.removeLife();
 					}
 					else if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
-							megaman.getBody().setLinearVelocity(75, 0);
+						megaman.getBody().setLinearVelocity(75, 0);
 						HUD.removeLife();
+					}
 				}
 			}
-		}
-	}		
+		}	
 		
 		//BOSS COLLISIONS
-		
 		if (!levelboss.getIsDead()) {
 			if (A.getBody().getUserData() == levelboss.getBody().getUserData() || B.getBody().getUserData() == levelboss.getBody().getUserData()) {
 				if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
-						megaman.getBody().setLinearVelocity(150, 0);
-						HUD.removeLife(levelboss.getPunchDamage());
+					megaman.getBody().setLinearVelocity(150, 0);
+					HUD.removeLife(levelboss.getPunchDamage());
 				}
 				else if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
-						megaman.getBody().setLinearVelocity(-150, 0);
-						HUD.removeLife(levelboss.getPunchDamage());
+					megaman.getBody().setLinearVelocity(-150, 0);
+					HUD.removeLife(levelboss.getPunchDamage());
+				}
+				else if (A.getUserData() == "feet" || B.getUserData() == "feet") {
+					megaman.getBody().setLinearVelocity(0, 3);
+					HUD.removeLife(levelboss.getPunchDamage());
 				}
 			}
 		
@@ -110,14 +109,19 @@ public class ContactDetector implements ContactListener{
 		for (int i = 0; i < levelboss.getBossBullets().size; i++) {
 			if (A.getBody().getUserData() == levelboss.getBossBullets().get(i).getBody().getUserData() || B.getBody().getUserData() == levelboss.getBossBullets().get(i).getBody().getUserData()) {
 				if (A.getUserData() == "rightSide" || B.getUserData() == "rightSide") {
-						megaman.getBody().setLinearVelocity(-75, 0);
-						HUD.removeLife(levelboss.getBulletDamage());
-						levelboss.getBossBullets().get(i).setMustDie();
+					megaman.getBody().setLinearVelocity(-75, 0);
+					HUD.removeLife(levelboss.getBulletDamage());
+					levelboss.getBossBullets().get(i).setMustDie();
 				}
 				else if (A.getUserData() == "leftSide" || B.getUserData() == "leftSide") {
 					megaman.getBody().setLinearVelocity(75, 0);
-						HUD.removeLife(levelboss.getBulletDamage());
-						levelboss.getBossBullets().get(i).setMustDie();
+					HUD.removeLife(levelboss.getBulletDamage());
+					levelboss.getBossBullets().get(i).setMustDie();
+				}
+				else if (A.getUserData() == "feet" || B.getUserData() == "feet") {
+					megaman.getBody().setLinearVelocity(0, 3);
+					HUD.removeLife(levelboss.getPunchDamage());
+					levelboss.getBossBullets().get(i).setMustDie();
 				}
 				else if (A.getBody().getUserData() == "ground" || B.getBody().getUserData() == "ground") {
 					levelboss.getBossBullets().get(i).setMustDie();
@@ -129,7 +133,6 @@ public class ContactDetector implements ContactListener{
 			if (levelboss.getBossBullets().get(i).getMustDie()) {
 				levelboss.addBulletsToDestroy(levelboss.getBossBullets().get(i));
 			}
-			
 		}
 			for(int i = 0; i < ammo.size; i++) {
 				if (A.getBody().getUserData() == ammo.get(i).getBody().getUserData() || B.getBody().getUserData() == ammo.get(i).getBody().getUserData()) {
@@ -172,19 +175,17 @@ public class ContactDetector implements ContactListener{
 		Fixture A = contact.getFixtureA();
 		Fixture B = contact.getFixtureB();
 		
-		if (A.getUserData() != "feet" && B.getUserData() != "feet") {
-			onTheGround = false;
-		}
+
 	}
 
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
-		
+
 	}
 
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
-
+		
 	}
 	
 	public boolean getReset() {
@@ -199,14 +200,15 @@ public class ContactDetector implements ContactListener{
 		lostAmmo.clear();
 	}
 	
-	public boolean getOnTheGround () {
-		return onTheGround;
-	}
 	public boolean getMustFall () {
 		return mustFall;
 	}
 
 	public void setMustFallFalse (){
 		mustFall = false;
+	}
+	
+	public boolean getFall () {
+		return fall;
 	}
 }
