@@ -1,7 +1,6 @@
 package com.megaman.logic;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.megaman.game.Utils.ContactDetector;
 

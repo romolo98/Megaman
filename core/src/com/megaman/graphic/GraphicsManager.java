@@ -237,30 +237,25 @@ public class GraphicsManager {
 	}
 	
 	public void drawMenu (SpriteBatch batch, int contMenu) {
-		batch.draw(graphicLoader.getMenu(), 0f, 0f, 1920/2, 1080/2, 0, 0, 1920, 1080, false, false);
+		batch.draw(graphicLoader.getMenu(),0, 0, gameManager.getCameraMenu().viewportWidth, gameManager.getCameraMenu().viewportHeight);
 		if (contMenu == 0) {
-			batch.draw(graphicLoader.getCursor(), 40, 230, 147/2, 91/2, 0, 0, 147, 91, false, false);
+			batch.draw(graphicLoader.getCursor(), gameManager.getCameraMenu().viewportWidth/60, gameManager.getCameraMenu().viewportHeight/2.5f, gameManager.getCameraMenu().viewportWidth/10, gameManager.getCameraMenu().viewportHeight/10);
 		}
 		else if (contMenu == 1) {
-			batch.draw(graphicLoader.getCursor(), 40, 160, 147/2, 91/2, 0, 0, 147, 91, false, false);
+			batch.draw(graphicLoader.getCursor(), gameManager.getCameraMenu().viewportWidth/60, gameManager.getCameraMenu().viewportHeight/3.5f, gameManager.getCameraMenu().viewportWidth/10, gameManager.getCameraMenu().viewportHeight/10);
 		}
 		else if (contMenu == 2) {
-			batch.draw(graphicLoader.getCursor(), 40, 90, 147/2, 91/2, 0, 0, 147, 91, false, false);
+			batch.draw(graphicLoader.getCursor(), gameManager.getCameraMenu().viewportWidth/60, gameManager.getCameraMenu().viewportHeight/6.5f, gameManager.getCameraMenu().viewportWidth/10, gameManager.getCameraMenu().viewportHeight/10);
 		}
 	}
 	
 	public void drawCredits (SpriteBatch batch) {
-		batch.draw(graphicLoader.getCredits(), 0f, 0f, 1920/2, 1080/2, 0, 0, 1920, 1080, false, false);
+		batch.draw(graphicLoader.getCredits(), 0, 0, gameManager.getCameraMenu().viewportWidth, gameManager.getCameraMenu().viewportHeight);
 	}
 	
 	public void drawWinningScreen (SpriteBatch batch) {
-		batch.draw(graphicLoader.getGiocoCompleto(), 0f, 0f, 1920/2, 1080/2, 0, 0, 1920, 1080, false, false);
+		batch.draw(graphicLoader.getGiocoCompleto(), gameManager.getCameraMenu().viewportWidth, gameManager.getCameraMenu().viewportHeight);
 	}
-	// LEVEL START (WORK IN PROGRESS)
-	/*public void drawLevelStart (SpriteBatch batch) {
-		batch.draw(graphicLoader.getStartText().getKeyFrame(elapsed), gameManager.getCamera().position.x - PPM*4, gameManager.getCamera().position.y);
-	}
-	*/
 	
 	public boolean getAnimationBossJumpDone () {
 		return animationBossJumpDone;

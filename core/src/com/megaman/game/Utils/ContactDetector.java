@@ -1,6 +1,6 @@
 package com.megaman.game.Utils;
 
-import com.badlogic.gdx.physics.box2d.Body;
+
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -14,7 +14,6 @@ import com.megaman.logic.Enemy;
 import com.megaman.logic.Entity;
 import com.megaman.logic.HUD;
 import com.megaman.logic.Megaman;
-import com.megaman.logic.gameManager;
 
 public class ContactDetector implements ContactListener{
 	

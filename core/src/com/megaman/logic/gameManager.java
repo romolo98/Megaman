@@ -2,10 +2,8 @@ package com.megaman.logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -16,7 +14,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.megaman.game.Utils.ContactDetector;
@@ -65,7 +62,7 @@ public class gameManager {
 	private static OrthographicCamera cameraMenu;
 	private OrthogonalTiledMapRenderer mapRenderer;
 	private static TiledMap map;
-	private Box2DDebugRenderer b2dr;
+	//private Box2DDebugRenderer b2dr;
 	static private World world;
 	private final static float SCALE = 2.0f;
 	private static float startWidth;
@@ -104,7 +101,7 @@ public class gameManager {
 	public void begin () {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, w/SCALE, h/SCALE);
-		b2dr = new Box2DDebugRenderer();
+		//b2dr = new Box2DDebugRenderer();
 		world = new World(new Vector2(0,-9.81f), false);
 		loadMap();
 		updateLevel();
@@ -280,9 +277,9 @@ public class gameManager {
 				}
 			}
 			
-				batch.end();
-				b2dr.render(world, camera.combined.scl(PPM)); //PIU' E' PICCOLO IL VALORE DI SCALA, PIU' E' GRANDE LA DISTANZA COPERTA DALLA CAMERA
-				batch.begin();
+				//batch.end();
+				//b2dr.render(world, camera.combined.scl(PPM)); //PIU' E' PICCOLO IL VALORE DI SCALA, PIU' E' GRANDE LA DISTANZA COPERTA DALLA CAMERA
+				//batch.begin();
 			
 			updateMegaman();
 			updateBullet(batch);
@@ -310,7 +307,7 @@ public class gameManager {
 	}
 	
 	public void disposer () {
-		b2dr.dispose();
+		//b2dr.dispose();
 		world.dispose();
 		mapRenderer.dispose();
 		level1.dispose();
@@ -325,14 +322,14 @@ public class gameManager {
 	}
 	
 	public void cameraMenuUpdate () {
-		startWidth = camera.viewportWidth/2;
-		startHeight = camera.viewportHeight/2;
-		
 		cameraMenu.position.x = 0;
 		cameraMenu.position.y = 0;
 		cameraMenu.position.z = 0;
 		
-		cameraBoundaries(cameraMenu, startWidth, startHeight, 1920 * PPM - startWidth * 2, 1080 * PPM - startHeight * 2);
+		startWidth = cameraMenu.viewportWidth/2;
+		startHeight = cameraMenu.viewportHeight/2;
+		
+		cameraBoundaries(cameraMenu, startWidth, startHeight, Gdx.graphics.getWidth() * PPM - startWidth * 2, Gdx.graphics.getHeight() * PPM - startHeight * 2);
 		
 		cameraMenu.update();
 	}
