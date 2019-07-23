@@ -41,6 +41,8 @@ public class GraphicLoader{
 	private Array<Texture> punchBossTexture;
 	private Array<Texture> explosionTexture;
 	private Array<Texture> deadTexture;
+	private Array<Texture> cannonTexture;
+	private Array<Texture> cannonReverseTexture;
 	private Animation<Texture> spawnAnimation;
 	private Animation<Texture> specialMove;
 	private Animation<Texture> fall;
@@ -59,6 +61,8 @@ public class GraphicLoader{
 	private Animation<Texture> punchBoss;
 	private Animation<Texture> explosion;
 	private Animation<Texture> dead;
+	private Animation<Texture> cannon;
+	private Animation<Texture> cannonReverse;
 	
  	public GraphicLoader() {
 		frameRates = 0.060f;
@@ -90,6 +94,8 @@ public class GraphicLoader{
 		punchBossTexture = new Array<Texture>();
 		explosionTexture = new Array<Texture>();
 		deadTexture = new Array<Texture>();
+		cannonTexture = new Array<Texture>();
+		cannonReverseTexture = new Array<Texture>();
 	}
 	
 	public void importImage () {
@@ -186,6 +192,16 @@ public class GraphicLoader{
 			deadTexture.add(new Texture("Megaman/Death/"+i+".png"));
 		}
 			dead = new Animation<Texture>(0.080f, deadTexture);
+			
+		for (int i = 0; i < 4; i++) {
+			cannonTexture.add(new Texture("Enemies/Cannon/"+i+".png"));
+		}
+			cannon = new Animation<Texture>(0.080f,cannonTexture);
+			
+		for (int i = 4; i < 7; i++) {
+			cannonReverseTexture.add(new Texture("Enemies/Cannon/"+i+".png"));
+		}
+			cannonReverse = new Animation<Texture> (0.080f,cannonReverseTexture);
 	}
 	
 	public Texture getBullet () {
@@ -278,6 +294,14 @@ public class GraphicLoader{
 	
 	public Animation<Texture> getDead () {
 		return dead;
+	}
+	
+	public Animation<Texture> getCannon () {
+		return cannon;
+	}
+	
+	public Animation<Texture> getCannonReverse () {
+		return cannonReverse;
 	}
 	
 	public Texture getFullHP () {

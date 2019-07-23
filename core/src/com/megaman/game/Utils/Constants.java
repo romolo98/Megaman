@@ -20,7 +20,6 @@ public class Constants {
 	public static final int FALL_SHOOT = 11;
 	public static final int ENTER = 12;
 	public static final int EXIT = 13;
-	public static final int MUTE = 14;
 	
 	//ANIMATION BOSS
 	public static final int BOSS_PUNCH = 0;

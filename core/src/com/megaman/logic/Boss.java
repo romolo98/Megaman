@@ -32,8 +32,8 @@ public class Boss extends Entity{
 		super.getBody().setUserData("boss");
 		forceX = 0;
 		forceY = 0;
-		life = 5;
-		totalLife = 5;
+		life = 50;
+		totalLife = 50;
 		lastTimeShoot = 0;
 		lastTimeJump = 0;
 		lastTimePunch = 5;

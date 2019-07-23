@@ -29,6 +29,8 @@ public class gameManager {
 
 	float w;
 	float h;
+	int delayCannons = 3000;
+	double lastTimeShoot = 0;
 	int contMenu;
 	int level;
 	int levelMax = 2;
@@ -48,7 +50,9 @@ public class gameManager {
 	Array<Bullet> ammunition;
 	Array<Bullet> ammunitionToDestroy;
 	Array<Enemy> axeBot;
+	Array<Enemy> cannons;
 	Array<Float> explosionTimers;
+	Array<Float> explosionTimers2;
 	Music menuTheme;
 	Music level1;
 	Music credits1;
@@ -83,6 +87,7 @@ public class gameManager {
 		menuTheme = Gdx.audio.newMusic(Gdx.files.internal("Audio/Menu.mp3"));
 		credits1 = Gdx.audio.newMusic(Gdx.files.internal("Audio/KingdomHearts.MP3"));
 		winningGame = Gdx.audio.newMusic(Gdx.files.internal("Audio/Guile's Theme.MP3"));
+		level1 = Gdx.audio.newMusic(Gdx.files.internal("Audio/Level1Theme.mp3"));
 		menu = true;
 		game = false;
 		gameOver = false;
@@ -104,8 +109,13 @@ public class gameManager {
 		loadMap();
 		updateLevel();
 		ammunitionToDestroy = new Array<Bullet>();
-		level1 = Gdx.audio.newMusic(Gdx.files.internal("Audio/Level1Theme.mp3"));
 		
+		cannons = new Array<Enemy>(getCannonsSpawn().size);
+		explosionTimers2 = new Array<Float>(cannons.size);
+		for (float i = 0; i < getCannonsSpawn().size; i++) {
+			cannons.add(new Enemy(i));
+			explosionTimers2.add(0f);
+		}
 		axeBot = new Array<Enemy>(getAxebotSpawn().size);
 		explosionTimers = new Array<Float>(getAxebotSpawn().size);
 		for (int i = 0; i < getAxebotSpawn().size; i++) {
@@ -128,7 +138,7 @@ public class gameManager {
 		
 		controller = new Controller();
 		
-		detector = new ContactDetector(deathzones, megaman, ammunition, axeBot, controller, boss);
+		detector = new ContactDetector(deathzones, megaman, ammunition, axeBot, cannons, controller, boss);
 		world.setContactListener(detector);
 		
 		hud = new HUD();
@@ -137,7 +147,6 @@ public class gameManager {
 	
 	public void run(SpriteBatch batch) {
 		//UTILIZZA IL RENDER DELLA MAPPA SULLO STESSO SPRITEBATCH
-		setMute();
 		if (menu) {
 			controller.setControlliFalse(EXIT);
 			level1.stop();
@@ -241,6 +250,36 @@ public class gameManager {
 				}
 			}
 			
+			for (int i = 0; i < getCannonsSpawn().size; i++) {
+				if (!cannons.get(i).getIsDead()) {
+					if (actualTime > delayCannons + lastTimeShoot && !cannons.get(i).getDirection() && (cannons.get(i).getBody().getPosition().x - megaman.getBody().getPosition().x) < 8) {
+						cannons.get(i).shoot();
+						lastTimeShoot = System.currentTimeMillis();
+					}
+					if (actualTime > delayCannons + lastTimeShoot &&  cannons.get(i).getDirection() && (megaman.getBody().getPosition().x - cannons.get(i).getBody().getPosition().x) < 8) {
+						cannons.get(i).shoot();
+						lastTimeShoot = System.currentTimeMillis();
+					}
+					if (cannons.get(i).getBody().getPosition().x > megaman.getBody().getPosition().x) {
+						cannons.get(i).setDirection(false);
+					}
+					else if (cannons.get(i).getBody().getPosition().x < megaman.getBody().getPosition().x){
+						cannons.get(i).setDirection(true);
+					}
+					if (!cannons.get(i).isDead) {
+						gm.drawEnemies2(batch, cannons.get(i));
+					}
+				}
+				if (cannons.get(i).getIsDead() && !cannons.get(i).getExplosionState()) {
+					gm.drawExplosion(batch, getCannonsSpawn().get(i).x/PPM, getCannonsSpawn().get(i).y/PPM);
+					explosionTimers2.set(i, explosionTimers2.get(i) + Gdx.graphics.getDeltaTime());
+				}
+				if (gm.getGL().getExplosion().isAnimationFinished(explosionTimers2.get(i))) {
+					explosionTimers2.set(i, 0f);
+					cannons.get(i).setHasExploded();
+				}
+			}
+			
 				batch.end();
 				b2dr.render(world, camera.combined.scl(PPM)); //PIU' E' PICCOLO IL VALORE DI SCALA, PIU' E' GRANDE LA DISTANZA COPERTA DALLA CAMERA
 				batch.begin();
@@ -248,6 +287,7 @@ public class gameManager {
 			updateMegaman();
 			updateBullet(batch);
 			updateBulletBoss(batch);
+			updateBulletEnemies(batch);
 		}
 	}
 	
@@ -269,25 +309,6 @@ public class gameManager {
 		begin();
 	}
 	
-	public void setMute () {
-		controller.setMute();
-		
-		if (controller.getControlli(MUTE)) {
-			mute = !mute;
-		}
-		if (mute) {
-			level1.setVolume(0);
-			credits1.setVolume(0);
-			menuTheme.setVolume(0);
-			winningGame.setVolume(0);
-		}
-		else {
-			level1.setVolume(1);
-			credits1.setVolume(1);
-			menuTheme.setVolume(1);
-			winningGame.setVolume(1);
-		}
-	}
 	public void disposer () {
 		b2dr.dispose();
 		world.dispose();
@@ -489,8 +510,19 @@ public class gameManager {
 		
 		for (Bullet i: boss.getBossBullets()) {
 			gm.drawBossBullet(batch,i,i.getDirection());
-			i.physicsIA(megaman,boss);
+			i.physicsIA(megaman);
 			i.setShoot(true);
+		}
+	}
+	
+	public void updateBulletEnemies (SpriteBatch batch) {
+		
+		for (int j = 0;j < cannons.size;j++) {
+			for (Bullet i: cannons.get(j).getEnemiesBullets()) {
+				gm.drawEnemiesBullet(batch,i,i.getDirection(),cannons.get(j));
+				i.physicsEnemies();
+				i.setShoot(true);
+			}
 		}
 	}
 	
@@ -564,6 +596,16 @@ public class gameManager {
 		return axebotSpawn;
 	}
 	
+	public static Array<Rectangle> getCannonsSpawn() {
+		Array<Rectangle> cannons = new Array<Rectangle>();
+		for (MapObject object : map.getLayers().get("CannonSpawn").getObjects()) {
+			if (object instanceof RectangleMapObject) {
+				cannons.add(((RectangleMapObject)object).getRectangle());
+			}
+		}
+		return cannons;
+	}
+	
 	public static Rectangle getBossSpawn() {
 		Rectangle rect = new Rectangle();
 		for (MapObject object : map.getLayers().get("BossSpawn").getObjects()) {
@@ -616,6 +658,15 @@ public class gameManager {
 				axeBot.get(i).setDeath();
 			}
 		}
+		
+		for (int i = 0; i < cannons.size; i++) {
+			if (cannons.get(i).getMustDie()) {
+				world.destroyBody(cannons.get(i).getBody());
+				cannons.get(i).getBody().setUserData(null);
+				cannons.get(i).setBodyNull();
+				cannons.get(i).setDeath();
+			}
+		}
 	}
 	
 	public void bossBulletDestroyer() {
@@ -628,6 +679,22 @@ public class gameManager {
 		}
 		boss.getBossBullets().removeAll(boss.getBulletsToDestroy(), true);
 		boss.clearBulletsToDestroy();
+	}
+	
+	public void enemiesBulletDestroyer() {
+		for (int j = 0;j < cannons.size;j++) {
+			for (int i = 0; i < cannons.get(j).getEnemiesBullets().size; i++) {
+				if (cannons.get(j).getEnemiesBullets().get(i).getMustDie()) {
+					world.destroyBody(cannons.get(j).getEnemiesBullets().get(i).getBody());
+					cannons.get(j).getEnemiesBullets().get(i).setBodyNull();
+					cannons.get(j).getEnemiesBullets().get(i).setDeath();
+				}
+			}
+		}
+		for (int j = 0;j < cannons.size;j++) {
+			cannons.get(j).getEnemiesBullets().removeAll(cannons.get(j).getBulletsToDestroy(), true);
+			cannons.get(j).clearBulletsToDestroy();
+		}
 	}
 	
 	public void MegamanBulletDestroyer() {

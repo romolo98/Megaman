@@ -9,10 +9,12 @@ public class Bullet extends Entity {
 	boolean direction;
 	int speedMegamanBullet;
 	int speedBossBullet;
+	int speedEnemiesBullet;
 	private boolean isDead = false;
 	private boolean mustDie = false;
 	static int bulletType1 = 0;
 	static int bulletType2 = 0;
+	static int bulletType3 = 0;
 	private int existenceTime = 5;
 	
 	public Bullet(Boss boss) {
@@ -27,6 +29,20 @@ public class Bullet extends Entity {
 		isShot = false;
 		vectorMegaman = new Vector2();
 		bulletType2++;
+	}
+	
+	public Bullet(Enemy cannon) {
+		super();
+		if (!cannon.getDirection())
+			super.sensorCreator(cannon.getBody().getPosition().x-0.35f, cannon.getBody().getPosition().y, 0.10f, 0.10f, false);
+		else 
+			super.sensorCreator(cannon.getBody().getPosition().x+0.35f, cannon.getBody().getPosition().y, 0.10f, 0.10f, false);
+		super.getBody().setGravityScale(0);
+		super.getBody().setUserData("cannonBullet" + bulletType3);
+		speedEnemiesBullet = 5;
+		isShot = false;
+		vectorMegaman = new Vector2();
+		bulletType3++;
 	}
 	
 	public Bullet(Megaman megaman) {
@@ -48,7 +64,7 @@ public class Bullet extends Entity {
 			this.getBody().setLinearVelocity(-speedMegamanBullet, 0);
 	}
 	
-	public void physicsIA (Megaman megaman,Boss boss) {
+	public void physicsIA (Megaman megaman) {
 		vectorMegaman.set(megaman.getBody().getPosition().x, megaman.getBody().getPosition().y);
 		if (!direction) {
 			if (!isShot)
@@ -58,6 +74,13 @@ public class Bullet extends Entity {
 			if (!isShot)
 				this.getBody().setLinearVelocity(this.getBody().getLocalPoint(vectorMegaman));
 		}
+	}
+	
+	public void physicsEnemies () {
+		if (direction)
+			this.getBody().setLinearVelocity(speedEnemiesBullet, 0);
+		else
+			this.getBody().setLinearVelocity(-speedEnemiesBullet, 0);
 	}
 	
 	public float getPositionX() {

@@ -54,6 +54,7 @@ public class Game extends ApplicationAdapter {
 		gameManager.bossDestroyer();
 		gameManager.enemiesDestroyer();
 		gameManager.bossBulletDestroyer();
+		gameManager.enemiesBulletDestroyer();
 		gameManager.MegamanBulletDestroyer();
 		
 		if (gameManager.getGame()) {

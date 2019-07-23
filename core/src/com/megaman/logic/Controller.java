@@ -23,7 +23,7 @@ public class Controller{
 	
 	
 	public Controller () {
-		controlli = new boolean[15];
+		controlli = new boolean[14];
 		notWalkRight = false;
 		notWalkLeft = false;
 		contJump = 0;
@@ -52,12 +52,6 @@ public class Controller{
 	}
 	public boolean getNotLeft () {
 		return notWalkLeft;
-	}
-	
-	public void setMute() {
-		if (Gdx.input.isKeyJustPressed(Keys.M)) {
-			controlli[MUTE] = !controlli[MUTE];
-		}
 	}
 	
 	public void winner () {
@@ -211,7 +205,7 @@ public class Controller{
 	
 	public boolean isAllFalseExeptIdle() {
 		for (int i=0;i<controlli.length;i++) {
-			if (controlli[i] && i != IDLE && i!= MUTE) {
+			if (controlli[i] && i != IDLE) {
 				return false;
 			}
 		}

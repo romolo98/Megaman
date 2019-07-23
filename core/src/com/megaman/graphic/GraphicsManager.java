@@ -176,6 +176,12 @@ public class GraphicsManager {
 		if (!Boss.isDead)
 			batch.draw(graphicLoader.getBossBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
 		}
+	
+	public void drawEnemiesBullet (SpriteBatch batch, Bullet bullet, boolean dir, Enemy cannon) {
+		if (!cannon.getIsDead())
+			batch.draw(graphicLoader.getBossBullet(), bullet.getBody().getPosition().x * PPM - PPM / 2, bullet.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, dir, false);
+		}
+	
 	public void drawBoss (SpriteBatch batch, Boss boss, Texture texture, boolean dir) {
 		if (!boss.getIsDead()) {
 		batch.draw(texture, boss.getBody().getPosition().x * PPM - 48, boss.getBody().getPosition().y * PPM - 48, 96, 96, 0, 0, 96, 96, dir, false);
@@ -217,6 +223,17 @@ public class GraphicsManager {
 		batch.draw(graphicLoader.getFullHP(), axeBot.getBody().getPosition().x * PPM - PPM / 2 , axeBot.getBody().getPosition().y * PPM - PPM / 1.75f, 64 / healthValue, 64, 0, 0, 64, 64, false, false);	
 		}
 	
+	}
+	
+	public void drawEnemies2 (SpriteBatch batch, Enemy cannons) {
+		batch.draw(graphicLoader.getCannon().getKeyFrame(elapsed,true), cannons.getBody().getPosition().x * PPM - PPM / 2, cannons.getBody().getPosition().y * PPM - PPM / 2, 64, 64, 0, 0, 64, 64, cannons.getDirection(), false);
+		
+		
+		if (cannons.getLife() != cannons.getMaxHP()) {
+			float healthValue = (float)cannons.getMaxHP() / (float)cannons.getLife();
+			batch.draw(graphicLoader.getEmptyHP(), cannons.getBody().getPosition().x * PPM - PPM / 2, cannons.getBody().getPosition().y * PPM - PPM / 1.75f, 64, 64, 0, 0, 64, 64, false, false);
+			batch.draw(graphicLoader.getFullHP(), cannons.getBody().getPosition().x * PPM - PPM / 2 , cannons.getBody().getPosition().y * PPM - PPM / 1.75f, 64 / healthValue, 64, 0, 0, 64, 64, false, false);	
+			}	
 	}
 	
 	public void drawMenu (SpriteBatch batch, int contMenu) {
